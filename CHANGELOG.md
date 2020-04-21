@@ -8,4 +8,5 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Initial version.
+- Initial version with basic authentication and API call infrastructure
+- Query, Add, Update and Delete Applications

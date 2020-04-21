@@ -61,7 +61,7 @@ else {
             NuGetApiKey  = $env:NuGetApiKey
             ErrorAction  = 'Stop'
             Tags         = @('', '')
-            LicenseUri   = "https://github.com/$Org/$PowerShellForFOD/blob/master/LICENSE.md"
+            LicenseUri   = "https://github.com/$Org/$PowerShellForFOD/blob/master/LICENSE"
             ProjectUri   = "https://github.com/$Org/$PowerShellForFOD"
             ReleaseNotes = 'Initial release to the PowerShell Gallery'
         }

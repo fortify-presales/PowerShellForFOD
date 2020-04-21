@@ -1,76 +1,60 @@
-function Send-FODApi
-{
+function Send-FODApi {
     <#
     .SYNOPSIS
         Send a request to the FOD REST API.
-
     .DESCRIPTION
         Send a request to the FOD REST API.
-
         This function is used by other PS4FOD functions.
         It's a simple wrapper you could use for calls to the FOD API.
-
     .PARAMETER Method
         REST API Method (Get, Post, Put, Delete ...).
-
         Defaults to Get.
-
     .PARAMETER Operation
         FOD API Operation to call, e.g. /api/v3/applications, this will be appended to $ApiUri
-
         Reference: https://api.ams.fortify.com/
-
     .PARAMETER Body
         Hash table of arguments to send to the FOD API.
-
     .PARAMETER Token
         FOD authentication token to use.
-
         If empty, the value from PS4FOD will be used.
-
     .PARAMETR ApiUri
         FOD API Uri to use, e.g. https://api.ams.fortify.com.
-
         If empty, the value from PS4FOD will be used.
-
-
     .PARAMETER Proxy
         Proxy server to use.
-
         If empty, the value from PS4FOD will be used.
-
     .PARAMETER ForceVerbose
         If specified, don't explicitly remove verbose output from Invoke-RestMethod
-
         *** WARNING ***
-        This will expose your data in verbose output/
-
+        This will expose your data in verbose output.
+    .EXAMPLE
+        # Get a list of (the first 5) FOD applications
+        $Body = @{
+            limit = 5
+        }
+        Send-FODApi -Operation "/api/v3/applications" -Body $Body -ForceVerbose
     .FUNCTIONALITY
         Fortify on Demand.
     #>
     [OutputType([String])]
-    [cmdletbinding()]
+    [CmdletBinding()]
     param (
-        [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$Method = 'Get',
+        [ValidateSet('Get', 'Post', 'Put', 'Delete', 'Patch')]
+        [string]$Method,
 
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [string]$Operation,
 
-        [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [hashtable]$Body = @{ },
+        [hashtable]$Body,
 
         [ValidateNotNullOrEmpty()]
         [ValidateScript({
-            if (-not$_ -and -not$Script:PS4FOD.Token)
-            {
+            if (-not $_ -and -not $Script:PS4FOD.Token){
                 throw 'Please specify an authentication token or create a new FOD Api Token with Get-FODToken.'
-            }
-            else
-            {
+            } else {
                 $true
             }
         })]
@@ -78,110 +62,110 @@ function Send-FODApi
 
         [ValidateNotNullOrEmpty()]
         [ValidateScript({
-            if (-not$_ -and -not$Script:PS4FOD.ApiUri)
-            {
+            if (-not $_ -and -not $Script:PS4FOD.ApiUri) {
                 throw 'Please supply a FOD Api Uri with Set-FODConfig.'
-            }
-            else
-            {
+            } else {
                 $true
             }
         })]
         [string]$ApiUri = $Script:PS4FOD.ApiUri,
 
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
         [string]$Proxy = $Script:PS4FOD.Proxy,
 
         [switch]$ForceVerbose = $Script:PS4FOD.ForceVerbose
     )
-    $Params = @{
-        Uri = "$ApiUri$Operation"
-        ErrorAction = 'Stop'
-    }
-    if ($Proxy)
+    begin
     {
-        $Params['Proxy'] = $Proxy
+        $Params = @{
+            Uri = "$ApiUri$Operation"
+            ErrorAction = 'Stop'
+        }
+        if (-not $Method) {
+            $Method = 'Get'
+        }
+        if ($Method -eq 'Get') {
+            $Params.Add('Method', 'Get')
+            $Params.Add('Body', $Body)
+        } else {
+            $Params.Add('Method', $Method)
+            $Params.Add('ContentType', 'application/json')
+            $Params.add('Body', (ConvertTo-Json $Body))
+        }
+        if ($Proxy) {
+            $Params['Proxy'] = $Proxy
+        }
+        if ($ForceVerbose) {
+            $Params.Add('Verbose', $True)
+            $VerbosePreference = "Continue"
+        }
+        $Headers = @{
+            'Authorization' = "Bearer " + $Token
+            'Accept' = "application/json"
+        }
+        Write-Verbose "Send-FODApi Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }
-    if (-not$ForceVerbose)
+    process
     {
-        $Params.Add('Verbose', $False)
-    }
-    if ($ForceVerbose)
-    {
-        $Params.Add('Verbose', $true)
-    }
-    $Headers = @{
-        'Authorization' = "Bearer " + $Token
-        'Accept' = "application/json"
-    }
-    $Params.Add('ContentType', 'application/json')
-
-    try
-    {
-        Write-Verbose "Send-FODApi JSON Payload:"
-        $Body | ConvertTo-Json | Write-Verbose
         $Response = $null
-        $Response = Invoke-RestMethod -Method $Method -Headers $Headers @Params -Body (ConvertTo-Json $Body)
-        Write-Verbose $Response
-    }
-    catch
-    {
-        # (HTTP 429 is "Too Many Requests")
-        if ($_.Exception.Response.StatusCode -eq 429)
+        try
         {
-
-            $RetryPeriod = 30
-            # TODO: Get the time before we can try again.
-            #if ($_.Exception.Response.Headers -and $_.Exception.Response.Headers.Contains('X-Rate-Limit-Reset'))
-            #{
-            #    $RetryPeriod = $_.Exception.Response.Headers.GetValues('X-Rate-Limit-Reset')
-            #    if ($RetryPeriod -is [string[]])
-            #    {
-            #        $RetryPeriod = [int]$RetryPeriod[0]
-            #    }
-            #}
-            # Write Response error
-            Write-Verbose "Sleeping [$RetryPeriod] seconds due to FOD 429 response"
-            Start-Sleep -Seconds $RetryPeriod
-            Send-FODApi @PSBoundParameters
-
-        }
-        elseif ($_.ErrorDetails.Message -ne $null)
-        {
-            $ErrorObj = $_.ErrorDetails.Message | ConvertFrom-Json
-            # if multitple errors, i.e. from input validation
-            if ($ErrorObj.errors)
+            if ($Body) {
+                Write-Verbose "JSON Payload:"
+                Write-Verbose (ConvertTo-Json $Body)
+            }
+            $Response = Invoke-RestMethod -Headers $Headers @Params
+            Write-Verbose $Response
+        } catch {
+            Write-Verbose "Caught Exception:"
+            # (HTTP 429 is "Too Many Requests")
+            if ($_.Exception.Response.StatusCode -eq 429)
             {
-                foreach ($error in $ErrorObj.errors)
-                {
-                    # Do not parse for now, just write directly
-                    Write-Host $error.message
+                $RetryPeriod = 30
+                # TODO: Get the time before we can try again.
+                #if ($_.Exception.Response.Headers -and $_.Exception.Response.Headers.Contains('X-Rate-Limit-Reset'))
+                #{
+                #    $RetryPeriod = $_.Exception.Response.Headers.GetValues('X-Rate-Limit-Reset')
+                #    if ($RetryPeriod -is [string[]])
+                #    {
+                #        $RetryPeriod = [int]$RetryPeriod[0]
+                #    }
+                #}
+                # Write Response error
+                Write-Verbose "Sleeping [$RetryPeriod] seconds due to FOD 429 response"
+                Start-Sleep -Seconds $RetryPeriod
+                Send-FODApi @PSBoundParameters
+            } elseif ($_.ErrorDetails.Message -ne $null) {
+                $StatusCode = $_.Exception.Response.StatusCode
+                $ErrorObj = $_.ErrorDetails.Message | ConvertFrom-Json
+                # if multitple errors, i.e. from input validation
+                if ($ErrorObj.errors) {
+                    #$ErrorObj.errors
+                    foreach ($error in $ErrorObj.errors) {
+                        # Do not parse for now, just write directly
+                        Write-Host "Error: $StatusCode"
+                        Write-Host $error
+                    }
+                } else {
+                    # Convert the error-message to an object. (Invoke-RestMethod will not return data by-default if a 4xx/5xx status code is generated.)
+                    $_.ErrorDetails | ConvertFrom-Json | Parse-FODError -Exception $_.Exception -ErrorAction Stop
                 }
-            }
-            else
-            {
-                Write-Host $_.ErrorDetails
-                # Convert the error-message to an object. (Invoke-RestMethod will not return data by-default if a 4xx/5xx status code is generated.)
-                $_.ErrorDetails.Message | ConvertFrom-Json | Parse-FODError -Exception $_.Exception -ErrorAction Stop
+            } else {
+                Write-Error -Exception $_.Exception -Message "FOD API call failed: $_"
             }
         }
-        else
-        {
-            Write-Error -Exception $_.Exception -Message "FOD API call failed: $_"
+    }
+    end
+    {
+        # Check to see if we have confirmation that our API call failed.
+        # (Responses with exception-generating status codes are handled in the "catch" block above - this one is for errors that don't generate exceptions)
+        if ($Response -ne $null -and $Response.ok -eq $False) {
+            $Response | Parse-FODError
+        } elseif ($Response) {
+            Write-Output $Response
+        } else {
+            Write-Verbose "Something went wrong. `$Response is `$null"
         }
-    }
-
-    # Check to see if we have confirmation that our API call failed.
-    # (Responses with exception-generating status codes are handled in the "catch" block above - this one is for errors that don't generate exceptions)
-    if ($Response -ne $null -and $Response.ok -eq $False)
-    {
-        $Response | Parse-FODError
-    }
-    elseif ($Response)
-    {
-        Write-Output $Response
-    }
-    else
-    {
-        Write-Verbose "Something went wrong. `$Response is `$null"
     }
 }

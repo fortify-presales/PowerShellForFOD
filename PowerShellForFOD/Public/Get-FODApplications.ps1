@@ -2,63 +2,43 @@ function Get-FODApplications {
     <#
     .SYNOPSIS
         Get information about FOD applications.
-
     .DESCRIPTION
         Get information about FOD applications.
-
     .PARAMETER Filters
         A delimited list of field filters.
-
     .PARAMETER OrderBy
         The field name to order the results by.
-
     .PARAMETER OrderByDirection
         The direction to order the results by. ASC and DESC are valid values.
-
     .PARAMETER Fields
         Comma separated list of fields to return.
-
     .PARAMETER Paging
         If specified, and more data is available after loading limit of applications,
         continue querying FOD until we have retrieved all the data available.
-
     .PARAMETER Limit
         Limit the number of applications returned to this number.
-
-        Maximum value is 50. Default is 50.
-
+        Maximum value is 50.
+        Default is 50.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
-
     .PARAMETER Token
         FOD token to use.
-
         If empty, the value from PS4FOD will be used.
-
     .PARAMETER Proxy
         Proxy server to use.
-
         Default value is the value set by Set-FODConfig
-
     .EXAMPLE
-
-        Get-FODApplications -Paging
-
         # Get all of the applications in the system through Paging
-
+        Get-FODApplications -Paging
      .EXAMPLE
-
-        Get-FODApplications -Filters "applicationName:myApp1|myApp2"
-
-        # Get the applications "myapp1" or "myApp2"
-
+        # Get any applications with "test" or "demo" in their name
+        Get-FODApplications -Paging -Filters "applicationName:test|demo"
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplications
-
     .FUNCTIONALITY
         Fortify on Demand
     #>
-    [cmdletbinding()]
+    [CmdletBinding()]
     param (
         [string]$Filters,
         [string]$OrderBy,
@@ -74,7 +54,7 @@ function Get-FODApplications {
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
-        [string]$Uri = $Script:PS4FOD.ApiUri,
+        [string]$ApiUri = $Script:PS4FOD.ApiUri,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -85,75 +65,66 @@ function Get-FODApplications {
     begin
     {
         $Params = @{}
-        if ($Proxy)
-        {
-            $Params.Proxy = $Proxy
+        if ($Proxy) {
+            $Params['Proxy'] = $Proxy
+        }
+        if ($ForceVerbose) {
+            $Params.Add('ForceVerbose', $True)
+            $VerbosePreference = "Continue"
         }
         Write-Verbose "Get-FODApplications Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $body = @{
+        $Body = @{
             offset = 0
             limit = $Limit
         }
-        if ($Filters)
-        {
-            $body.Add("filters", $Filters)
+        if ($Filters) {
+            $Body.Add("filters", $Filters)
         }
-        if ($OrderBy)
-        {
-            $body.Add("orderBy", $OrderBy)
+        if ($OrderBy) {
+            $Body.Add("orderBy", $OrderBy)
         }
-        if ($OrderByDirection)
-        {
+        if ($OrderByDirection) {
             if ($OrderByDirection -eq "ASC" -or $OrderByDirection -eq "DESC") {
-                $body.Add("orderByDirection", $OrderByDirection)
+                $Body.Add("orderByDirection", $OrderByDirection)
             } else {
                 Write-Error "OrderBy can only be ASC or DESC."
-                Exit
+                throw
             }
         }
-        if ($Fields)
-        {
-            $body.Add("fields", $Fields)
+        if ($Fields) {
+            $Body.Add("fields", $Fields)
         }
-        if ($Limit -gt 50)
-        {
+        if ($Limit -gt 50) {
             Write-Error "Maximum value for Limit is 50."
-            Exit
+            throw
         }
         $RawApplications = @()
-        $has_more = $false
-        $totalCount = 0
-        $loadedCount = 0
-        $loadLimit = $Limit
+        $HasMore = $false
+        $TotalCount = 0
+        $LoadedCount = 0
+        $LoadLimit = $Limit
     }
     process
     {
-        do
-        {
-            $params = @{
-                Body = $body
-            }
-            Write-Verbose "Send-FODApi"
-            $response = Send-FODApi -Operation "/api/v3/applications" @params
-            $totalCount = $response.totalCount
-            if ($loadedCount -lt ($totalCount - $loadLimit))
-            {
-                $has_more = $true
-                $loadedCount += $loadLimit
+        do {
+            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications'" #$Params
+            $Response = Send-FODApi -Method Get -Operation "/api/v3/applications" -Body $Body @Params
+            $TotalCount = $Response.totalCount
+            if ($LoadedCount -lt ($TotalCount - $LoadLimit)) {
+                $HasMore = $true
+                $LoadedCount += $LoadLimit
                 $Body.Remove("offset")
-                $Body.Add("offset", $loadedCount)
+                $Body.Add("offset", $LoadedCount)
+            } else {
+                $HasMore = $false
             }
-            else
-            {
-                $has_more = $false
-            }
-            $RawApplications += $response.items
+            $RawApplications += $Response.items
         } until (
-            -not$Paging -or
-                -not$has_more
+            -not $Paging -or
+                -not $HasMore
         )
+        Write-Verbose "Loaded $LoadedCount applications"
     }
-
     end {
         if ($Raw) {
             $RawApplications

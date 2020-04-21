@@ -1,5 +1,5 @@
 # Parse application
-Function Parse-FODAttribute
+function Parse-FODAttribute
 {
     [cmdletbinding()]
     param($InputObject)
@@ -7,7 +7,7 @@ Function Parse-FODAttribute
     foreach ($Attribute in $InputObject)
     {
         [PSCustomObject]@{
-            PSTypeName = 'FOD.Attribute'
+            PSTypeName = 'FOD.AttributeObject'
             id = $Attribute.id
             name = $Attribute.name
             value = $Attribute.value

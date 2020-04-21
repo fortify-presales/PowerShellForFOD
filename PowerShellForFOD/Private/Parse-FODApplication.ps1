@@ -1,5 +1,5 @@
 # Parse application
-Function Parse-FODApplication
+function Parse-FODApplication
 {
     [cmdletbinding()]
     param($InputObject)

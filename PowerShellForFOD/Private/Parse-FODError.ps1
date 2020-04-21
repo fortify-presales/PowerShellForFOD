@@ -2,18 +2,18 @@ function Parse-FODError
 {
     [CmdletBinding()]
     param (
-    # The response object from FOD's API.
+        # The response object from FOD's API.
         [Parameter(
-                Mandatory = $true,
-                ValueFromPipeline = $true
+            Mandatory = $true,
+            ValueFromPipeline = $true
         )]
         [Object]$ResponseObject,
 
-    # The exception from Invoke-RestMethod, if available.
+        # The exception from Invoke-RestMethod, if available.
         [Exception]$Exception
     )
 
-    Begin {
+    begin {
         $FODErrorData = @{
         # Messages are adapted from FOD API documentation
 
@@ -33,27 +33,34 @@ function Parse-FODError
                 Message = "FOD API rate-limit exceeded."
                 RecommendedAction = "Try again in a few moments."
             }
+
+            # TODO: other messages by error code
+
+            "1000" = @{
+                Message = "Authorization failure - has authentication token been created?"
+                RecommendedAction = "Please try re-creating a token using Get-FODToken"
+            }
         }
     }
 
     process {
-        If ($ResponseObject.ok)
-        {
+        $ErrorParams = $null
+        if ($ResponseObject.ok) {
             # We weren't actually given an error in this case
             Write-Debug "Parse-FODError: Received non-error response, skipping."
             return
         }
-
-        $ErrorParams = $FODErrorData[$ResponseObject.error]
-
-        If ($ErrorParams -eq $null)
-        {
+        if ($ResponseObject.error) {
+            $ErrorParams = $FODErrorData[$ResponseObject.error]
+        } elseif ($ResponseObject.errorCode) {
+            $ErrorParams = $FODErrorData[$ResponseObject.errorCode]
+        }
+        if ($ErrorParams -eq $null) {
             $ErrorParams = @{
-                Message = "Unknown error $( $ResponseObject.error ) received from FOD API."
+                Message = "Unknown error received from FOD API."
             }
         }
-        If ($Exception)
-        {
+        if ($Exception) {
             $ErrorParams.Exception = $Exception
         }
 

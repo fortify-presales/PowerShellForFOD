@@ -1,6 +1,76 @@
 function New-FODApplicationObject
 {
+    <#
+    .SYNOPSIS
+        Construct a new FOD Application Object.
+    .DESCRIPTION
+        Construct a new FOD Application Object.
+        Note that this does not physically add the application in FOD.
+        It constructs an application object to add with the Add-FODApplication function.
+    .PARAMETER Id
+        The Id of the application.
+        Note: you do not need to set this parameter to add a new application, it is used to store the id
+        of a previously created application when this is object is used for Get-FODApplication/Get-FODApplications.
+    .PARAMETER Name
+        The Name of the application.
+    .PARAMETER Description
+        The Description of the application.
+        Optional.
+    .PARAMETER Type
+        The Type of the application.
+        Allowed values are 'Web_Thick_Client' or 'Mobile'.
+    .PARAMETER BusinessCriticality
+        The Business Criticality of the application.
+        Valid values are 'High', 'Medium' or 'Low'.
+    .PARAMETER ReleaseName
+        The name of the initial Release to create for the application.
+    .PARAMETER ReleaseDescription
+        The Description of the release.
+        Optional.
+    .PARAMETER SDLCStatus
+        The SDLC status of the release.
+        Valid values are 'Development', 'QA', 'Production' or 'Retired'.
+    .PARAMETER EmailList
+        Comma separated list of email addresses to send notifications to.
+        Optional.
+    .PARAMETER HasMicroservices
+        Whether the application contains Microservices.
+        Default is false.
+    .PARAMETER MicroServices
+        Collection of PS4FOD.MicroserviceObject's containing the release names of all
+        Microservices associated to the application.
+        Optional.
+    .PARAMETER ReleaseMicroserviceName
+        The name of the Microservice to be associated with the release.
+        Optional.
+    .PARAMETER OwnerId
+        The id of the owner of the application. The "Owner" receives all email notifications
+        related to this application.
+    .PARAMETER Attributes
+        Collection of PS4FOD.AttributeObject's containing key/value pairs.
+        Optional but some attributes may have been made mandatory for your tenant.
+    .PARAMETER UserGroups
+        Collection of PS4FOD.UserGroupObject's containing user id's that should have access
+        to this application.
+        Optional.
+    .EXAMPLE
+        # This is a simple example illustrating some common options, including setting
+        # some attributes.
 
+        # Create AttributeObject(s)
+        $attributes = @(
+            New-FODAttributeObject -Id 22 -Value "2751"         # Region attribute id
+            New-FODAttributeObject -Id 50 -Value "some value"   # Some other attribute id
+        )
+
+        # Create the ApplicationObject
+        $appObject = New-FODApplicationObject -Name "apitest1" -Description "its description" `
+            -Type "Web_Thick_Client" -BusinessCriticality "Low" `
+            -ReleaseName 1.0 -ReleaseDescription "its description" -SDLCStatus "Development" `
+            -HasMicroservices $false -OwnerId 9444 -Attributes $attributes
+    .FUNCTIONALITY
+        Fortify on Demand
+    #>
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[String])]
     Param
@@ -27,7 +97,7 @@ function New-FODApplicationObject
         [string]$EmailList,
 
         [validateset($True, $False)]
-        [bool]$HasMicroservices,
+        [bool]$HasMicroservices = $False,
 
         [Parameter(Mandatory = $false,
                 ValueFromPipeline = $true)]
@@ -43,43 +113,38 @@ function New-FODApplicationObject
                 ValueFromPipeline = $true)]
         [PSTypeName('PS4FOD.AttributeObject')]
         [System.Collections.Hashtable[]]
-        $Attributes
+        $Attributes,
 
-    #        [Parameter(Mandatory=$false,
-    #            ValueFromPipeline = $true)]
-    #        [PSTypeName('PS4FOD.UserGroup')]
-    #        [System.Collections.Hashtable[]]
-    #        $UserGroups
+        [Parameter(Mandatory=$false,
+                ValueFromPipeline = $true)]
+        [PSTypeName('PS4FOD.UserGroupObject')]
+        [System.Collections.Hashtable[]]
+        $UserGroups
 
     )
-    Begin
+    begin
     {
         $AllMicroservices = @()
-        #        $AllUserGroups = @()
+        $AllUserGroups = @()
         $AllAttributes = @()
-
     }
-    Process
+    process
     {
-        foreach ($MicroService in $Microservices)
-        {
+        foreach ($MicroService in $Microservices) {
             $AllMicroservices += $MicroService
         }
-        #        foreach ($UserGroup in $UserGroups)
-        #        {
-        #            $AllUserGroups += $UserGroup
-        #        }
-        foreach ($Attribute in $Attributes)
-        {
+        foreach ($UserGroup in $UserGroups) {
+            $AllUserGroups += $UserGroup
+        }
+        foreach ($Attribute in $Attributes) {
             $AllAttributes += $Attribute
         }
     }
-    End
+    end
     {
         $body = @{ }
 
-        switch ($psboundparameters.keys)
-        {
+        switch ($psboundparameters.keys) {
             'id'                        { $body.applicationId = $Id }
             'name'                      { $body.applicationName = $Name }
             'description'               { $body.applicationDescription = $Description }
@@ -98,7 +163,7 @@ function New-FODApplicationObject
 
             'ownerId'                   { $body.ownerId = $OwnerId }
 
-            #            'userGroupIds'              { $body.userGroupIds            = @($AllUserGroups)}
+            'userGroupIds'              { $body.userGroupIds = @($AllUserGroups)}
 
             'attributes'                { $body.attributes = @($AllAttributes) }
         }

@@ -1,67 +1,42 @@
-function New-FODApplication {
+function Add-FODApplication {
     <#
     .SYNOPSIS
-        Creates a new FOD application.
-
+        Adds a new FOD application.
     .DESCRIPTION
-        Creates a new FOD application.
-
-    .PARAMETER Name
-        Application Name.
-
-    .PARAMETER Description
-        Application Description.
-
-    .PARAMETER Type
-        Application Type.
-
-    .PARAMETER ReleaseName
-        Release Name.
-
-    .PARAMETER ReleaseDescription
-        Release Description.
-
-    .PARAMETER EmailList
-        Email List
-
+        Adds a new FOD application using the FOD REST API and a previously created
+        PS4FOD.ApplicationObject.
+    .PARAMETER Application
+        A PS4FOD.ApplicationObject containing the application's values.
     .PARAMETER Raw
-        If specified, provide raw output and do not parse any responses.
-
+        Print Raw output - do not convert into ApplicationObject.
+        Default is false.
     .PARAMETER Token
-        FOD token to use.
-
+        FOD authentication token to use.
         If empty, the value from PS4FOD will be used.
-
     .PARAMETER Proxy
         Proxy server to use.
-
         Default value is the value set by Set-FODConfig
-
+    .PARAMETER ForceVerbose
+        Force verbose output.
+        Default value is the value set by Set-FODConfig
     .EXAMPLE
-
-        Get-FODApplications -Paging
-
-        # Get all of the applications in the system through Paging
-
-     .EXAMPLE
-
-        Get-FODApplications -Filters "applicationName:myApp1|myApp2"
-
-        # Get the applications "myapp1" or "myApp2"
-
-    .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplications
-
+        # Add a new application
+        $appResponse = New-FODApplication -Application $appObject
+        if ($appResponse) {
+            Write-Host "Created application with id:" $appResponse.applicationId
+        }
     .FUNCTIONALITY
         Fortify on Demand
     #>
-    [cmdletbinding()]
+    [CmdletBinding()]
     param (
         [PSTypeName('PS4FOD.ApplicationObject')]
         [parameter(ParameterSetName = 'FODApplicationObject',
                 ValueFromPipeline = $True)]
         [ValidateNotNullOrEmpty()]
         $Application,
+
+        [switch]$Raw = $False,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -80,20 +55,19 @@ function New-FODApplication {
     begin
     {
         $Params = @{}
-        if ($Proxy)
-        {
+        if ($Proxy) {
             $Params.Proxy = $Proxy
         }
-        Write-Verbose "Send-FODApplication Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Add-FODApplication Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawApplication = @()
     }
     process
     {
-        $params = @{
+        $Params = @{
             Body = $Application
         }
         Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/applications'"
-        $RawApplication = Send-FODApi -Method Post -Operation "/api/v3/applications" @params
+        $RawApplication = Send-FODApi -Method Post -Operation "/api/v3/applications" @Params
     }
     end {
         if ($Raw) {
