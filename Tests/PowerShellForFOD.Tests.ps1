@@ -23,8 +23,12 @@ Describe "$TemplatePowerShellModule PowerShell Module Tests" {
     }
 }
 
-$pubFunctions = ('New-FunctionName1', 'Get-FunctionName2')
-$privFunctions = ('Import-FunctionName3','Import-FunctionName4')
+$pubFunctions = ('Add-FODApplication', 'Get-FODApplication', 'Get-FODApplications', 'Get-FODConfig', 'Get-FODToken',
+'New-FODApplicationObject','New-FODAttributeObject','New-FODMicroserviceObject'.'New-FODReleaseObject',
+'New-FODUserGroupObject','New-FODUserObject','Remove-FODApplication','Send-FODApi','Set-FODConfig',
+'Update-FODApplication')
+$privFunctions = ('AddObjectDetail','Get-FODConfigPath','Parse-FODApplication','Parse-FODAttribute','Parse-FODError',
+'Parse-FODResponse','Remove-SensitiveData','Test-IsWindows')
 
 $folders = ( 'Public','Private')
 
