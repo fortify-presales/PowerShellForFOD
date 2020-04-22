@@ -129,6 +129,8 @@ function Add-ObjectDetail
 
     Begin
     {
+        Write-Verbose "Add-ObjectDetail Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+
         if ( $PSBoundParameters.ContainsKey('DefaultProperties'))
         {
             # define a subset of properties

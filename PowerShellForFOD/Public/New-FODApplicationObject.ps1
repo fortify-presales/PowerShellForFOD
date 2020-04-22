@@ -127,6 +127,7 @@ function New-FODApplicationObject
         $AllMicroservices = @()
         $AllUserGroups = @()
         $AllAttributes = @()
+        Write-Verbose "New-FODApplicationObject Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }
     process
     {

@@ -12,6 +12,9 @@ Function Get-FODConfig {
     .PARAMETER Path
         If specified, read config from this XML file.
         Defaults to PS4FOD.xml in the user temp folder on Windows, or .ps4fod in the user's home directory on Linux/macOS.
+    .EXAMPLE
+        # Retrieve the current configuration
+        Get-FODConfig
     .FUNCTIONALITY
         Fortify on Demand.
     #>
@@ -25,8 +28,9 @@ Function Get-FODConfig {
         [parameter(ParameterSetName='source')]
         $Path = $script:_PS4FODXmlpath
     )
+    Write-Verbose "Get-FODConfig Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
 
-    if($PSCmdlet.ParameterSetName -eq 'source' -and $Source -eq "PS4FOD" -and -not $PSBoundParameters.ContainsKey('Path')) {
+    if ($PSCmdlet.ParameterSetName -eq 'source' -and $Source -eq "PS4FOD" -and -not $PSBoundParameters.ContainsKey('Path')) {
         $Script:PS4FOD
     } else {
         function Decrypt {
@@ -37,6 +41,7 @@ Function Get-FODConfig {
                                 $string))
             }
         }
+        Write-Verbose "Retrieving FOD Configuration from $Path"
         Import-Clixml -Path $Path |
                 Select-Object -Property Proxy,
                 @{l='ApiUri';e={Decrypt $_.ApiUri}},

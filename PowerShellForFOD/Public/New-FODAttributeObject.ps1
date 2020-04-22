@@ -24,21 +24,21 @@ function New-FODAttributeObject
     #>
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable],[String])]
-    Param
+    param
     (
         [int]$Id,
         [string]$Name,
         [string]$Value
     )
-    Begin
+    begin
+    {
+        Write-Verbose "New-FODAttributeObject Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+    }
+    process
     {
 
     }
-    Process
-    {
-
-    }
-    End
+    end
     {
         $body = @{ }
 

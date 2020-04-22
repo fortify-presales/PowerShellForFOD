@@ -24,6 +24,9 @@ function Set-FODConfig
     .PARAMETER Path
         If specified, save config file to this file path.
         Defaults to PS4FOD.xml in the user temp folder on Windows, or .ps4fod in the user's home directory on Linux/macOS.
+    .EXAMPLE
+        # Set the FOD Api Url and Force Verbose mode to $true
+        Set-FODConfig -ApiUrl https://api.emea.fortify.com -ForceVerbose
     .FUNCTIONALITY
         Fortify on Demand.
     #>
@@ -36,7 +39,7 @@ function Set-FODConfig
         [string]$Path = $script:_PS4FODXmlpath
     )
 
-    Switch ($PSBoundParameters.Keys)
+    switch ($PSBoundParameters.Keys)
     {
         'ApiUri'       { $Script:PS4FOD.ApiUri = $ApiUri }
         'Token'        { $Script:PS4FOD.Token = $Token }
@@ -44,13 +47,15 @@ function Set-FODConfig
         'ForceVerbose' { $Script:PS4FOD.ForceVerbose = $ForceVerbose }
     }
 
-    Function Encrypt
+    function encrypt
     {
         param([string]$string)
         if ($String -notlike '' -and (Test-IsWindows)) {
             ConvertTo-SecureString -String $string -AsPlainText -Force
         }
     }
+
+    Write-Verbose "Set-FODConfig Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
 
     # Write the global variable and the xml
     $Script:PS4FOD |

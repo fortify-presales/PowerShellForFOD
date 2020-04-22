@@ -28,6 +28,9 @@ function Get-FODToken
         If specified, don't explicitly remove verbose output from Invoke-RestMethod
         *** WARNING ***
         This will expose your data in verbose output
+    .EXAMPLE
+        # Retrieve an authentication token using Client Credentials from https://api.emea.fortify.com
+        Get-FODToken -GrantType ClientCredentials -ApiUrl https://api.emea.fortify.com
     .FUNCTIONALITY
         Fortify on Demand.
     #>
@@ -74,6 +77,7 @@ function Get-FODToken
     if ($ForceVerbose) {
         $Params.Add('Verbose', $true)
     }
+    Write-Verbose "Get-FODToken Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     $Body = @{
         scope = $Scope
     }
