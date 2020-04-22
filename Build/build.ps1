@@ -59,7 +59,7 @@ else {
     Try {
         # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
         $PM = @{
-            Path         = "..\$PowerShellForFOD"
+            Path         = ".\$PowerShellForFOD"
             NuGetApiKey  = $env:NuGetApiKey
             ErrorAction  = 'Stop'
             Tags         = @('Micro Focus', 'Fortify', 'FOD', 'Fortify On Demand', 'Security', 'Application Security')
