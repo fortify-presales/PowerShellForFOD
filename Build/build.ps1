@@ -1,3 +1,5 @@
+param([switch]$Local = $false)
+
 $Org = "fortify-community-plugins"
 $Author = 'Kevin Lee'
 $PowerShellForFOD = 'PowerShellForFOD'
@@ -7,7 +9,7 @@ Write-Host -Object ''
 
 # Make sure we're using the Master branch and that it's not a pull request
 # Environmental Variables Guide: https://www.appveyor.com/docs/environment-variables/
-if ($env:APPVEYOR_REPO_BRANCH -ne 'master') {
+if ($env:APPVEYOR_REPO_BRANCH -ne 'master' -and $Local -eq $false) {
     Write-Warning -Message "Skipping version increment and publish for branch $env:APPVEYOR_REPO_BRANCH"
 }
 elseif ($env:APPVEYOR_PULL_REQUEST_NUMBER -gt 0) {
@@ -57,16 +59,16 @@ else {
     Try {
         # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
         $PM = @{
-            Path         = ".\$PowerShellForFOD"
+            Path         = "..\$PowerShellForFOD"
             NuGetApiKey  = $env:NuGetApiKey
             ErrorAction  = 'Stop'
-            Tags         = @('', '')
+            Tags         = @('Micro Focus', 'Fortify', 'FOD', 'Fortify On Demand', 'Security', 'Application Security')
             LicenseUri   = "https://github.com/$Org/$PowerShellForFOD/blob/master/LICENSE"
             ProjectUri   = "https://github.com/$Org/$PowerShellForFOD"
             ReleaseNotes = 'Initial release to the PowerShell Gallery'
         }
 
-        #Publish-Module @PM
+        Publish-Module @PM
         Write-Host "$PowerShellForFOD PowerShell Module version $newVersion published to the PowerShell Gallery." -ForegroundColor Cyan
     }
     Catch {

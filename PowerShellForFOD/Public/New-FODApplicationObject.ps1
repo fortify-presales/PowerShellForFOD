@@ -54,11 +54,9 @@ function New-FODApplicationObject
         to this application.
         Optional.
     .EXAMPLE
-        # This is a simple example illustrating some common options, including setting
-        # some attributes.
-        $appObject = New-FODApplicationObject -Name "apitest1" -Description "its description" `
-            -Type "Web_Thick_Client" -BusinessCriticality "Low" `
-            -ReleaseName 1.0 -ReleaseDescription "its description" -SDLCStatus "Development" `
+        New-FODApplicationObject -Name "apitest1" -Description "its description"
+            -Type "Web_Thick_Client" -BusinessCriticality "Low"
+            -ReleaseName 1.0 -ReleaseDescription "its description" -SDLCStatus "Development"
             -HasMicroservices $false -OwnerId 9444 -Attributes $attributes
     .FUNCTIONALITY
         Fortify on Demand
