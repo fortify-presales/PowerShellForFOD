@@ -24,13 +24,13 @@ pull_requests:
 #Publish to PowerShell Gallery with this key
 environment:
   NuGetApiKey:
-    secure: {NUGETAPIKEY}
+    secure: 2jqQSsKPFWAQERm/MtzT63N5+DWWHZT/cMmMx/DPI7x2z3zL9C4gkoBjXbVSaQIo
   GitHubKey:
-    secure: {GITHUB_PERSONAL_ACCESS_TOKEN}
+    secure: o2s3TzgLmBcQQNiO/U+Pz4orxi3UsoCGFXn7A86iu1/2ovOOY2exBpVlWGPuVA74
 
 # Install NuGet to interact with the PowerShell Gallery
 install:
-  - ps: . .\install.ps1
+  - ps: . .\Build\install.ps1
 
 # Invoke Pester to run all of the unit tests, then save the results into XML in order to populate the AppVeyor tests section
 # If any of the tests fail, consider the pipeline failed
@@ -45,4 +45,4 @@ test_script:
   - git config --global core.autocrlf true
   - git config --global core.safecrlf false
   - ps: write-host "calling build.ps1"
-  - ps: . .\build.ps1
+  - ps: . .\Build\build.ps1

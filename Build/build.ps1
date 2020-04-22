@@ -50,7 +50,7 @@ else {
     Import-Module -Name "$PSScriptRoot\$PowerShellForFOD" -Force
     New-MarkdownHelp -Module $PowerShellForFOD -OutputFolder '.\docs\' -Force
     New-ExternalHelp -Path '.\docs\' -OutputPath ".\$PowerShellForFOD\en-US\" -Force
-    . .\docs.ps1
+    . .\Build\docs.ps1
     Write-Host -Object ''
 
     # Publish the new version to the PowerShell Gallery
@@ -66,7 +66,7 @@ else {
             ReleaseNotes = 'Initial release to the PowerShell Gallery'
         }
 
-        Publish-Module @PM
+        #Publish-Module @PM
         Write-Host "$PowerShellForFOD PowerShell Module version $newVersion published to the PowerShell Gallery." -ForegroundColor Cyan
     }
     Catch {
@@ -74,7 +74,7 @@ else {
         Write-Warning "Publishing update $newVersion to the PowerShell Gallery failed."
         throw $_
     }
-
+Exit
     # Publish the new version back to Master on GitHub
     Try {
         # Set up a path to the git.exe cmd, import posh-git to give us control over git, and then push changes to GitHub
