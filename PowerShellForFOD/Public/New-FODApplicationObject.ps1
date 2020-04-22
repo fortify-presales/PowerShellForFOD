@@ -56,14 +56,6 @@ function New-FODApplicationObject
     .EXAMPLE
         # This is a simple example illustrating some common options, including setting
         # some attributes.
-
-        # Create AttributeObject(s)
-        $attributes = @(
-            New-FODAttributeObject -Id 22 -Value "2751"         # Region attribute id
-            New-FODAttributeObject -Id 50 -Value "some value"   # Some other attribute id
-        )
-
-        # Create the ApplicationObject
         $appObject = New-FODApplicationObject -Name "apitest1" -Description "its description" `
             -Type "Web_Thick_Client" -BusinessCriticality "Low" `
             -ReleaseName 1.0 -ReleaseDescription "its description" -SDLCStatus "Development" `
