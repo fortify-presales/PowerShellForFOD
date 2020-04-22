@@ -62,7 +62,7 @@ else {
             Path         = ".\$PowerShellForFOD"
             NuGetApiKey  = $env:NuGetApiKey
             ErrorAction  = 'Stop'
-            Tags         = @('Micro Focus', 'Fortify', 'FOD', 'Fortify On Demand', 'Security', 'Application Security')
+            Tags         = @('MicroFocus', 'Fortify', 'FOD', 'FortifyOnDemand', 'Security', 'DevOps', 'DevSecOps')
             LicenseUri   = "https://github.com/$Org/$PowerShellForFOD/blob/master/LICENSE"
             ProjectUri   = "https://github.com/$Org/$PowerShellForFOD"
             ReleaseNotes = 'Initial release to the PowerShell Gallery'

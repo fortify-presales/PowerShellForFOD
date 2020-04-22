@@ -100,7 +100,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'Micro Focus','Fortify','Fortify On Demand','FOD','Security','Application Security','REST','API'
+        Tags = 'MicroFocus', 'Fortify', 'FOD', 'FortifyOnDemand', 'Security', 'DevOps', 'DevSecOps'
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/fortify-community-plugins/PowerShellForFOD/blob/master/LICENSE'
