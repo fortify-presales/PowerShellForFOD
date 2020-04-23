@@ -1,0 +1,280 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Introduction · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter active" data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Introduction</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="power-shell-for-fortify-on-demand-fod-module">Power Shell For Fortify On Demand (FOD) Module</h1>
+<h4 id="table-of-contents">Table of Contents</h4>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#current-api-support">Current API Support</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#logging">Logging</a></li>
+<li><a href="#developing-and-contributing">Developing and Contributing</a></li>
+<li><a href="#licensing">Licensing</a></li>
+</ul>
+<h2 id="overview">Overview</h2>
+<p>This is a <a href="https://microsoft.com/powershell" target="_blank">PowerShell</a> <a href="https://technet.microsoft.com/en-us/library/dd901839.aspx" target="_blank">module</a>
+that provides command-line interaction and automation for the <a href="https://api.ams.fortify.com/swagger/ui/index" target="_blank">Fortify On Demand API</a>.</p>
+<hr>
+<h2 id="current-api-support">Current API Support</h2>
+<p>At present, this module can:</p>
+<ul>
+<li>Authenticate against the FOD API to retrieve and store authentication token</li>
+<li>Execute a generic FOD API REST command with authentication and rate limiting support</li>
+<li>Query, add, update and remove Users</li>
+<li>Query, add, update and remove Applications</li>
+<li>Query, add, update and remove Users</li>
+</ul>
+<p>Development is ongoing, with the goal to add broad support for the entire API set.</p>
+<p>Review <a href="Examples/USAGE.md">example usage</a> to see how the module can be used to accomplish some example tasks.</p>
+<hr>
+<h2 id="installation">Installation</h2>
+<p>You can get latest release of the PowerShellForFOD on the <a href="https://www.powershellgallery.com/packages/PowerShellForFOD" target="_blank">PowerShell Gallery</a></p>
+<pre><code class="lang-PowerShell">Install-Module -Name PowerShellForFOD
+</code></pre>
+<hr>
+<h2 id="configuration">Configuration</h2>
+<p>To access the Fortify On Demand API you need to create an &quot;authentication&quot; token. This module allows the creation and 
+persistence of this token so that it does not need to be passed with each command. To create the token, run the 
+following commands to set your API endpoint and request a token:</p>
+<pre><code class="lang-PowerShell">Set-FODConfig -ApiUri https://api.ams.fortify.com
+Get-FODToken
+</code></pre>
+<p>Note: the value for <code>ApiUri</code> will depend on which region you are using Fortify on Demand in.</p>
+<p>After running <code>Get-FODToken</code> you will be prompted for a username and password. Both &quot;client credentials&quot; and 
+&quot;username/password&quot; authentication is supported. For example, to login with your Fortify On Demand username/password 
+enter your <code>tenant\username</code> values in the &quot;username&quot; field and your <code>password</code> value in the &quot;password&quot; field. For 
+&quot;client credentials&quot; you should enter an API Key and API Secret that has been created in the Fortify On Demand portal 
+at <code>Administration -&gt; Settings -&gt; API</code>.</p>
+<p>Note: the token is not permanent; Fortify on Demand will &quot;timeout&quot; the token after a period of inactivity,
+after which you will need to re-create it with <code>Get-FODToken</code>. The configuration is encrypted and stored on disk for 
+use in subsequent commands.</p>
+<p>There are more configuration options available.  Please review the help for that command for the most up-to-date list!</p>
+<h2 id="usage">Usage</h2>
+<p>Example command:</p>
+<pre><code class="lang-powershell"><span class="hljs-variable">$applications</span> = Get-FODApplications -Filters <span class="hljs-string">&quot;applicationName:test&quot;</span> -Paging | Out-GridView
+</code></pre>
+<p>For more example commands, please refer to <a href="USAGE.md">USAGE</a>.</p>
+<hr>
+<h2 id="developing-and-contributing">Developing and Contributing</h2>
+<p>Please see the <a href="CONTRIBUTING.md">Contribution Guide</a> for information on how to develop and contribute.</p>
+<p>If you have any problems, please consult <a href="https://github.com/fortify-community-plugins/PowerShellForFOD/issues" target="_blank">GitHub Issues</a>
+to see if has already been discussed.</p>
+<hr>
+<h2 id="licensing">Licensing</h2>
+<p>PowerShellForGitHub is licensed under the <a href="LICENSE">GNU General Public license</a>.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2020-04-23T11:03:15.966Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-04-23T11:08:13.250Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
