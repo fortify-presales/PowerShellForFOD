@@ -19,8 +19,8 @@ $attributes = @(
 # Create the ApplicationObject
 $appObject = New-FODApplicationObject -Name "apitest1" -Description "its description" `
     -Type "Web_Thick_Client" -BusinessCriticality "Low" `
-    -ReleaseName 1.0 -ReleaseDescription "its description" -SDLCStatus "Development" `
-    -HasMicroservices $false -OwnerId 9444 -Attributes $attributes
+    -ReleaseName "1.0" -ReleaseDescription "its description" -SDLCStatus "Development" `
+    -OwnerId 9444 -Attributes $attributes
 
 # Add the new Application
 Write-Host "Creating new application..."
@@ -31,12 +31,14 @@ if ($appResponse) {
 }
 $applicationId = $appResponse.applicationId
 
+Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
 
 # Get the new Application
 Write-Host "Getting application with id: $applicationId"
 Get-FODApplication -Id $applicationId
 
+Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
 
 # Create update AttributeObjects first - mandatory attributes will still need to be sent
@@ -53,6 +55,7 @@ $appUpdateObject = New-FODApplicationObject -Name "apitest1-new" -Description "i
 Write-Host "Updating application with id: $applicationId"
 Update-FODApplication -Id $applicationId -Application $appUpdateObject
 
+Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
 
 # Delete the Application

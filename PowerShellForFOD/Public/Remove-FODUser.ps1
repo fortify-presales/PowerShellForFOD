@@ -1,19 +1,11 @@
-function Update-FODApplication {
+function Remove-FODUser {
     <#
     .SYNOPSIS
-        Updates a specific FOD application.
+        Deletes a specific FOD user.
     .DESCRIPTION
-        Updates a specific FOD application.
+        Deletes a specific FOD user.
     .PARAMETER Id
-        The id of the application.
-    .PARAMETER Application
-        A PS4FOD.ApplicationObject containing the application's values.
-        Note: only the following fields can/will be updated:
-            - applicationName
-            - applicationDescription
-            - emailList
-            - attributes
-            - businessCriticalityType
+        The id of the user.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -23,10 +15,10 @@ function Update-FODApplication {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Update the application with id 1000
-        Update-FODApplication -Id 1000 -Application $applicationObj
+        # Remove the user with id 1000
+        Remove-FODUser -Id 1000
     .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_PutApplication
+        https://api.ams.fortify.com/swagger/ui/index#!/Users/UsersV3_Delete
     .FUNCTIONALITY
         Fortify on Demand
     #>
@@ -34,12 +26,6 @@ function Update-FODApplication {
     param (
         [Parameter(Mandatory)]
         [int]$Id,
-
-        [PSTypeName('PS4FOD.ApplicationObject')]
-        [parameter(ParameterSetName = 'FODApplicationObject',
-            ValueFromPipeline = $True)]
-        [ValidateNotNullOrEmpty()]
-        $Application,
 
         [switch]$Raw,
 
@@ -67,16 +53,13 @@ function Update-FODApplication {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Update-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Delete-FODUser Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawResponse = $null
     }
     process
     {
-        $Params = @{
-            Body = $Application
-        }
-        Write-Verbose "Send-FODApi: -Method Put -Operation '/api/v3/applications/$Id'"
-        $RawResponse = Send-FODApi -Method Put -Operation "/api/v3/applications/$Id" @Params
+            Write-Verbose "Send-FODApi -Method Delete -Operation '/api/v3/users/$Id'" #$Params
+            $RawResponse = Send-FODApi -Method Delete -Operation "/api/v3/users/$Id" @Params
     }
     end {
         if ($Raw) {

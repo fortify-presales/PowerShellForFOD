@@ -12,6 +12,6 @@ gitbook build
 Pop-Location
 
 # Copy the new book items into the docs folder
-Remove-Item -Path '.\docs\' -Include *.html -Recurse -Force
-Copy-Item -Path "$StageFolder\_book\*" -Destination '..\docs\' -Recurse -Force
+Remove-Item -Path '.\Docs\' -Include *.html -Recurse -Force
+Copy-Item -Path "$StageFolder\_book\*" -Destination '.\Docs\' -Recurse -Force
 Remove-Item -Path $StageFolder -Recurse -Force

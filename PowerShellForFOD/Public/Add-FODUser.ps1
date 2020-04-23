@@ -1,14 +1,14 @@
-function Add-FODApplication {
+function Add-FODUser {
     <#
     .SYNOPSIS
-        Adds a new FOD application.
+        Adds a new FOD user.
     .DESCRIPTION
-        Adds a new FOD application using the FOD REST API and a previously created
-        PS4FOD.ApplicationObject.
-    .PARAMETER Application
-        A PS4FOD.ApplicationObject containing the application's values.
+        Adds a new FOD user using the FOD REST API and a previously created
+        PS4FOD.UserObject.
+    .PARAMETER User
+        A PS4FOD.UserObject containing the user's values.
     .PARAMETER Raw
-        Print Raw output - do not convert into ApplicationObject.
+        Print Raw output - do not convert into UserObject.
         Default is false.
     .PARAMETER Token
         FOD authentication token to use.
@@ -20,21 +20,21 @@ function Add-FODApplication {
         Force verbose output.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Add a new application
-        $appResponse = Add-FODApplication -Application $appObject
-        if ($appResponse) {
-            Write-Host "Created application with id:" $appResponse.applicationId
+        # Add a new user
+        $userResponse = Add-FODUser -User $userObject
+        if ($userResponse) {
+            Write-Host "Created user with id:" $userResponse.userId
         }
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
-        [PSTypeName('PS4FOD.ApplicationObject')]
-        [parameter(ParameterSetName = 'FODApplicationObject',
+        [PSTypeName('PS4FOD.UserObject')]
+        [parameter(ParameterSetName = 'FODUserObject',
                 ValueFromPipeline = $True)]
         [ValidateNotNullOrEmpty()]
-        $Application,
+        $User,
 
         [switch]$Raw = $False,
 
@@ -58,22 +58,22 @@ function Add-FODApplication {
         if ($Proxy) {
             $Params.Proxy = $Proxy
         }
-        Write-Verbose "Add-FODApplication Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $RawApplication = @()
+        Write-Verbose "Add-FODUser Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $RawUser = @()
     }
     process
     {
         $Params = @{
-            Body = $Application
+            Body = $User
         }
-        Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/applications'"
-        $RawApplication = Send-FODApi -Method Post -Operation "/api/v3/applications" @Params
+        Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/users'"
+        $RawUser = Send-FODApi -Method Post -Operation "/api/v3/users" @Params
     }
     end {
         if ($Raw) {
-            $RawApplication
+            $RawUser
         } else {
-            Parse-FODApplication -InputObject $RawApplication
+            Parse-FODUser -InputObject $RawUser
         }
     }
 }

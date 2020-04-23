@@ -1,19 +1,23 @@
-function Update-FODApplication {
+function Update-FODUser {
     <#
     .SYNOPSIS
-        Updates a specific FOD application.
+        Updates a specific FOD user.
     .DESCRIPTION
-        Updates a specific FOD application.
+        Updates a specific FOD user.
     .PARAMETER Id
-        The id of the application.
-    .PARAMETER Application
-        A PS4FOD.ApplicationObject containing the application's values.
+        The id of the user.
+    .PARAMETER User
+        A PS4FOD.UserObject containing the user's values.
         Note: only the following fields can/will be updated:
-            - applicationName
-            - applicationDescription
-            - emailList
-            - attributes
-            - businessCriticalityType
+            - Email
+            - FirstName
+            - LastName
+            - PhoneNumber
+            - RoleId
+            - PasswordNeverExpires
+            - IsSuspended
+            - MustChange
+            - Password
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -23,10 +27,10 @@ function Update-FODApplication {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Update the application with id 1000
-        Update-FODApplication -Id 1000 -Application $applicationObj
+        # Update the user with id 1000
+        Update-FODUser -Id 1000 -User $userObj
     .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_PutApplication
+        https://api.ams.fortify.com/swagger/ui/index#!/Users/UsersV3_PutUser
     .FUNCTIONALITY
         Fortify on Demand
     #>
@@ -35,11 +39,11 @@ function Update-FODApplication {
         [Parameter(Mandatory)]
         [int]$Id,
 
-        [PSTypeName('PS4FOD.ApplicationObject')]
-        [parameter(ParameterSetName = 'FODApplicationObject',
+        [PSTypeName('PS4FOD.UserObject')]
+        [parameter(ParameterSetName = 'FODUserObject',
             ValueFromPipeline = $True)]
         [ValidateNotNullOrEmpty()]
-        $Application,
+        $User,
 
         [switch]$Raw,
 
@@ -67,16 +71,16 @@ function Update-FODApplication {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Update-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Update-FODUser Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawResponse = $null
     }
     process
     {
         $Params = @{
-            Body = $Application
+            Body = $User
         }
-        Write-Verbose "Send-FODApi: -Method Put -Operation '/api/v3/applications/$Id'"
-        $RawResponse = Send-FODApi -Method Put -Operation "/api/v3/applications/$Id" @Params
+        Write-Verbose "Send-FODApi: -Method Put -Operation '/api/v3/users/$Id'"
+        $RawResponse = Send-FODApi -Method Put -Operation "/api/v3/users/$Id" @Params
     }
     end {
         if ($Raw) {

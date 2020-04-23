@@ -86,8 +86,7 @@ function New-FODApplicationObject
 
         [string]$EmailList,
 
-        [validateset($True, $False)]
-        [bool]$HasMicroservices = $False,
+        [switch]$HasMicroservices,
 
         [Parameter(Mandatory = $false,
                 ValueFromPipeline = $true)]
@@ -117,6 +116,10 @@ function New-FODApplicationObject
         $AllMicroservices = @()
         $AllUserGroups = @()
         $AllAttributes = @()
+        if ($HasMicroservices -and -not $MicroServices) {
+            Write-Error "A value for MicroServices is required if HasMicroservices is selected"
+            throw
+        }
         Write-Verbose "New-FODApplicationObject Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }
     process
@@ -144,7 +147,13 @@ function New-FODApplicationObject
             'user'                      { $body.ownerId = $User.Id }
             'emailList'                 { $body.emailList = $EmailList }
 
-            'hasMicroservices'          { $body.hasMicroservices = $HasMicroservices }
+            'hasMicroservices'          {
+                if ($HasMicroservices) {
+                    $body.hasMicroservices = $true
+                } else {
+                    $body.hasMicroservices = $false
+                }
+            }
             'microservices'             { $body.microservices = @($AllMicroServices) }
             'releaseMicroserviceName'   { $body.releaseMicroserviceName = $releaseMicroserviceName }
 

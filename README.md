@@ -23,11 +23,13 @@ that provides command-line interaction and automation for the [Fortify On Demand
 At present, this module can:
  * Authenticate against the FOD API to retrieve and store authentication token
  * Execute a generic FOD API REST command with authentication and rate limiting support
- * Query, add, update and remove [Applications]
+ * Query, add, update and remove Users
+ * Query, add, update and remove Applications
+ * Query, add, update and remove Users
 
 Development is ongoing, with the goal to add broad support for the entire API set.
 
-Review [examples](USAGE.md#examples) to see how the module can be used to accomplish some of these tasks.
+Review [example usage](Examples\USAGE.md) to see how the module can be used to accomplish some example tasks.
 
 ----------
 
@@ -43,29 +45,28 @@ Install-Module -Name PowerShellForFOD
 
 ## Configuration
 
-To access the FOD API you need to provide an "authentication" token. This module allows the creation and 
-persistence of this token so that it does not need to be passed with each command. To create the token,
-run the following to set your API endpoint and token:
-
-Note: the value for `ApiUrl` will depend on which region you are using Fortify on Demand in.
+To access the Fortify On Demand API you need to create an "authentication" token. This module allows the creation and 
+persistence of this token so that it does not need to be passed with each command. To create the token, run the 
+following commands to set your API endpoint and request a token:
 
 ```PowerShell
-Set-FODConfig -ApiUrl https://api.ams.fortify.com
+Set-FODConfig -ApiUri https://api.ams.fortify.com
 Get-FODToken
 ```
 
-You will be prompted for a username and password. Both "client credentials" and "username/password" are
-supported. For example, to login with your username/password enter your `tenant\username` in the
-"username" field and your `password` in the "password" field. For "client credentials" you can enter
-an API Key and API Secret that has been setup in Fortify On Demand.
+Note: the value for `ApiUri` will depend on which region you are using Fortify on Demand in.
 
-The token is not permanent, Fortify on Demand will "timeout" the token after a period of inactivity,
-after which you will need to re-create it with `Get-FODToken`.
+After running `Get-FODToken` you will be prompted for a username and password. Both "client credentials" and 
+"username/password" authentication is supported. For example, to login with your Fortify On Demand username/password 
+enter your `tenant\username` values in the "username" field and your `password` value in the "password" field. For 
+"client credentials" you should enter an API Key and API Secret that has been created in the Fortify On Demand portal 
+at `Administration -> Settings -> API`.
 
-The configuration is encrypted and stored on disk for use in subsequent commands.
+Note: the token is not permanent; Fortify on Demand will "timeout" the token after a period of inactivity,
+after which you will need to re-create it with `Get-FODToken`. The configuration is encrypted and stored on disk for 
+use in subsequent commands.
 
-There are more configuration options available.  Just review the help for that command for the 
-most up-to-date list!
+There are more configuration options available.  Please review the help for that command for the most up-to-date list!
 
 ## Usage
 
@@ -75,19 +76,16 @@ Example command:
 $applications = Get-FODApplications -Filters "applicationName:test" -Paging | Out-GridView
 ```
 
-For more example commands, please refer to [USAGE](USAGE.md#examples).
+For more example commands, please refer to [USAGE](USAGE.md).
 
 ----------
 
 ## Developing and Contributing
 
-Please see the [Contribution Guide](CONTRIBUTING.md) for information on how to develop and
-contribute.
+Please see the [Contribution Guide](CONTRIBUTING.md) for information on how to develop and contribute.
 
 If you have any problems, please consult [GitHub Issues](https://github.com/fortify-community-plugins/PowerShellForFOD/issues)
 to see if has already been discussed.
-
-If you do not see your problem captured, please file [feedback](CONTRIBUTING.md#feedback).
 
 ----------
 

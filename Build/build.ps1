@@ -1,4 +1,7 @@
-param([switch]$Local = $false)
+param(
+    [switch]$Local,
+    [switch]$SkipPublishing
+)
 
 $Org = "fortify-community-plugins"
 $Author = 'Kevin Lee'
@@ -35,7 +38,7 @@ else {
             'Path'              = $manifestPath
             'ModuleVersion'     = $newVersion
             'FunctionsToExport' = $functionList
-            'Copyright'         = "(c) 2020-$( (Get-Date).Year ) $Author. All rights reserved."
+            'Copyright'         = "(c) $( (Get-Date).Year ) $Author. All rights reserved."
         }
         Update-ModuleManifest @splat
         (Get-Content -Path $manifestPath) -replace "PSGet_$PowerShellForFOD", "$PowerShellForFOD" | Set-Content -Path $manifestPath
@@ -55,44 +58,46 @@ else {
     . .\Build\docs.ps1
     Write-Host -Object ''
 
-    # Publish the new version to the PowerShell Gallery
-    Try {
-        # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
-        $PM = @{
-            Path         = ".\$PowerShellForFOD"
-            NuGetApiKey  = $env:NuGetApiKey
-            ErrorAction  = 'Stop'
-            Tags         = @('MicroFocus', 'Fortify', 'FOD', 'FortifyOnDemand', 'Security', 'DevOps', 'DevSecOps')
-            LicenseUri   = "https://github.com/$Org/$PowerShellForFOD/blob/master/LICENSE"
-            ProjectUri   = "https://github.com/$Org/$PowerShellForFOD"
-            ReleaseNotes = 'Initial release to the PowerShell Gallery'
+    if ($SkipPublishing) {
+        Write-Host "Skipping Publishing to Powershell Gallery"
+    } else  {
+        # Publish the new version to the PowerShell Gallery
+        Try
+        {
+            # Build a splat containing the required details and make sure to Stop for errors which will trigger the catch
+            $PM = @{
+                Path = ".\$PowerShellForFOD"
+                NuGetApiKey = $env:NuGetApiKey
+                ErrorAction = 'Stop'
+            }
+
+            Publish-Module @PM
+            Write-Host "$PowerShellForFOD PowerShell Module version $newVersion published to the PowerShell Gallery." -ForegroundColor Cyan
+        }
+        Catch
+        {
+            # Sad panda; it broke
+            Write-Warning "Publishing update $newVersion to the PowerShell Gallery failed."
+            throw $_
         }
 
-        Publish-Module @PM
-        Write-Host "$PowerShellForFOD PowerShell Module version $newVersion published to the PowerShell Gallery." -ForegroundColor Cyan
-    }
-    Catch {
-        # Sad panda; it broke
-        Write-Warning "Publishing update $newVersion to the PowerShell Gallery failed."
-        throw $_
-    }
-Exit
-    # Publish the new version back to Master on GitHub
-    Try {
-        # Set up a path to the git.exe cmd, import posh-git to give us control over git, and then push changes to GitHub
-        # Note that "update version" is included in the appveyor.yml file's "skip a build" regex to avoid a loop
-        $env:Path += ";$env:ProgramFiles\Git\cmd"
-        Import-Module posh-git -ErrorAction Stop
-        git checkout master
-        git add --all
-        git status
-        git commit -s -m "Update version to $newVersion"
-        git push origin master
-        Write-Host "$PowerShellForFOD PowerShell Module version $newVersion published to GitHub." -ForegroundColor Cyan
-    }
-    Catch {
-        # Sad panda; it broke
-        Write-Warning "Publishing update $newVersion to GitHub failed."
-        throw $_
+        # Publish the new version back to Master on GitHub
+        Try {
+            # Set up a path to the git.exe cmd, import posh-git to give us control over git, and then push changes to GitHub
+            # Note that "update version" is included in the appveyor.yml file's "skip a build" regex to avoid a loop
+            $env:Path += ";$env:ProgramFiles\Git\cmd"
+            Import-Module posh-git -ErrorAction Stop
+            git checkout master
+            git add --all
+            git status
+            git commit -s -m "Update version to $newVersion"
+            git push origin master
+            Write-Host "$PowerShellForFOD PowerShell Module version $newVersion published to GitHub." -ForegroundColor Cyan
+        }
+        Catch {
+            # Sad panda; it broke
+            Write-Warning "Publishing update $newVersion to GitHub failed."
+            throw $_
+        }
     }
 }

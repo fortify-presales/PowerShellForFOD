@@ -18,16 +18,11 @@ function New-FODReleaseObject
     .PARAMETER Description
         The Description of the release.
         Optional.
-    .PARAMETER Type
-        The Type of the release.
-        Allowed values are 'Web_Thick_Client' or 'Mobile'.
-    .PARAMETER BusinessCriticality
-        The Business Criticality of the release.
-        Valid values are 'High', 'Medium' or 'Low'.
-    .PARAMETER ReleaseName
-        The name of the initial Release to create for the release.
-    .PARAMETER ReleaseDescription
-        The Description of the release.
+    .PARAMETER CopyState
+        Copy the state of an existing release.
+        Default is $False.
+    .PARAMETER CopyReleaseId
+        The Id of the release to copy.
         Optional.
     .PARAMETER SDLCStatus
         The SDLC status of the release.
@@ -35,11 +30,10 @@ function New-FODReleaseObject
     .PARAMETER Microservice
         The PS4FOD.MicroserviceObject that the release is related to.
         Optional.
-    .PARAMETER OwnerId
-        The id of the owner of the release.
     .EXAMPLE
         # Create the ReleaseObject
         $relObject = New-FODReleaseObject -Name "1.0" -Description "its description" `
+            -CopyState $true -CopyReleaseId 100 -SDLCStatus 'Development'
     .FUNCTIONALITY
         Fortify on Demand
     #>
@@ -48,23 +42,33 @@ function New-FODReleaseObject
     param
     (
         [int]$Id,
+
         [int]$ApplicationId,
+
         [string]$Name,
+
         [string]$Description,
+
+        [switch]$CopyState,
+
+        [int]$CopyReleaseId,
+
         [validateset('Development', 'QA', 'Production', 'Retired')]
         [string]$SDLCStatus,
+
+        [int]$OwnerId,
+
         [Parameter(Mandatory = $false,
                 ValueFromPipeline = $true)]
         [PSTypeName('PS4FOD.MicroServiceObject')]
-        $MicroService,
-        [Parameter(Mandatory = $false,
-                ValueFromPipeline = $true)]
-        [PSTypeName('PS4FOD.UserObject')]
-        $Owner
-
+        $MicroService
     )
     begin
     {
+        if ($CopyState -and -not $CopyReleaseId) {
+            Write-Error "A value for CopyReleaseId is required id CopyState is selected"
+            throw
+        }
         Write-Verbose "New-FODReleaseObject Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }
     process
@@ -79,11 +83,16 @@ function New-FODReleaseObject
         {
             'id'                    { $body.id = $Id }
             'applicationId'         { $body.applicationId = $ApplicationId }
-            'releaseName'           { $body.releaseName = $Name }
-            'releaseDescription'    { $body.releaseDescription = $Description }
-            'sdlcStatusType'        { $body.sdlcStatusType = $SDLCStatus }
-            'microserviceId'        { $body.microserviceId = $MicroService.Id }
-            'ownerId'               { $body.ownerId = $User.Id }
+            'name'                  { $body.releaseName = $Name }
+            'description'           { $body.releaseDescription = $Description }
+            'copyState'             {
+                if ($CopyState) { $body.copyState = $true }
+                else { $body.copyState = $false }
+            }
+            'copyReleaseId'         { $body.copyStateReleaseId = $CopyReleaseId }
+            'sdlcStatus'            { $body.sdlcStatusType = $SDLCStatus }
+            'microservice'          { $body.microserviceId = $MicroService.Id }
+            'ownerId'                   { $body.ownerId = $OwnerId }
         }
 
         Add-ObjectDetail -InputObject $body -TypeName PS4FOD.ReleaseObject
