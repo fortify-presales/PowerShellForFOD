@@ -143,7 +143,8 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="power-shell-for-fortify-on-demand-fod-module">Power Shell For Fortify On Demand (FOD) Module</h1>
+                                <p><a href="https://ci.appveyor.com/project/akevinlee/powershellforfod" target="_blank"><img src="https://ci.appveyor.com/api/projects/status/egkljq9ok9xhvnhh?svg=true" alt="Build status"></a></p>
+<h1 id="power-shell-for-fortify-on-demand-fod-module">Power Shell For Fortify On Demand (FOD) Module</h1>
 <h4 id="table-of-contents">Table of Contents</h4>
 <ul>
 <li><a href="#overview">Overview</a></li>
@@ -158,6 +159,15 @@
 <h2 id="overview">Overview</h2>
 <p>This is a <a href="https://microsoft.com/powershell" target="_blank">PowerShell</a> <a href="https://technet.microsoft.com/en-us/library/dd901839.aspx" target="_blank">module</a>
 that provides command-line interaction and automation for the <a href="https://api.ams.fortify.com/swagger/ui/index" target="_blank">Fortify On Demand API</a>.</p>
+<h2 id="use-cases">Use Cases</h2>
+<p>Although the module can be used generically, it was designed for the following key use cases:</p>
+<ul>
+<li>Programatically importing existing users, applications and releases into FOD. Using PowerShell scripting it is possible 
+to create scripts that pull data from other sources - such as a spreadsheet  - and execute the functions in this module.</li>
+<li>Programatically importing on-premise scans executed using <a href="https://www.microfocus.com/en-us/products/static-code-analysis-sast" target="_blank">Fortify SCA</a>
+or <a href="https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast" target="_blank">Fortify WebInspect</a>.</li>
+<li>Programatically creating dashboards from FOD data together with data from other sources.  </li>
+</ul>
 <hr>
 <h2 id="current-api-support">Current API Support</h2>
 <p>At present, this module can:</p>
@@ -167,29 +177,37 @@ that provides command-line interaction and automation for the <a href="https://a
 <li>Query, add, update and remove Users</li>
 <li>Query, add, update and remove Applications</li>
 <li>Query, add, update and remove Users</li>
+<li>Query Attributes</li>
+<li>Query Application, Release and individual Scans</li>
+<li>Query, add and remove user access to Applications</li>
+<li>Query, add and remove user group access to Applications</li>
+<li>Query Vulnerabilities</li>
+<li>Import on-premise static scans (from <a href="https://www.microfocus.com/en-us/products/static-code-analysis-sast" target="_blank">Fortify SCA</a>)</li>
+<li>Import on-premise dynamic scans (from <a href="https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast" target="_blank">Fortify WebInspect</a>) </li>
 </ul>
 <p>Development is ongoing, with the goal to add broad support for the entire API set.</p>
-<p>Review <a href="Examples/USAGE.md">example usage</a> to see how the module can be used to accomplish some example tasks.</p>
+<p>Review example <a href="USAGE.md">usage</a> to see how the module can be used to accomplish some example tasks.</p>
 <hr>
 <h2 id="installation">Installation</h2>
-<p>You can get latest release of the PowerShellForFOD on the <a href="https://www.powershellgallery.com/packages/PowerShellForFOD" target="_blank">PowerShell Gallery</a></p>
+<p>You can get the latest release of the PowerShellForFOD from the <a href="https://www.powershellgallery.com/packages/PowerShellForFOD" target="_blank">PowerShell Gallery</a></p>
 <pre><code class="lang-PowerShell">Install-Module -Name PowerShellForFOD
 </code></pre>
 <hr>
 <h2 id="configuration">Configuration</h2>
-<p>To access the Fortify On Demand API you need to create an &quot;authentication&quot; token. This module allows the creation and 
-persistence of this token so that it does not need to be passed with each command. To create the token, run the 
-following commands to set your API endpoint and request a token:</p>
+<p>To access the <a href="https://www.microfocus.com/en-us/products/application-security-testing" target="_blank">Fortify On Demand</a> API you need 
+to create an &quot;authentication&quot; token. This module allows the creation and persistence of this token so that it does not 
+need to be passed with each command. To create the token, run the following commands to set your API endpoint and 
+request a token:</p>
 <pre><code class="lang-PowerShell">Set-FODConfig -ApiUri https://api.ams.fortify.com
 Get-FODToken
 </code></pre>
-<p>Note: the value for <code>ApiUri</code> will depend on which region you are using Fortify on Demand in.</p>
-<p>After running <code>Get-FODToken</code> you will be prompted for a username and password. Both &quot;client credentials&quot; and 
-&quot;username/password&quot; authentication is supported. For example, to login with your Fortify On Demand username/password 
-enter your <code>tenant\username</code> values in the &quot;username&quot; field and your <code>password</code> value in the &quot;password&quot; field. For 
-&quot;client credentials&quot; you should enter an API Key and API Secret that has been created in the Fortify On Demand portal 
+<p>Note: the value for <code>ApiUri</code> will depend on which region you are using <a href="https://www.microfocus.com/en-us/products/application-security-testing" target="_blank">Fortify On Demand</a> in.</p>
+<p>After running <code>Get-FODToken</code> you will be prompted for a username and password. Both <em>&quot;client credentials&quot;</em> and 
+<em>&quot;username/password&quot;</em> authentication are supported. For example, to login with your Fortify On Demand portal &quot;username/password&quot; 
+enter your <em><code>tenant\username</code></em> values in the <em>&quot;username&quot;</em> field and your <em><code>password</code></em> value in the <em>&quot;password&quot;</em> field. For 
+<em>&quot;client credentials&quot;</em> you should enter an API Key and API Secret that has been created in the Fortify On Demand portal 
 at <code>Administration -&gt; Settings -&gt; API</code>.</p>
-<p>Note: the token is not permanent; Fortify on Demand will &quot;timeout&quot; the token after a period of inactivity,
+<p>Please note: the token is not permanent; Fortify on Demand will &quot;timeout&quot; the token after a period of inactivity,
 after which you will need to re-create it with <code>Get-FODToken</code>. The configuration is encrypted and stored on disk for 
 use in subsequent commands.</p>
 <p>There are more configuration options available.  Please review the help for that command for the most up-to-date list!</p>
@@ -241,7 +259,7 @@ to see if has already been discussed.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2020-04-23T11:03:15.966Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-04-23T11:08:13.250Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2020-04-28T07:52:40.886Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-04-28T07:57:54.595Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
