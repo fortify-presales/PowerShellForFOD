@@ -23,8 +23,8 @@ function Update-FODRelease {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Update the release with id 1000
-        Update-FODRelease -Id 1000 -Release $releaseObj
+        # Update the release with id 100
+        Update-FODRelease -Id 100 -Release $releaseObj
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_PutRelease
     .FUNCTIONALITY

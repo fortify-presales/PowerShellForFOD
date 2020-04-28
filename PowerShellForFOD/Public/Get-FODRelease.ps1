@@ -15,8 +15,8 @@ function Get-FODRelease {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Get the release with id 1000
-        Get-FODRelease -Id 1000
+        # Get the release with id 100
+        Get-FODRelease -Id 100
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetRelease
     .FUNCTIONALITY

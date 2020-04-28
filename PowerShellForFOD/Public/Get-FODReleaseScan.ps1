@@ -1,11 +1,13 @@
-function Get-FODApplication {
+function Get-FODReleaseScan {
     <#
     .SYNOPSIS
-        Get information about a specific FOD application.
+        Gets the individual scan for a FOD releases.
     .DESCRIPTION
-        Get information about a specific FOD application.
-    .PARAMETER Id
-        The id of the application.
+        Get the individual scan that has been carried out for a specific FOD release.
+    .PARAMETER ReleaseId
+        The release id.
+    .PARAMETER ScanId
+        The scan id.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -15,18 +17,17 @@ function Get-FODApplication {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Get the application with id 100
-        Get-FODApplication -Id 100
+        # Get the scans with id 1234 for release id 100 through Paging
+        Get-FODReleaseScan -ReleaseId 100 -ScanId 1234
     .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplication
+        https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetScansByReleaseId
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [int]$Id,
-
+        [int]$ReleaseId,
+        [int]$ScanId,
         [switch]$Raw,
 
         [Parameter()]
@@ -53,19 +54,19 @@ function Get-FODApplication {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Get-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $RawApplication = $null
+        Write-Verbose "Get-FODReleaseScan Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $Response = $null
     }
     process
     {
-            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$Id'" #$Params
-            $RawApplication = Send-FODApi -Method Get -Operation "/api/v3/applications/$Id" @Params
+        Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/releases/$ReleaseId/scans/$ScanId'" #$Params
+        $Response = Send-FODApi -Method Get -Operation "/api/v3/releases/$ReleaseId/scans/$ScanId" @Params
     }
     end {
         if ($Raw) {
-            $RawApplication
+            $Response
         } else {
-            Parse-FODApplication -InputObject $RawApplication
+            Parse-FODScan -InputObject $Response
         }
     }
 }

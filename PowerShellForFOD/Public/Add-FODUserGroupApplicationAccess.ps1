@@ -1,12 +1,13 @@
-function Add-FODUser {
+function Add-FODUserGroupApplicationAccess {
     <#
     .SYNOPSIS
-        Adds a new FOD user.
+        Adds/Grants user group access for a given application.
     .DESCRIPTION
-        Adds a new FOD user using the FOD REST API and a previously created
-        PS4FOD.UserObject.
-    .PARAMETER User
-        A PS4FOD.UserObject containing the user's values.
+        Adds/Grants user group access for one or more applications.
+    .PARAMETER UserGroupId
+        The id of the user group to give access to.
+    .PARAMTER ApplicationId
+        The id of the application to give the user access to.
     .PARAMETER Raw
         Print Raw output - do not convert into UserObject.
         Default is false.
@@ -20,21 +21,18 @@ function Add-FODUser {
         Force verbose output.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Add a new user
-        $userResponse = Add-FODUser -User $userObject
-        if ($userResponse) {
-            Write-Host "Created user with id:" $userResponse.userId
-        }
+        # Give the user group with id 1000 access to application with id 100
+        Add-FODUserGroupApplicationAccess -UserGroupId 1000 -ApplicationId 100
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
-        [PSTypeName('PS4FOD.UserObject')]
-        [parameter(ParameterSetName = 'FODUserObject',
-                ValueFromPipeline = $True)]
-        [ValidateNotNullOrEmpty()]
-        $User,
+        [Parameter(Mandatory)]
+        $UserGroupId,
+
+        [Parameter(Mandatory)]
+        $ApplicationId,
 
         [switch]$Raw = $False,
 
@@ -56,26 +54,25 @@ function Add-FODUser {
     {
         $Params = @{}
         if ($Proxy) {
-            $Params['Proxy'] = $Proxy
+            $Params.Proxy = $Proxy
         }
         if ($ForceVerbose) {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Add-FODUser Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $RawUser = @()
+        Write-Verbose "Add-FODUserGroupApplicationAccess Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $Response = $null
     }
     process
     {
-        $Params.Body = $User
-        Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/users'"
-        $RawUser = Send-FODApi -Method Post -Operation "/api/v3/users" @Params
+        $Body = @{
+            applicationId = $ApplicationId
+        }
+        $Params.Body = $Body
+        Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/user-group-application-access/$UserGroupId'"
+        $Response = Send-FODApi -Method Post -Operation "/api/v3/user-group-application-access/$UserGroupId" @Params
     }
     end {
-        if ($Raw) {
-            $RawUser
-        } else {
-            Parse-FODUser -InputObject $RawUser
-        }
+        $Response
     }
 }

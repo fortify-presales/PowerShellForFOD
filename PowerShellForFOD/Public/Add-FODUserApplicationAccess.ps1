@@ -1,14 +1,15 @@
-function Add-FODRelease {
+function Add-FODUserApplicationAccess {
     <#
     .SYNOPSIS
-        Adds a new FOD release.
+        Adds/Grants user access for a given application.
     .DESCRIPTION
-        Adds a new FOD release using the FOD REST API and a previously created
-        PS4FOD.ReleaseObject.
-    .PARAMETER Release
-        A PS4FOD.ReleaseObject containing the release's values.
+        Adds/Grants user access for one or more applications.
+    .PARAMETER UserId
+        The id of the user to give access to.
+    .PARAMTER ApplicationId
+        The id of the application to give the user access to.
     .PARAMETER Raw
-        Print Raw output - do not convert into ReleaseObject.
+        Print Raw output - do not convert into UserObject.
         Default is false.
     .PARAMETER Token
         FOD authentication token to use.
@@ -20,21 +21,18 @@ function Add-FODRelease {
         Force verbose output.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Add a new release
-        $relResponse = Add-FODRelease -Release $relObject
-        if ($relResponse) {
-            Write-Host "Created release with id:" $relResponse.releaseId
-        }
+        # Give the user with id 1000 access to application with id 100
+        Add-FODUserApplicationAccess -UserId 1000 -ApplicationId 100
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
-        [PSTypeName('PS4FOD.ReleaseObject')]
-        [parameter(ParameterSetName = 'FODReleaseObject',
-                ValueFromPipeline = $True)]
-        [ValidateNotNullOrEmpty()]
-        $Release,
+        [Parameter(Mandatory)]
+        $UserId,
+
+        [Parameter(Mandatory)]
+        $ApplicationId,
 
         [switch]$Raw = $False,
 
@@ -62,20 +60,19 @@ function Add-FODRelease {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Add-FODRelease Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $RawRelease = @()
+        Write-Verbose "Add-FODUserApplicationAccess Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $Response = @()
     }
     process
     {
-        $Params.Body = $Release
-        Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/releases'"
-        $RawRelease = Send-FODApi -Method Post -Operation "/api/v3/releases" @Params
+        $Body = @{
+            applicationId = $ApplicationId
+        }
+        $Params.Body = $Body
+        Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/user-application-access/$UserId'"
+        $Response = Send-FODApi -Method Post -Operation "/api/v3/user-application-access/$UserId" @Params
     }
     end {
-        if ($Raw) {
-            $RawRelease
-        } else {
-            Parse-FODRelease -InputObject $RawRelease
-        }
+        $Response
     }
 }

@@ -70,14 +70,20 @@ PowerShellVersion = '5.1'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @('Add-FODApplication', 'Add-FODRelease', 'Add-FODUser', 
-               'Get-FODApplication', 'Get-FODApplications', 'Get-FODAttributes', 
-               'Get-FODConfig', 'Get-FODRelease', 'Get-FODReleases', 'Get-FODToken', 
-               'Get-FODUser', 'Get-FODUsers', 'New-FODApplicationObject', 
-               'New-FODAttributeObject', 'New-FODMicroserviceObject', 
-               'New-FODReleaseObject', 'New-FODUserGroupObject', 'New-FODUserObject', 
-               'Remove-FODApplication', 'Remove-FODRelease', 'Remove-FODUser', 
-               'Send-FODApi', 'Set-FODConfig', 'Update-FODApplication', 
-               'Update-FODRelease', 'Update-FODUser')
+                'Get-FODApplication', 'Get-FODApplications', 'Get-FODAttributes',
+                'Get-FODConfig', 'Get-FODRelease', 'Get-FODReleases', 'Get-FODToken',
+                'Get-FODUser', 'Get-FODUsers', 'Get-FODUserGroups',
+                'Get-FODUserGroupApplicationAccess', 'Add-FODUserGroupApplicationAccess', 'Remove-FODUserGroupApplicationAccess',
+                'Get-FODUserApplicationAccess', 'Add-FODUserApplicationAccess', 'Remove-FODUserApplicationAccess',
+                'New-FODApplicationObject',
+                'New-FODAttributeObject', 'New-FODMicroserviceObject',
+                'New-FODReleaseObject', 'New-FODUserGroupObject', 'New-FODUserObject',
+                'Remove-FODApplication', 'Remove-FODRelease', 'Remove-FODUser',
+                'Send-FODApi', 'Set-FODConfig', 'Update-FODApplication',
+                'Update-FODRelease', 'Update-FODUser',
+                'Get-FODVulnerabilities',
+                'Get-FODApplicationScans', 'Get-FODReleaseScans', 'Get-FODReleaseScan',
+                'Import-FODStaticScan', 'Import-FODDynamicScan')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

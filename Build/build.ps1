@@ -22,6 +22,9 @@ else {
     # We're going to add 1 to the revision value since a new commit has been merged to Master
     # This means that the major / minor / build values will be consistent across GitHub and the Gallery
     Try {
+        # Remove any left over build files
+        Get-ChildItem * -Include *.nuspec -Recurse | Remove-Item
+
         # This is where the module manifest lives
         $manifestPath = ".\$PowerShellForFOD\$PowerShellForFOD.psd1"
 

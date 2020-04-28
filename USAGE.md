@@ -9,18 +9,30 @@
     * [Retrieving Applications](#retrieving-applications)
     * [Updating Applications](#updating-applications)
     * [Deleting Application](#deleting-applications)
+    * [Adding User Application Access](#adding-user-application-access)
+    * [Retrieving User Application Access](#retrieving-user-application-access)
+    * [Removing User Application Access](#removing-user-application-access)
+    * [Adding User Group Application Access](#adding-user-group-application-access)
+    * [Retrieving User Group Application Access](#retrieving-user-group-application-access)
+    * [Removing User Group Application Access](#removing-user-group-application-access)    
 *   [Releases](#releases)
     * [Adding Releases](#adding-releases)
     * [Retrieving Releases](#retrieving-releases)
     * [Updating Releases](#updating-releases)
     * [Deleting Releases](#deleting-releases)
+*   [Scans](#scans)
+    * [Retrieving Scans](#retrieving-scans)
+    * [Importing Static Scans](#importing-static-scans)
+    * [Importing Dynamic Scans](#importing-dynamic-scans)    
+*   [Vulnerabilities](#vulnerabilities)
+    * [Retrieving Vulnerabilities](#retrieving-vulnerabilities)    
 *   [Users](#users)
     * [Adding Users](#adding-users)
     * [Retrieving Users](#retrieving-users)
     * [Updating Users](#updating-users)
     * [Deleting Users](#deleting-users)
 *   [Attributes](#attributes)
-    * [Retrieving Attributes](#retrieving-attributes)
+    * [Retrieving Attributes](#retrieving-attributes)    
 *   [Troubleshooting](#troubleshooting)    
 
 ----------
@@ -153,6 +165,60 @@ Write-Host "Deleting application with id: $applicationId"
 Remove-FODApplication -Id $applicationId
 ```
 
+### Adding User Application Access
+
+To give a user access to an application, use the following:
+
+```Powershell
+# Give the user with id 1000 access to application with id 100
+Add-FODUserApplicationAccess -UserId 1000 -ApplicationId 100
+```
+
+### Retrieving User Application Access
+
+To retrieve what users have access to an application, use the following:
+
+```Powershell
+# Get the application access details of user group id 1000
+Get-FODUserGroupApplicationAccess -Id 1000
+```
+    
+### Removing User Application Access
+
+To remove a user's access to an application, use the following:
+
+```Powershell
+# Remove the user group with id 1000 from application 100
+Remove-FODUserGroupApplicationAccess -UserGroupId 1000 -ApplicationId 100
+```
+
+### Adding User Group Application Access
+
+To give a user group access to an application, use the following:
+
+```Powershell
+# Give the user group with id 1000 access to application with id 100
+Add-FODUserGroupApplicationAccess -UserGroupId 1000 -ApplicationId 100
+```
+
+### Retrieving User Group Application Access
+
+To retrieve what user groups have access to an application, use the following:
+
+```Powershell
+# Get the application access details of user group id 1000
+Get-FODUserGroupApplicationAccess -Id 1000
+```
+
+### Removing User Group Application Access
+
+To remove a user's access to an application, use the following:
+
+```Powershell
+# Remove the user with id 1000 from application 100
+Remove-FODUserApplicationAccess -UserId 1000 -ApplicationId 100
+```
+  
 ----------
 
 ## Releases
@@ -212,6 +278,73 @@ To delete (remove) a release, use the following:
 
 ```Powershell
 Remove-FODRelease -Id $releaseId
+```
+
+----------
+
+## Scans
+
+### Retrieving Scans
+
+To retrieve scans for an application you can use:
+
+```Powershell
+# Get all of the scans for application id 1000 through Paging
+Get-FODApplicationScans -ApplicationId 1000 -Paging
+```
+
+To retrieve scans for a release you can use:
+
+```Powershell
+# Get all of the scans for release id 1000 through Paging
+Get-FODReleaseScans -ReleaseId 1000 -Paging
+```
+
+To retrieve a specific scan for a release you can use:
+
+```Powershell
+# Get the scans with id 1234 for release id 1000 through Paging
+Get-FODReleaseScan -ReleaseId 1000 -ScanId 1234
+```
+
+### Importing Static Scans
+
+You can import on-premise static scans (from [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast))
+using the `Import-FODStaticScan` as in the following:
+
+```Powershell
+# Import an FPR scan file into release with id 1000
+Import-FODStaticScan -Release 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+```
+
+### Importing Dynamic Scans
+
+You can import on-premise dynamic scans (from [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast))
+using the `Import-FODDynamicScan` as in the following:
+
+```Powershell
+# Import an FPR scan file into release with id 1000
+Import-FODDynamicScan -Release 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+```
+
+----------
+
+## Vulnerabilities
+
+### Retrieving Vulnerabilities
+
+You can retrieve vulnerabilities for a specific release using the following:
+
+```Powershell
+# Get all of the vulnerabilities for release id 1000 through Paging
+Get-FODVulnerabilities -Release Id 1000 -Paging
+```
+
+You can also use "filters" to retrieve different severities, categories and types of vulnerabilities, for example:
+
+```Powershell
+# Get all vulnerabilities with "critical" or "high" severity for release id 1000
+Get-FODVulnerabilities -Release Id 1000 -Paging -Filters "severityString:Critical|High"
 ```
 
 ----------

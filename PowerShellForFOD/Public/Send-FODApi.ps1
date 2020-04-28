@@ -14,6 +14,10 @@ function Send-FODApi {
         Reference: https://api.ams.fortify.com/
     .PARAMETER Body
         Hash table of arguments to send to the FOD API.
+    .PARAMETER BodyFile
+        A File containing the Body to be sent to the FOD API.
+    .PARAMETER ContentType
+        Content Type to send, if not specified defaults to "application/json"
     .PARAMETER Token
         FOD authentication token to use.
         If empty, the value from PS4FOD will be used.
@@ -49,6 +53,12 @@ function Send-FODApi {
 
         [ValidateNotNullOrEmpty()]
         [hashtable]$Body,
+
+        [Parameter(Mandatory=$false)]
+        [string]$BodyFile,
+
+        [Parameter(Mandatory=$false)]
+        [string]$ContentType = 'application/json',
 
         [ValidateNotNullOrEmpty()]
         [ValidateScript({
@@ -88,6 +98,10 @@ function Send-FODApi {
         if ($Method -eq 'Get') {
             $Params.Add('Method', 'Get')
             $Params.Add('Body', $Body)
+        } elseif ($BodyFile) {
+            Write-Verbose "BodyFile is $BodyFile"
+            $Params.Add('Method', $Method)
+            $Params.Add('InFile', $BodyFile)
         } else {
             $Params.Add('Method', $Method)
             $Params.Add('ContentType', 'application/json')
@@ -123,15 +137,12 @@ function Send-FODApi {
             if ($_.Exception.Response.StatusCode -eq 429)
             {
                 $RetryPeriod = 30
-                # TODO: Get the time before we can try again.
-                #if ($_.Exception.Response.Headers -and $_.Exception.Response.Headers.Contains('X-Rate-Limit-Reset'))
-                #{
-                #    $RetryPeriod = $_.Exception.Response.Headers.GetValues('X-Rate-Limit-Reset')
-                #    if ($RetryPeriod -is [string[]])
-                #    {
-                #        $RetryPeriod = [int]$RetryPeriod[0]
-                #    }
-                #}
+                if ($_.Exception.Response.Headers -and $_.Exception.Response.Headers.Contains('X-Rate-Limit-Reset')) {
+                    $RetryPeriod = $_.Exception.Response.Headers.GetValues('X-Rate-Limit-Reset')
+                    if ($RetryPeriod -is [string[]]) {
+                        $RetryPeriod = [int]$RetryPeriod[0]
+                    }
+                }
                 # Write Response error
                 Write-Verbose "Sleeping [$RetryPeriod] seconds due to FOD 429 response"
                 Start-Sleep -Seconds $RetryPeriod
@@ -165,7 +176,7 @@ function Send-FODApi {
         } elseif ($Response) {
             Write-Output $Response
         } else {
-            Write-Verbose "Something went wrong. `$Response is `$null"
+            Write-Verbose "Response is empty."
         }
     }
 }

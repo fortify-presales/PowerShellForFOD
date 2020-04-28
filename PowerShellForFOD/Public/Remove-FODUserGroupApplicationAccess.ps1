@@ -1,11 +1,11 @@
-function Get-FODApplication {
+function Remove-FODUserApplicationAccess {
     <#
     .SYNOPSIS
-        Get information about a specific FOD application.
+        Removes access from an application for a specific user.
     .DESCRIPTION
-        Get information about a specific FOD application.
-    .PARAMETER Id
-        The id of the application.
+        Removes access from an application for a specific user.
+    .PARAMETER UserId
+        The id of the user.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -15,17 +15,20 @@ function Get-FODApplication {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Get the application with id 100
-        Get-FODApplication -Id 100
+        # Remove the user with id 1000 from application 100
+        Remove-FODUserApplicationAccess -UserId 1000 -ApplicationId 100
     .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplication
+        https://api.ams.fortify.com/swagger/ui/index#!/UserApplicationAccess/UserApplicationAccessV3_DeleteUserApplicationAccess
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [int]$Id,
+        [int]$UserId,
+
+        [Parameter(Mandatory)]
+        [int]$ApplicationId,
 
         [switch]$Raw,
 
@@ -53,19 +56,15 @@ function Get-FODApplication {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Get-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $RawApplication = $null
+        Write-Verbose "Remove-FODUserApplicationAccess Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $Response = $null
     }
     process
     {
-            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$Id'" #$Params
-            $RawApplication = Send-FODApi -Method Get -Operation "/api/v3/applications/$Id" @Params
+        Write-Verbose "Send-FODApi -Method Delete -Operation '/api/v3/user-application-access/$UserId/$ApplicationId'" #$Params
+        $Response = Send-FODApi -Method Delete -Operation "/api/v3/user-application-access/$UserId/$ApplicationId" @Params
     }
     end {
-        if ($Raw) {
-            $RawApplication
-        } else {
-            Parse-FODApplication -InputObject $RawApplication
-        }
+        $Response
     }
 }

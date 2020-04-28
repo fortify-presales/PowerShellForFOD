@@ -7,7 +7,7 @@ function Parse-FODResponse
     [PSCustomObject]@{
         PSTypeName = 'FOD.ResponseObject'
         success = $InputObject.success
-        errors = $InputObject.errors # TODO: parse errors as object
+        errors = $InputObject.errors
         Raw = $InputObject
     }
 }

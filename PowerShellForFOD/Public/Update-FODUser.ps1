@@ -27,8 +27,8 @@ function Update-FODUser {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Update the user with id 1000
-        Update-FODUser -Id 1000 -User $userObj
+        # Update the user with id 100
+        Update-FODUser -Id 100 -User $userObj
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Users/UsersV3_PutUser
     .FUNCTIONALITY

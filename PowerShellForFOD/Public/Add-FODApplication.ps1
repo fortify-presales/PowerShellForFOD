@@ -56,16 +56,18 @@ function Add-FODApplication {
     {
         $Params = @{}
         if ($Proxy) {
-            $Params.Proxy = $Proxy
+            $Params['Proxy'] = $Proxy
+        }
+        if ($ForceVerbose) {
+            $Params.Add('ForceVerbose', $True)
+            $VerbosePreference = "Continue"
         }
         Write-Verbose "Add-FODApplication Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawApplication = @()
     }
     process
     {
-        $Params = @{
-            Body = $Application
-        }
+        $Params.Body = $Application
         Write-Verbose "Send-FODApi: -Method Post -Operation '/api/v3/applications'"
         $RawApplication = Send-FODApi -Method Post -Operation "/api/v3/applications" @Params
     }

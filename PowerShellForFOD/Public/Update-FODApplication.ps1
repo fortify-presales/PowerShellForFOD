@@ -23,8 +23,8 @@ function Update-FODApplication {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Update the application with id 1000
-        Update-FODApplication -Id 1000 -Application $applicationObj
+        # Update the application with id 100
+        Update-FODApplication -Id 100 -Application $applicationObj
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_PutApplication
     .FUNCTIONALITY

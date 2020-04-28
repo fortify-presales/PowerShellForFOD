@@ -8,6 +8,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [1.0.0.3] - 2020-04-27
+
+### Added
+
+- Query Application, Release and Individual Scans
+- Import Static Scans (from [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast))
+- Import Dynamic Scans (from [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast))
+- Query, Add and Remove user access from Applications
+- Query, add and Remove user group access from Applications
+- Query Vulnerabilities
+
+### Changed
+
+- Send-FODApi (Added parameter to send body from a file and rate limit handling)
+- Add-FODApplication (Added correct ForceVerbose operation)
+- Add-FODRelease (Added correct ForceVerbose operation)
+- Add-FODUser (Added correct ForceVerbose operation)
+- Update documentation for new commands
+
+### Removed
+
+- None
+
 ## [1.0.0.2] - 2020-04-23
 
 ### Added
@@ -27,6 +50,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Removed
 
+- None
+
 ## [1.0.0.1] - 2020-04-22
 
 ### Added
@@ -36,4 +61,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
+- None
+
 ### Removed
+
+- None

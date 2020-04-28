@@ -15,8 +15,8 @@ function Remove-FODApplication {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Remove the application with id 1000
-        Remove-FODApplication -Id 1000
+        # Remove the application with id 100
+        Remove-FODApplication -Id 100
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_Delete
     .FUNCTIONALITY
@@ -53,7 +53,7 @@ function Remove-FODApplication {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Delete-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Remove-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawResponse = $null
     }
     process

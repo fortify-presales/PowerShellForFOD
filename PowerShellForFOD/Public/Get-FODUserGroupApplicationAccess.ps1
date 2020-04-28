@@ -1,11 +1,11 @@
-function Get-FODApplication {
+function Get-FODUserGroupApplicationAccess {
     <#
     .SYNOPSIS
-        Get information about a specific FOD application.
+        Get information about the application access of an FOD user group.
     .DESCRIPTION
-        Get information about a specific FOD application.
-    .PARAMETER Id
-        The id of the application.
+        Get information about the application access of an FOD user group.
+    .PARAMETER UserGroupId
+        The id of the user group.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -15,17 +15,17 @@ function Get-FODApplication {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Get the application with id 100
-        Get-FODApplication -Id 100
+        # Get the application access details of user group id 1000
+        Get-FODUserGroupApplicationAccess -Id 1000
     .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplication
+        https://api.ams.fortify.com/swagger/ui/index#!/UserGroupApplicationAccesss/UserGroupApplicationAccesssV3_GetUserGroupApplicationAccess
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [int]$Id,
+        [int]$UserGroupId,
 
         [switch]$Raw,
 
@@ -53,19 +53,19 @@ function Get-FODApplication {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Get-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $RawApplication = $null
+        Write-Verbose "Get-FODUserGroupApplicationAccess Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $RawUserGroupApplicationAccess = $null
     }
     process
     {
-            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$Id'" #$Params
-            $RawApplication = Send-FODApi -Method Get -Operation "/api/v3/applications/$Id" @Params
+            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/user-group-application-access/$UserGroupId'" #$Params
+            $RawUserGroupApplicationAccess = Send-FODApi -Method Get -Operation "/api/v3/user-group-application-access/$UserGroupId" @Params
     }
     end {
         if ($Raw) {
-            $RawApplication
+            $RawUserGroupApplicationAccess
         } else {
-            Parse-FODApplication -InputObject $RawApplication
+            Parse-FODUserGroupApplicationAccess -InputObject $RawUserGroupApplicationAccess.items
         }
     }
 }

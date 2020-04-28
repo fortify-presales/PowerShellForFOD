@@ -23,10 +23,21 @@ Describe "$TemplatePowerShellModule PowerShell Module Tests" {
     }
 }
 
-$pubFunctions = ('Add-FODApplication', 'Get-FODApplication', 'Get-FODApplications', 'Get-FODConfig', 'Get-FODToken',
-'New-FODApplicationObject','New-FODAttributeObject','New-FODMicroserviceObject','New-FODReleaseObject',
-'New-FODUserGroupObject','New-FODUserObject','Remove-FODApplication','Send-FODApi','Set-FODConfig',
-'Update-FODApplication')
+$pubFunctions = ('Add-FODApplication', 'Add-FODRelease', 'Add-FODUser',
+'Get-FODApplication', 'Get-FODApplications', 'Get-FODAttributes',
+'Get-FODConfig', 'Get-FODRelease', 'Get-FODReleases', 'Get-FODToken',
+'Get-FODUser', 'Get-FODUsers', 'Get-FODUserGroups',
+'Get-FODUserGroupApplicationAccess', 'Add-FODUserGroupApplicationAccess', 'Remove-FODUserGroupApplicationAccess',
+'Get-FODUserApplicationAccess', 'Add-FODUserApplicationAccess', 'Remove-FODUserApplicationAccess',
+'New-FODApplicationObject',
+'New-FODAttributeObject', 'New-FODMicroserviceObject',
+'New-FODReleaseObject', 'New-FODUserGroupObject', 'New-FODUserObject',
+'Remove-FODApplication', 'Remove-FODRelease', 'Remove-FODUser',
+'Send-FODApi', 'Set-FODConfig', 'Update-FODApplication',
+'Update-FODRelease', 'Update-FODUser',
+'Get-FODVulnerabilities',
+'Get-FODApplicationScans', 'Get-FODReleaseScans', 'Get-FODReleaseScan',
+'Import-FODStaticScan', 'Import-FODDynamicScan')
 $privFunctions = ('AddObjectDetail')
 
 $folders = ( 'Public','Private')

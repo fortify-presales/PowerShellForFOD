@@ -15,8 +15,8 @@ function Remove-FODRelease {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Remove the release with id 1000
-        Remove-FODRelease -Id 1000
+        # Remove the release with id 100
+        Remove-FODRelease -Id 100
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_Delete
     .FUNCTIONALITY
@@ -53,7 +53,7 @@ function Remove-FODRelease {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Delete-FODRelease Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Remove-FODRelease Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawResponse = $null
     }
     process

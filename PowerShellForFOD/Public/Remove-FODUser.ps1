@@ -53,7 +53,7 @@ function Remove-FODUser {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Delete-FODUser Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Remove-FODUser Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawResponse = $null
     }
     process
