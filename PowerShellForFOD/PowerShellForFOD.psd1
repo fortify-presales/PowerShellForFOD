@@ -70,7 +70,8 @@ PowerShellVersion = '5.1'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @('Add-FODApplication', 'Add-FODRelease', 'Add-FODUser', 
-               'Add-FODUserApplicationAccess', 'Add-FODUserGroupApplicationAccess', 
+               'Add-FODUserApplicationAccess', 'Add-FODUserGroupApplicationAccess',
+               'Get-FODScans', 'Get-FODScanSummary',
                'Get-FODApplication', 'Get-FODApplications', 
                'Get-FODApplicationScans', 'Get-FODAttributes', 'Get-FODConfig', 
                'Get-FODRelease', 'Get-FODReleases', 'Get-FODReleaseScan', 
@@ -123,7 +124,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Added Release,User and Attribute operations.'
+        ReleaseNotes = 'Added Scans and Scan summaries and made parameters mandatory for some commands.'
 
         # Prerelease string of this module
         # Prerelease = ''

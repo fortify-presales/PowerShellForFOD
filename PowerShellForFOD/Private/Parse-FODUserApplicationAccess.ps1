@@ -8,10 +8,10 @@ function Parse-FODUserApplicationAccess
     {
         [PSCustomObject]@{
             PSTypeName = 'FOD.UserApplicationAccessObject'
-            applicationId  = $UserApplicationAccess.applicationId
-            applicationName  = $UserApplicationAccess.applicationName
-            userId  = $UserApplicationAccess.userGroupId
-            accessMethod  = $UserApplicationAccess.accessMethod
+            applicationId = $UserApplicationAccess.applicationId
+            applicationName = $UserApplicationAccess.applicationName
+            userId = $UserApplicationAccess.userGroupId
+            accessMethod = $UserApplicationAccess.accessMethod
             Raw = $UserApplicationAccess
         }
     }

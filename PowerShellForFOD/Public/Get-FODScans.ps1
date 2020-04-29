@@ -1,11 +1,17 @@
-function Get-FODApplicationScans {
+function Get-FODScans {
     <#
     .SYNOPSIS
-        Gets the scans for a FOD applications.
+        Gets scans from FOD.
     .DESCRIPTION
-        Get the scans that have been carried out for a specific FOD application.
-    .PARAMETER ApplicationId
-        The application id.
+        Get scans from FOD.
+    .PARAMETER StartedOnStartDate
+        The started on state date.
+    .PARAMETER StartedOnEndDate
+        The started on end date.
+    .PARAMETER CompletedOnStartDate
+        The completed on state date.
+    .PARAMETER CompletedOnEndDate
+        The completed on end date.
     .PARAMETER OrderBy
         The field name to order the results by.
     .PARAMETER OrderByDirection
@@ -28,18 +34,19 @@ function Get-FODApplicationScans {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Get all of the scans for application id 100 through Paging
-        Get-FODApplicationScans -ApplicationId 100 -Paging
+        # Get all of the scans for application id 100 through Paging, latest completed first
+        Get-FODScans -Filters "applicationId:100" -Paging -OrderBy 'startedDateTime' -OrderByDirection 'DESC'
     .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetScansByApplicationId
+        https://api.ams.fortify.com/swagger/ui/index#!/Scans/ScansV3_GetScans
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [int]$ApplicationId,
-
+        [string]$StartedOnStartDate,
+        [string]$StartedOnEndDate,
+        [string]$CompletedOnStartDate,
+        [string]$CompletedOnEndDate,
         [string]$OrderBy,
         [string]$OrderByDirection,
         [string]$Fields,
@@ -71,10 +78,22 @@ function Get-FODApplicationScans {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Get-FODApplicationScans Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Get-FODScans Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $Body = @{
             offset = 0
             limit = $Limit
+        }
+        if ($StartedOnStartDate) {
+            $Body.Add("startedOnStartDate", $StartedOnStartDate)
+        }
+        if ($StartedOnEndDate) {
+            $Body.Add("startedOnEndDate", $StartedOnEndDate)
+        }
+        if ($CompletedOnStartDate) {
+            $Body.Add("completedOnStartDate", $CompletedOnStartDate)
+        }
+        if ($CompletedOnEndDate) {
+            $Body.Add("completedOnEndDate", $CompletedOnEndDate)
         }
         if ($OrderBy) {
             $Body.Add("orderBy", $OrderBy)
@@ -103,8 +122,8 @@ function Get-FODApplicationScans {
     process
     {
         do {
-            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$ApplicationId/scans'" #$Params
-            $Response = Send-FODApi -Method Get -Operation "/api/v3/applications/$ApplicationId/scans" -Body $Body @Params
+            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/scans'" #$Params
+            $Response = Send-FODApi -Method Get -Operation "/api/v3/scans" -Body $Body @Params
             $TotalCount = $Response.totalCount
             if ($LoadedCount -lt ($TotalCount - $LoadLimit)) {
                 $HasMore = $true

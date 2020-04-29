@@ -37,7 +37,9 @@ function Get-FODReleaseScans {
     #>
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
         [int]$ReleaseId,
+
         [string]$OrderBy,
         [string]$OrderByDirection,
         [string]$Fields,

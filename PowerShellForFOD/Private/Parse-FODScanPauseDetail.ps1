@@ -8,9 +8,9 @@ function Parse-FODScanPauseDetail
     {
         [PSCustomObject]@{
             PSTypeName = 'FOD.ScanPauseDetailObject'
-            pausedOn  = $ScanPauseDetail.pausedOn
-            reason  = $ScanPauseDetail.reason
-            notes  = $ScanPauseDetail.notes
+            pausedOn = $ScanPauseDetail.pausedOn
+            reason = $ScanPauseDetail.reason
+            notes = $ScanPauseDetail.notes
             Raw = $ScanPauseDetail
         }
     }

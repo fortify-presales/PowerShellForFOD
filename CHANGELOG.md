@@ -8,6 +8,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [1.0.0.4] - 2020-04-29
+
+### Added
+
+- Query Scans and retrieve Scan summary
+- Added "Dashboard" examples to README and Examples directory
+
+### Changed
+
+- Get-FODApplicationScans (made "ApplicationId" parameter mandatory)
+- Get-FODReleaseScan (made "ReleaseId" parameter mandatory)
+- Get-FODReleaseScans (made "ReleaseId" parameter mandatory)
+- Update documentation for new commands
+
+### Removed
+
+- None
+
 ## [1.0.0.3] - 2020-04-27
 
 ### Added

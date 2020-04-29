@@ -22,6 +22,7 @@
     * [Deleting Releases](#deleting-releases)
 *   [Scans](#scans)
     * [Retrieving Scans](#retrieving-scans)
+    * [Retrieving Scan Summary](#retrieving-scan-summary)
     * [Importing Static Scans](#importing-static-scans)
     * [Importing Dynamic Scans](#importing-dynamic-scans)    
 *   [Vulnerabilities](#vulnerabilities)
@@ -286,6 +287,13 @@ Remove-FODRelease -Id $releaseId
 
 ### Retrieving Scans
 
+To retrieve scans you can use:
+
+```Powershell
+# Get all of the scans for application id 1000 through Paging, latest completed first
+Get-FODScans -Filters "applicationId:1000" -Paging -OrderBy 'startedDateTime' -OrderByDirection 'DESC'
+```
+
 To retrieve scans for an application you can use:
 
 ```Powershell
@@ -305,6 +313,15 @@ To retrieve a specific scan for a release you can use:
 ```Powershell
 # Get the scans with id 1234 for release id 1000 through Paging
 Get-FODReleaseScan -ReleaseId 1000 -ScanId 1234
+```
+
+### Retrieving Scan Summary
+
+To retrieve the summary for a scan you can use:
+
+```Powershell
+# Get the scan summary for scan with id 1000
+Get-ScanSummary -ScanId 1000
 ```
 
 ### Importing Static Scans
@@ -429,4 +446,35 @@ Get-FODAttributes -Filter 'name:Regions'
 
 ## Troubleshooting
 
-TBD
+### Untrusted Repository
+
+If this is the first time you have installed a module from PSGallery, you might receive a message similar to the
+following:
+
+```
+Untrusted repository
+You are installing the modules from an untrusted repository. If you trust this repository, change its
+InstallationPolicy value by running the Set-PSRepository cmdlet. Are you sure you want to install the modules from
+'PSGallery'?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): Y
+```
+
+Select `Y` to install the module this time or you can use `Set-PSRepository` cmdlet.
+
+### Creating/Storing a Credential object
+
+The `Get-FODToken` function requires a PowerShell `Credential` object which will normally be created by prompting
+the user for the Fortify on Demand login details. However, if you are creating a script you might want to create
+this `Credential` object programmatically. This can be achieved by the following:
+
+```Powershell
+# An example of creating a $Credential object and generating FOD authentication token
+$User = "tenant\username"
+$Password = ConvertTo-SecureString -String "password" -AsPlainText -Force
+$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $Password
+Set-FODConfig -ApiUri $FODPortalUri
+Get-FODToken -GrantType UsernamePassword -Credential $Credential
+```
+
+Replace `tenant\username` and `password` with your login details. Obviously "hardcoding" credentials such as this
+in files has security implications.

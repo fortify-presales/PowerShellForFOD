@@ -1,11 +1,9 @@
-function Get-FODReleaseScan {
+function Get-FODScanSummary {
     <#
     .SYNOPSIS
-        Gets the individual scan for a FOD releases.
+        Gets the scans summary for a specific scan from FOD.
     .DESCRIPTION
-        Get the individual scan that has been carried out for a specific FOD release.
-    .PARAMETER ReleaseId
-        The release id.
+        Gets the scans summary for a specific scan from FOD.
     .PARAMETER ScanId
         The scan id.
     .PARAMETER Raw
@@ -17,21 +15,21 @@ function Get-FODReleaseScan {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Get the scans with id 1234 for release id 100 through Paging
-        Get-FODReleaseScan -ReleaseId 100 -ScanId 1234
+        # Get the scan summary for scan with id 1000
+        Get-ScanSummary -ScanId 1000
     .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetScansByReleaseId
+        https://api.ams.fortify.com/swagger/ui/index#!/Scans/ScansV3_GetScanSummary
     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [int]$ReleaseId,
-
-        [Parameter(Mandatory)]
         [int]$ScanId,
+
         [switch]$Raw,
+        [switch]$Paging,
+        [int]$Limit = 50,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -57,19 +55,19 @@ function Get-FODReleaseScan {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Get-FODReleaseScan Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $Response = $null
+        Write-Verbose "Get-FODScanSummary Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $RawScanSummary = $null
     }
     process
     {
-        Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/releases/$ReleaseId/scans/$ScanId'" #$Params
-        $Response = Send-FODApi -Method Get -Operation "/api/v3/releases/$ReleaseId/scans/$ScanId" @Params
-    }
+        Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/scans/$ScanId/summary'" #$Params
+        $RawScanSummary = Send-FODApi -Method Get -Operation "/api/v3/scans/$ScanId/summary" @Params
+}
     end {
         if ($Raw) {
-            $Response
+            $RawScanSummary
         } else {
-            Parse-FODScan -InputObject $Response
+            Parse-FODScanSummary -InputObject $RawScanSummary
         }
     }
 }

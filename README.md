@@ -28,6 +28,10 @@ Although the module can be used generically, it was designed for the following k
  * Programatically importing on-premise scans executed using [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast)
    or [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast).
  * Programatically creating dashboards from FOD data together with data from other sources.  
+ 
+An example dashboard created with this module and PowerShell [Universal Dashboard](https://universaldashboard.io/) is shown below:
+
+![DevSecOps Dashboard](Media/dashboard-example.png) 
         
 ----------
 
