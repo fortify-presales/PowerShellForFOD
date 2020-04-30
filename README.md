@@ -18,13 +18,14 @@
 This is a [PowerShell](https://microsoft.com/powershell) [module](https://technet.microsoft.com/en-us/library/dd901839.aspx)
 that provides command-line interaction and automation for the [Fortify On Demand API](https://api.ams.fortify.com/swagger/ui/index).
 
+![Example](Media/example-render.gif) 
 
 ## Use Cases
 
-Although the module can be used generically, it was designed for the following key use cases:
+Although the module can be used generically, some use cases where it can be applied include:
 
  * Programatically importing existing users, applications and releases into FOD. Using PowerShell scripting it is possible 
-   to create scripts that pull data from other sources - such as a spreadsheet  - and execute the functions in this module.
+   to create scripts that pull data from other sources - such as a spreadsheet - and execute the functions in this module.
  * Programatically importing on-premise scans executed using [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast)
    or [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast).
  * Programatically creating dashboards from FOD data together with data from other sources.  
