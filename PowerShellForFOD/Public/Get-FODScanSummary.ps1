@@ -17,8 +17,6 @@ function Get-FODScanSummary {
     .EXAMPLE
         # Get the scan summary for scan with id 1000
         Get-ScanSummary -ScanId 1000
-        # Get the analysis status of scan with id 1000
-        Get-FODScanSummary -ScanId 281760 | Select-Object -Property analysisStatusType
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Scans/ScansV3_GetScanSummary
     .FUNCTIONALITY
