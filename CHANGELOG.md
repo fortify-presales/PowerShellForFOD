@@ -8,6 +8,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [1.0.0.5] - 2020-05-04
+
+### Added
+
+- Start Static Scans (Advanced by uploading Zip file of source code)
+- BSI token parse
+
+### Changed
+
+- Import-FODStaticScan (Added missing "Raw" parameter)
+- Import-FODDynamicScan (Added missing "Raw" parameter)
+- Get-FODReleaseScan (Added missing "Raw" parameter)
+- Get-FODScanSummary (Updated documentation)
+- Update documentation for new commands
+
+### Removed
+
+- None
+
 ## [1.0.0.4] - 2020-04-29
 
 ### Added

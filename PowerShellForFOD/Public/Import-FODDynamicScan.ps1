@@ -32,6 +32,8 @@ function Import-FODDynamicScan {
         [Parameter(Mandatory)]
         [system.io.fileinfo]$ScanFile,
 
+        [switch]$Raw,
+
         [Parameter()]
         [ValidateNotNullOrEmpty()]
         [string]$Token = $Script:PS4FOD.Token,

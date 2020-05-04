@@ -25,6 +25,7 @@
     * [Retrieving Scan Summary](#retrieving-scan-summary)
     * [Importing Static Scans](#importing-static-scans)
     * [Importing Dynamic Scans](#importing-dynamic-scans)    
+    * [Starting a Static Scan](#starting-a-static-scan)
 *   [Vulnerabilities](#vulnerabilities)
     * [Retrieving Vulnerabilities](#retrieving-vulnerabilities)    
 *   [Users](#users)
@@ -343,6 +344,34 @@ using the `Import-FODDynamicScan` as in the following:
 # Import an FPR scan file into release with id 1000
 Import-FODDynamicScan -Release 1000 -ScanFile C:\Temp\scans\scanResults.fpr
 ```
+
+### Starting a Static Scan
+
+To start a Fortify on Demand static scan, a *Zip* file with the source and dependencies (as described in the [documentation](https://ams.fortify.com/Docs/en/index.htm) 
+needs to be uploaded and a Build Server Integration (BSI) token needs to be specified. This token is available in the
+ `Static Scan Setup` when you select `Start Scan -> Static` from the Fortify on Demand portal and enter 
+the basic details of the scan. When you have both of these you can start a static scan using the following:
+
+```Powershell 
+# Copy the BSI Token from the portal between the quotes
+$BsiToken = "..."
+# Starts a static scan using the BSI Token $BsiToken and the Zip file "C:\Temp\upload\fod.zip"
+$response = Start-FODStaticScan -BSIToken $BsiToken -ZipFile C:\Temp\upload\fod.zip `
+    -RemediationScanPreference NonRemediationScanOnly -EntitlementPreference SubscriptionOnly `
+    -InProgressScanPreference DoNotStartScan -Notes "some notes" -Raw
+Write-Host "Started static scan id: $response.scanId"
+```
+
+After the zip file has been uploaded the scan will be queued and executed in Fortify on Demand. To find the status of
+the scan you can use the `Get-FODScanSummary` function as in the following:
+
+```Powershell
+# Get the summary of the scan from the $response object created in the previous step
+Get-FODScanSummary -ScanId $response.scanId | Select-Object -Property analysisStatusType
+```
+
+The `analysisStatusType` will be the current status visibile in the Fortify on Demand portal, e.g. Queued, In_Progress, 
+Completed and so on.
 
 ----------
 

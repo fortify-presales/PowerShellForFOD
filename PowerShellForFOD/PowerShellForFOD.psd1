@@ -12,7 +12,7 @@
 RootModule = 'PowerShellForFOD.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0.4'
+ModuleVersion = '1.0.0.5'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -84,7 +84,7 @@ FunctionsToExport = @('Add-FODApplication', 'Add-FODRelease', 'Add-FODUser',
                'Remove-FODApplication', 'Remove-FODRelease', 'Remove-FODUser', 
                'Remove-FODUserApplicationAccess', 
                'Remove-FODUserGroupApplicationAccess', 'Send-FODApi', 
-               'Set-FODConfig', 'Update-FODApplication', 'Update-FODRelease', 
+               'Set-FODConfig', 'Start-FODStaticScan', 'Update-FODApplication', 'Update-FODRelease',
                'Update-FODUser')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -123,7 +123,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Added Scans and Scan summaries and made parameters mandatory for some commands.'
+        ReleaseNotes = 'Added Start Static Scan (advanced via upload of Zip file).'
 
         # Prerelease string of this module
         # Prerelease = ''

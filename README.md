@@ -28,6 +28,7 @@ Although the module can be used generically, some use cases where it can be appl
    to create scripts that pull data from other sources - such as a spreadsheet - and execute the functions in this module.
  * Programatically importing on-premise scans executed using [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast)
    or [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast).
+ * Running Static Scans from third party build tools where a plugin is not currently available.  
  * Programatically creating dashboards from FOD data together with data from other sources.  
  
 An example dashboard created with this module and PowerShell [Universal Dashboard](https://universaldashboard.io/) is shown below:

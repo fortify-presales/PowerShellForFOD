@@ -31,6 +31,7 @@ function Get-FODReleaseScan {
 
         [Parameter(Mandatory)]
         [int]$ScanId,
+
         [switch]$Raw,
 
         [Parameter()]
