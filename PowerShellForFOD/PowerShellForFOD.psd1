@@ -12,7 +12,7 @@
 RootModule = 'PowerShellForFOD.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0.5'
+ModuleVersion = '1.0.0.6'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -123,7 +123,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = 'Added Start Static Scan (advanced via upload of Zip file).'
+        ReleaseNotes = 'Adding security options into configuration file.'
 
         # Prerelease string of this module
         # Prerelease = ''
