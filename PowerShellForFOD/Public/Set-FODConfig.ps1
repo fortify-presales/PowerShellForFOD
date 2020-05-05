@@ -7,43 +7,86 @@ function Set-FODConfig
         Set PowerShell for FOD module configuration, and $PS4FOD module variable.
         This data is used as the default Token and ApiUri for most commands.
         If a command takes either a token or a uri, tokens take precedence.
-        WARNING: Use this to store the token or uri on a filesystem at your own risk
+        Credentials can also be stored so that the token can be genereated when needed.
+        WARNING: Use this to store the token,uri or crendetials on a filesystem at your own risk
                  Only supported on Windows systems, via the DPAPI
     .PARAMETER Token
-        Specify a Token to use.
-        Only serialized to disk on Windows, via DPAPI.
+        Specify a previously generate authentication Token.
     .PARAMETER ApiUri
         Specify the API Uri to use, e.g. https://api.ams.fortify.com.
-        Only serialized to disk on Windows, via DPAPI.
+    .PARAMETER GrantType
+        The method of authentication: UsernamePassword (Resource Owner Password Credentials) or ClientCredentials.
+        Default is "UsernamePassword".
+    .PARAMETER Scope
+        The API scope to use, required if UsernamePassword Credentials is used.
+        Default is "api-tenant".
+    .PARAMETER Credential
+        A previously created Credential object to be used.
     .PARAMETER Proxy
         Proxy to use with Invoke-RESTMethod.
+    .PARAMETER ForceToken
+        If set to true, an authentication token will be re-generated on every API call.
     .PARAMETER ForceVerbose
         If set to true, we allow verbose output that may include sensitive data
         *** WARNING ***
-        If you set this to true, your Slack token will be visible as plain text in verbose output
+        If you set this to true, your Fortify on Demand token will be visible as plain text in verbose output
     .PARAMETER Path
         If specified, save config file to this file path.
         Defaults to PS4FOD.xml in the user temp folder on Windows, or .ps4fod in the user's home directory on Linux/macOS.
     .EXAMPLE
         # Set the FOD Api Url and Force Verbose mode to $true
         Set-FODConfig -ApiUrl https://api.emea.fortify.com -ForceVerbose
+        # Set the FOD Api Uri, Grant Type and Scope and save a previously created Credential object
+        $Credential = Get-Credential
+        Set-FODConfig -ApiUri https://api.emea.fortify.com -GrantType UsernamePassword -Scope api-tenant -Credential $Credential
     .FUNCTIONALITY
         Fortify on Demand.
     #>
     [cmdletbinding()]
     param(
-        [string]$ApiUri,
+        [Parameter()]
         [string]$Token,
+
+        [Parameter()]
+        [string]$ApiUri,
+
+        [Parameter()]
+        [ValidateSet('UsernamePassword', 'ClientCredentials')]
+        [string]$GrantType = "UsernamePassword",
+
+        [Parameter()]
+        [ValidateSet('api-tenant', 'start-scans', 'manage-apps', 'view-apps', 'manage-issues', 'view-issues',
+                'manage-reports', 'view-reports', 'manage-users', 'view-users', 'manage-notifications',
+                'view-tenant-data')]
+        [string]$Scope = "api-tenant",
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        [System.Management.Automation.Credential()]
+        $Credential,
+
+        [Parameter()]
         [string]$Proxy,
+
+        [Parameter()]
+        [bool]$ForceToken,
+
+        [Parameter()]
         [bool]$ForceVerbose,
+
+        [Parameter()]
         [string]$Path = $script:_PS4FODXmlpath
     )
 
     switch ($PSBoundParameters.Keys)
     {
         'ApiUri'       { $Script:PS4FOD.ApiUri = $ApiUri }
+        'GrantType'    { $Script:PS4FOD.GrantType = $GrantType }
+        'Scope'        { $Script:PS4FOD.Scope = $Scope }
+        'Credential'   { $Script:PS4FOD.Credential = $Credential }
         'Token'        { $Script:PS4FOD.Token = $Token }
         'Proxy'        { $Script:PS4FOD.Proxy = $Proxy }
+        'ForceToken'   { $Script:PS4FOD.ForceToken = $ForceToken }
         'ForceVerbose' { $Script:PS4FOD.ForceVerbose = $ForceVerbose }
     }
 
@@ -61,7 +104,11 @@ function Set-FODConfig
     $Script:PS4FOD |
         Select-Object -Property Proxy,
         @{ l = 'ApiUri'; e = { Encrypt $_.ApiUri } },
+        @{ l = 'GrantType'; e = { $_.GrantType } },
+        @{ l = 'Scope'; e = { $_.Scope } },
+        @{ l = 'Credential'; e = { $_.Credential } },
         @{ l = 'Token'; e = { Encrypt $_.Token } },
+        ForceToken,
         ForceVerbose |
         Export-Clixml -Path $Path -force
 

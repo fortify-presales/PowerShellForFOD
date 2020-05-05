@@ -27,6 +27,8 @@ function Send-FODApi {
     .PARAMETER Proxy
         Proxy server to use.
         If empty, the value from PS4FOD will be used.
+    .PARAMETER NewToken
+        Create a new token using stored credentials.
     .PARAMETER ForceVerbose
         If specified, don't explicitly remove verbose output from Invoke-RestMethod
         *** WARNING ***
@@ -84,7 +86,10 @@ function Send-FODApi {
         [ValidateNotNullOrEmpty()]
         [string]$Proxy = $Script:PS4FOD.Proxy,
 
+        [switch]$ForceToken = $Script:PS4FOD.ForceToken,
+
         [switch]$ForceVerbose = $Script:PS4FOD.ForceVerbose
+
     )
     begin
     {
@@ -114,6 +119,11 @@ function Send-FODApi {
             $Params.Add('Verbose', $True)
             $VerbosePreference = "Continue"
         }
+        if ($ForceToken) {
+            Write-Verbose "Re-creating authentication token"
+            Get-FODToken
+            $Token = $Script:PS4FOD.Token
+        }
         $Headers = @{
             'Authorization' = "Bearer " + $Token
             'Accept' = "application/json"
@@ -134,12 +144,13 @@ function Send-FODApi {
         } catch {
             Write-Verbose "Caught Exception:"
             # (HTTP 429 is "Too Many Requests")
-            if ($_.Exception.Response.StatusCode -eq 429)
-            {
+            if ($_.Exception.Response.StatusCode -eq 429) {
                 $RetryPeriod = 30
-                if ($_.Exception.Response.Headers -and $_.Exception.Response.Headers.Contains('X-Rate-Limit-Reset')) {
+                if ($_.Exception.Response.Headers -and $_.Exception.Response.Headers.Contains('X-Rate-Limit-Reset'))
+                {
                     $RetryPeriod = $_.Exception.Response.Headers.GetValues('X-Rate-Limit-Reset')
-                    if ($RetryPeriod -is [string[]]) {
+                    if ($RetryPeriod -is [string[]])
+                    {
                         $RetryPeriod = [int]$RetryPeriod[0]
                     }
                 }

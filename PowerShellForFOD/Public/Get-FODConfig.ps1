@@ -45,7 +45,11 @@ Function Get-FODConfig {
         Import-Clixml -Path $Path |
                 Select-Object -Property Proxy,
                 @{l='ApiUri';e={Decrypt $_.ApiUri}},
+                @{l='GrantType';e={$_.GrantType}},
+                @{l='Scope';e={$_.Scope}},
+                @{l='Credential';e={$_.Credential}},
                 @{l='Token';e={Decrypt $_.Token}},
+                ForceToken,
                 ForceVerbose
     }
 

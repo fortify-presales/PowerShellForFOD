@@ -3,7 +3,7 @@ function Remove-SensitiveData
     param (
         [parameter(ValueFromPipeline = $True)]
         $InputObject,
-        $SensitiveProperties = @('ApiUri', 'Token'),
+        $SensitiveProperties = @('ApiUri', 'Token', 'Credential'),
         $ForceVerbose = $Script:PS4FOD.ForceVerbose
     )
     process {

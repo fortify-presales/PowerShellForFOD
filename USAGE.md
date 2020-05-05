@@ -42,16 +42,15 @@
 ## Configuration
 
 To access the [Fortify On Demand](https://www.microfocus.com/en-us/products/application-security-testing) API you need 
-to create an **"authentication"** token. This module allows the creation and persistence of this token so that it does
-not need to be passed with each command. To create the token, first set your API endpoint and then request then request
-the token with the following commands:
+to create an **authentication token**. This module allows the creation and persistence of this token so that it does
+not need to be passed with each command. To create the token, set your **API Uri** endpoint and the **GrantType** and **Scope**
+you will be using to access Fortify on Demand as in the following: 
 
 ```PowerShell
-Set-FODConfig -ApiUri https://api.ams.fortify.com
-Get-FODToken
+Set-FODConfig -ApiUri https://api.ams.fortify.com -GrantType UsernamePassword -Scope api-tenant
 ```
 
-Note: the value for `ApiUri` will depend on which region you are using Fortify on Demand in. The current values are:
+The value for `ApiUri` will depend on which region you are using Fortify on Demand in. The current values are:
 
 |Data Center|API Root Uri|
 |-----------|------------|
@@ -60,15 +59,29 @@ Note: the value for `ApiUri` will depend on which region you are using Fortify o
 |APAC|https://api.apac.fortify.com|
 |FedRAMP|https://api.fed.fortify.com|
 
-After running `Get-FODToken` you will be prompted for a username and password. Both *"client credentials"* and 
-*"username/password"* authentication is supported. For example, to login with your Fortify On Demand username/password 
-enter your `tenant\username` values in the *"username"* field and your `password` value in the *"password"* field. For 
-*"client credentials"* you should enter an API Key and API Secret that has been created in the Fortify On Demand portal 
-at `Administration -> Settings -> API`.
+Fortify on Demand supports two authentication types or `GrantType`: **username/password** authentication (`GrantType UsernamePassword`) 
+and **client credentials** (`GrantType ClientCredentials`). 
 
-Note: the token is not permanent; Fortify on Demand will "timeout" the token after a period of inactivity,
-after which you will need to re-create it with `Get-FODToken`. The configuration is encrypted and stored on disk for 
-use in subsequent commands.
+You can then retrieve an **authentication token** using the following: 
+
+```PowerShell
+Get-FODToken
+```
+After which you will be prompted to login with your Fortify On Demand credentials. The values you enter depend on which
+`GrantType` you are using. For **username/password** authentication enter your `tenantId\username` values in the 
+*"username"* field and your `password` value in the **password** field. For **client credentials** authentication you 
+should enter an **API Key** and **API Secret** that has been created in the Fortify On Demand portal at `Administration -> Settings -> API`.
+
+Please note, the token is not permanent - Fortify on Demand will "timeout" the token after a period of inactivity,
+after which you will need to re-create it with `Get-FODToken`. However, you can also store a PowerShell [Credential](https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.pscredential?view=powershellsdk-1.1.0)
+object which can be automatically used to generate the token. To do this you can carry out the following:
+
+```Powershell
+$Credential = Get-Credential
+Set-FODConfig -Credential $Credential
+``` 
+
+The configuration is encrypted and stored on disk for use in subsequent commands.
 
 To retrieve the current configuration execute the following:
 
@@ -76,11 +89,15 @@ To retrieve the current configuration execute the following:
 Get-FODConfig
 ```
 
-There are currently four configuration settings available:
+There following configuration settings are available/visible:
 
 - `Proxy` - A proxy server configuration to use
 - `ApiUri` - The API endpoint of the Fortify On Demand server you are using
+- `GrantType` - The type of authentication being used
+- `Scope` - The API scope of access
+- `Credential` - A PowerShell Credential object
 - `Token` - An authentication token retrieved using `Get-FODToken`
+- `ForceToken` - Force the authentication token to be re-generated on every API call
 - `ForceVerbose` - Force Verbose output for all commands and subcommands 
 
 Each of these options can be set via `Set-FODConfig`, for example `Set-FODConfig -ForceVerbose` to force
@@ -477,7 +494,7 @@ Get-FODAttributes -Filter 'name:Regions'
 
 ### Untrusted Repository
 
-If this is the first time you have installed a module from PSGallery, you might receive a message similar to the
+If this is the first time you have installed a module from [PSGallery](https://www.powershellgallery.com/), you might receive a message similar to the
 following:
 
 ```
@@ -490,20 +507,34 @@ InstallationPolicy value by running the Set-PSRepository cmdlet. Are you sure yo
 
 Select `Y` to install the module this time or you can use `Set-PSRepository` cmdlet.
 
-### Creating/Storing a Credential object
+### Creating/Storing a Powershell Credential object
 
 The `Get-FODToken` function requires a PowerShell `Credential` object which will normally be created by prompting
-the user for the Fortify on Demand login details. However, if you are creating a script you might want to create
+the user for Fortify on Demand login details. However, if you are creating a script you might want to create
 this `Credential` object programmatically. This can be achieved by the following:
 
 ```Powershell
-# An example of creating a $Credential object and generating FOD authentication token
-$User = "tenant\username"
-$Password = ConvertTo-SecureString -String "password" -AsPlainText -Force
-$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $User, $Password
-Set-FODConfig -ApiUri $FODPortalUri
-Get-FODToken -GrantType UsernamePassword -Credential $Credential
+$Credential = Get-Credential
+Set-FODConfig -ApiUri $FODPortalUri ... -Credential $Credential
+Get-FODToken
 ```
 
-Replace `tenant\username` and `password` with your login details. Obviously "hardcoding" credentials such as this
-in files has security implications.
+`Get-Credential` will request a username and password which will be either your `tenantId\username` and `password`
+values or an **API Key** and **API Secret** that has been created in the Fortify On Demand portal at 
+`Administration -> Settings -> API`.
+
+### Removing/creating the configuration file
+
+The configuration file is stored in `%HOME_DRIVE%%HOME_PATH%\AppData\Local\Temp`, e.g. `C:\Users\demo\AppData\Local\Temp`
+as `%USERNAME%-hostname-PS4FOD.xml`. You can delete this file and re-create it using `Set-FODConfig` if necessary.
+
+### Debugging responses
+
+If you are not receiving the output you expect you can turn on **verbose** output using the `ForceVerbose` option
+as in the following:
+
+```Powershell
+Set-FODConfig -ForceVerbose $true
+```
+
+Then when you execute a command you should see details of all the API calls that are being made.

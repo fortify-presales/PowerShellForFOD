@@ -8,6 +8,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [1.0.0.6] - 2020-05-06
+
+### Added
+
+- Ability to store Credentials to allow re-generation of token
+
+### Changed
+
+- Get-FODConfig (Added storage of "GrantType", "Scope", "Credential" and "ForceToken" parameters)
+- Get-FODToken (Added parameters for "GrantType", "Scope", "Credential" and "ForceToken")
+- Get-FODReleaseScan (Added missing "Raw" parameter)
+- Send-FODApi (Added "ForceToken" option to allow authentication token to be re-generated on every call)
+- Set-FODConfig (Added storage of "GrantType", "Scope", "Credential" and "ForceToken" parameters)
+- Update documentation for updated commands
+
+### Removed
+
+- None
+
 ## [1.0.0.5] - 2020-05-04
 
 ### Added

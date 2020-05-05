@@ -6,6 +6,8 @@ function Get-FODToken
     .DESCRIPTION
         Connects to FOD using User or Client Credentials and prints the resultant authentication token and/or saves
         it in the PowerShell for FOD module configuration.
+    .PARAMETER ApiUri
+        FOD API Uri to use, e.g. https://api.ams.fortify.com.
     .PARAMETER GrantType
         The method of authentication: UsernamePassword (Resource Owner Password Credentials) or ClientCredentials.
         Defaults to 'UsernamePassword'.
@@ -19,8 +21,9 @@ function Get-FODToken
         If ClientCredentials are used enter your API Key and API Secret.
     .PARAMETER Print
         Prints the value of the authentication token to the output.
-    .PARAMETER ApiUri
-        FOD API Uri to use, e.g. https://api.ams.fortify.com.
+    .PARAMETER ForceCredential
+        If specified and a Credential object has already been stored, this will ignore it and force the
+        prompt for a new Credential object.
     .PARAMETER Proxy
         Proxy server to use.
         Optional.
@@ -38,20 +41,6 @@ function Get-FODToken
     [cmdletbinding()]
     param (
         [Parameter()]
-        [ValidateSet('UsernamePassword', 'ClientCredentials')]
-        [string[]]$GrantType = "UsernamePassword",
-
-        [Parameter()]
-        [ValidateNotNullOrEmpty()]
-        [string]$Scope = 'api-tenant',
-
-        [Parameter(Mandatory)]
-        [System.Management.Automation.PSCredential]
-        [System.Management.Automation.Credential()]
-        $Credential,
-
-        [switch]$Print = $False,
-
         [ValidateNotNullOrEmpty()]
         [ValidateScript({
             if (-not$_ -and -not$Script:PS4FOD.ApiUri) {
@@ -59,12 +48,70 @@ function Get-FODToken
             } else {
                 $true
             }
-        })]
-
+         })]
         [string]$ApiUri = $Script:PS4FOD.ApiUri,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet('UsernamePassword', 'ClientCredentials')]
+        [ValidateScript({
+            if (-not$_ -and -not$Script:PS4FOD.GrantType) {
+                throw 'Please supply a FOD GrantType with Set-FODConfig.'
+            } else {
+                $true
+            }
+        })]
+        [string]$GrantType = $Script:PS4FOD.GrantType,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet('api-tenant', 'start-scans', 'manage-apps', 'view-apps', 'manage-issues', 'view-issues',
+            'manage-reports', 'view-reports', 'manage-users', 'view-users', 'manage-notifications',
+            'view-tenant-data')]
+        [ValidateScript({
+            if (-not$_ -and -not$Script:PS4FOD.Scope) {
+                throw 'Please supply a FOD Scope with Set-FODConfig.'
+            } else {
+                $true
+            }
+        })]
+        [string]$Scope = $Script:PS4FOD.Scope,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        [System.Management.Automation.Credential()]
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({
+            if (-not$_ -and -not$Script:PS4FOD.Credential) {
+                throw 'Please supply a Credential with Set-FODConfig.'
+            } else {
+                $true
+            }
+        })]
+        $Credential = $Script:PS4FOD.Credential,
+
+        [switch]$Print = $False,
+
+        [switch]$ForceCredential = $False,
+
         [string]$Proxy = $Script:PS4FOD.Proxy,
         [switch]$ForceVerbose = $Script:PS4FOD.ForceVerbose
     )
+
+    # Check parameters have values
+    if ([string]::IsNullOrEmpty($ApiUri)) {
+        throw 'Please supply a valid FOD API Uri with Set-FODConfig.'
+    }
+    if ([string]::IsNullOrEmpty($GrantType)) {
+        throw 'Please supply a valid FOD GrantType with Set-FODConfig.'
+    }
+    if ([string]::IsNullOrEmpty($Scope)) {
+        throw 'Please supply a valid FOD Scope with Set-FODConfig.'
+    }
+    if ($ForceCredential -or ($Credential -eq $null)) {
+        $Credential = Get-Credential
+    }
+
     $Params = @{
         ErrorAction = 'Stop'
     }
@@ -117,7 +164,7 @@ function Get-FODToken
         if ($Print) {
             Write-Host $Token
         }
-        Set-FODConfig -Token $Token
+        Set-FODConfig -ApiUri $ApiUri -GrantType $GrantType -Scope $Scope -Token $Token
     }
     else {
         Write-Verbose "Something went wrong.  `$Response is `$null"
