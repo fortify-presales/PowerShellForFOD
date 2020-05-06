@@ -36,9 +36,6 @@ function Set-FODConfig
     .EXAMPLE
         # Set the FOD Api Url and Force Verbose mode to $true
         Set-FODConfig -ApiUrl https://api.emea.fortify.com -ForceVerbose
-        # Set the FOD Api Uri, Grant Type and Scope and save a previously created Credential object
-        $Credential = Get-Credential
-        Set-FODConfig -ApiUri https://api.emea.fortify.com -GrantType UsernamePassword -Scope api-tenant -Credential $Credential
     .FUNCTIONALITY
         Fortify on Demand.
     #>
