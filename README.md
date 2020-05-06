@@ -73,27 +73,16 @@ Install-Module -Name PowerShellForFOD
 
 To access the [Fortify On Demand](https://www.microfocus.com/en-us/products/application-security-testing) API you need 
 to create an "authentication" token. This module allows the creation and persistence of this token so that it does not 
-need to be passed with each command. To create the token, run the following commands to set your API endpoint and 
-request a token:
+need to be passed with each command. To create the token, run the following commands to set your API endpoint, use 
+Username/Password authentication and request a token:
 
 ```PowerShell
-Set-FODConfig -ApiUri https://api.ams.fortify.com
+Set-FODConfig -ApiUri https://api.ams.fortify.com -GrantType UsernamePassword -Scope api-tenant
 Get-FODToken
 ```
 
-Note: the value for `ApiUri` will depend on which region you are using [Fortify On Demand](https://www.microfocus.com/en-us/products/application-security-testing) in.
-
-After running `Get-FODToken` you will be prompted for a username and password. Both *"client credentials"* and 
-*"username/password"* authentication are supported. For example, to login with your Fortify On Demand portal "username/password" 
-enter your *`tenant\username`* values in the *"username"* field and your *`password`* value in the *"password"* field. For 
-*"client credentials"* you should enter an API Key and API Secret that has been created in the Fortify On Demand portal 
-at `Administration -> Settings -> API`.
-
-Please note: the token is not permanent; Fortify on Demand will "timeout" the token after a period of inactivity,
-after which you will need to re-create it with `Get-FODToken`. The configuration is encrypted and stored on disk for 
-use in subsequent commands.
-
-There are more configuration options available.  Please review the help for that command for the most up-to-date list!
+You will requested for your login details, in example you would enter your `tenantId\username` and `password`.
+For more information on how to authenticate please refer to [USAGE](USAGE.md).
 
 ## Usage
 
