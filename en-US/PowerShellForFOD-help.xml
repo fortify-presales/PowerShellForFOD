@@ -3684,42 +3684,6 @@
       <command:syntaxItem>
         <maml:name>Get-FODToken</maml:name>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>GrantType</maml:name>
-          <maml:Description>
-            <maml:para>The method of authentication: UsernamePassword (Resource Owner Password Credentials) or ClientCredentials. Defaults to 'UsernamePassword'.</maml:para>
-          </maml:Description>
-          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
-          <dev:type>
-            <maml:name>String[]</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>UsernamePassword</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
-          <maml:name>Scope</maml:name>
-          <maml:Description>
-            <maml:para>The API scope to use, required if UsernamePassword Credentials is used. Defaults to 'api-tenant'.</maml:para>
-          </maml:Description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>Api-tenant</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-          <maml:name>Credential</maml:name>
-          <maml:Description>
-            <maml:para>The Credential object to be used, if empty you will be prompted for User and Password. If 'UsernamePassword' credentials are used enter your "tenant\username" details at the User prompt and your "password" at the Password prompt. If ClientCredentials are used enter your API Key and API Secret.</maml:para>
-          </maml:Description>
-          <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
-          <dev:type>
-            <maml:name>PSCredential</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
           <maml:name>ApiUri</maml:name>
           <maml:Description>
             <maml:para>FOD API Uri to use, e.g. https://api.ams.fortify.com.</maml:para>
@@ -3730,6 +3694,42 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>GrantType</maml:name>
+          <maml:Description>
+            <maml:para>The method of authentication: UsernamePassword (Resource Owner Password Credentials) or ClientCredentials. Defaults to 'UsernamePassword'.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.GrantType</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+          <maml:name>Scope</maml:name>
+          <maml:Description>
+            <maml:para>The API scope to use, required if UsernamePassword Credentials is used. Defaults to 'api-tenant'.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.Scope</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+          <maml:name>Credential</maml:name>
+          <maml:Description>
+            <maml:para>The Credential object to be used, if empty you will be prompted for User and Password. If 'UsernamePassword' credentials are used enter your "tenant\username" details at the User prompt and your "password" at the Password prompt. If ClientCredentials are used enter your API Key and API Secret.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCredential</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.Credential</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
           <maml:name>Proxy</maml:name>
@@ -3755,6 +3755,17 @@
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ForceCredential</maml:name>
+          <maml:Description>
+            <maml:para>If specified and a Credential object has already been stored, this will ignore it and force the prompt for a new Credential object.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ForceVerbose</maml:name>
           <maml:Description>
             <maml:para>If specified, don't explicitly remove verbose output from Invoke-RestMethod * WARNING * This will expose your data in verbose output</maml:para>
@@ -3769,18 +3780,30 @@
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>ApiUri</maml:name>
+        <maml:Description>
+          <maml:para>FOD API Uri to use, e.g. https://api.ams.fortify.com.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>GrantType</maml:name>
         <maml:Description>
           <maml:para>The method of authentication: UsernamePassword (Resource Owner Password Credentials) or ClientCredentials. Defaults to 'UsernamePassword'.</maml:para>
         </maml:Description>
-        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
-          <maml:name>String[]</maml:name>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>UsernamePassword</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.GrantType</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
         <maml:name>Scope</maml:name>
         <maml:Description>
           <maml:para>The API scope to use, required if UsernamePassword Credentials is used. Defaults to 'api-tenant'.</maml:para>
@@ -3790,9 +3813,9 @@
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>Api-tenant</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.Scope</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
         <maml:name>Credential</maml:name>
         <maml:Description>
           <maml:para>The Credential object to be used, if empty you will be prompted for User and Password. If 'UsernamePassword' credentials are used enter your "tenant\username" details at the User prompt and your "password" at the Password prompt. If ClientCredentials are used enter your API Key and API Secret.</maml:para>
@@ -3802,7 +3825,7 @@
           <maml:name>PSCredential</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.Credential</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Print</maml:name>
@@ -3816,17 +3839,17 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
-        <maml:name>ApiUri</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ForceCredential</maml:name>
         <maml:Description>
-          <maml:para>FOD API Uri to use, e.g. https://api.ams.fortify.com.</maml:para>
+          <maml:para>If specified and a Credential object has already been stored, this will ignore it and force the prompt for a new Credential object.</maml:para>
         </maml:Description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>SwitchParameter</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
         <maml:name>Proxy</maml:name>
@@ -8291,6 +8314,17 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ForceToken</maml:name>
+          <maml:Description>
+            <maml:para>{{ Fill ForceToken Description }}</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ForceVerbose</maml:name>
           <maml:Description>
             <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
@@ -8351,6 +8385,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ForceToken</maml:name>
+        <maml:Description>
+          <maml:para>{{ Fill ForceToken Description }}</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ForceVerbose</maml:name>
@@ -8464,15 +8510,15 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Set PowerShell for FOD module configuration, and $PS4FOD module variable. This data is used as the default Token and ApiUri for most commands. If a command takes either a token or a uri, tokens take precedence. WARNING: Use this to store the token or uri on a filesystem at your own risk          Only supported on Windows systems, via the DPAPI</maml:para>
+      <maml:para>Set PowerShell for FOD module configuration, and $PS4FOD module variable. This data is used as the default Token and ApiUri for most commands. If a command takes either a token or a uri, tokens take precedence. Credentials can also be stored so that the token can be genereated when needed. WARNING: Use this to store the token,uri or crendetials on a filesystem at your own risk          Only supported on Windows systems, via the DPAPI</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Set-FODConfig</maml:name>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>ApiUri</maml:name>
+          <maml:name>Token</maml:name>
           <maml:Description>
-            <maml:para>Specify the API Uri to use, e.g. https://api.ams.fortify.com. Only serialized to disk on Windows, via DPAPI.</maml:para>
+            <maml:para>Specify a previously generate authentication Token.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -8482,9 +8528,9 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
-          <maml:name>Token</maml:name>
+          <maml:name>ApiUri</maml:name>
           <maml:Description>
-            <maml:para>Specify a Token to use. Only serialized to disk on Windows, via DPAPI.</maml:para>
+            <maml:para>Specify the API Uri to use, e.g. https://api.ams.fortify.com.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -8494,6 +8540,42 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+          <maml:name>GrantType</maml:name>
+          <maml:Description>
+            <maml:para>The method of authentication: UsernamePassword (Resource Owner Password Credentials) or ClientCredentials. Default is "UsernamePassword".</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>UsernamePassword</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+          <maml:name>Scope</maml:name>
+          <maml:Description>
+            <maml:para>The API scope to use, required if UsernamePassword Credentials is used. Default is "api-tenant".</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Api-tenant</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+          <maml:name>Credential</maml:name>
+          <maml:Description>
+            <maml:para>A previously created Credential object to be used.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCredential</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="6" aliases="none">
           <maml:name>Proxy</maml:name>
           <maml:Description>
             <maml:para>Proxy to use with Invoke-RESTMethod.</maml:para>
@@ -8505,10 +8587,10 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
-          <maml:name>ForceVerbose</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="7" aliases="none">
+          <maml:name>ForceToken</maml:name>
           <maml:Description>
-            <maml:para>If set to true, we allow verbose output that may include sensitive data * WARNING * If you set this to true, your Slack token will be visible as plain text in verbose output</maml:para>
+            <maml:para>If set to true, an authentication token will be re-generated on every API call.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
           <dev:type>
@@ -8517,7 +8599,19 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="8" aliases="none">
+          <maml:name>ForceVerbose</maml:name>
+          <maml:Description>
+            <maml:para>If set to true, we allow verbose output that may include sensitive data * WARNING * If you set this to true, your Fortify on Demand token will be visible as plain text in verbose output</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="9" aliases="none">
           <maml:name>Path</maml:name>
           <maml:Description>
             <maml:para>If specified, save config file to this file path. Defaults to PS4FOD.xml in the user temp folder on Windows, or .ps4fod in the user's home directory on Linux/macOS.</maml:para>
@@ -8533,9 +8627,9 @@
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-        <maml:name>ApiUri</maml:name>
+        <maml:name>Token</maml:name>
         <maml:Description>
-          <maml:para>Specify the API Uri to use, e.g. https://api.ams.fortify.com. Only serialized to disk on Windows, via DPAPI.</maml:para>
+          <maml:para>Specify a previously generate authentication Token.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -8545,9 +8639,9 @@
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
-        <maml:name>Token</maml:name>
+        <maml:name>ApiUri</maml:name>
         <maml:Description>
-          <maml:para>Specify a Token to use. Only serialized to disk on Windows, via DPAPI.</maml:para>
+          <maml:para>Specify the API Uri to use, e.g. https://api.ams.fortify.com.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -8557,6 +8651,42 @@
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+        <maml:name>GrantType</maml:name>
+        <maml:Description>
+          <maml:para>The method of authentication: UsernamePassword (Resource Owner Password Credentials) or ClientCredentials. Default is "UsernamePassword".</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>UsernamePassword</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+        <maml:name>Scope</maml:name>
+        <maml:Description>
+          <maml:para>The API scope to use, required if UsernamePassword Credentials is used. Default is "api-tenant".</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>Api-tenant</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+        <maml:name>Credential</maml:name>
+        <maml:Description>
+          <maml:para>A previously created Credential object to be used.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+        <dev:type>
+          <maml:name>PSCredential</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="6" aliases="none">
         <maml:name>Proxy</maml:name>
         <maml:Description>
           <maml:para>Proxy to use with Invoke-RESTMethod.</maml:para>
@@ -8568,10 +8698,10 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
-        <maml:name>ForceVerbose</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="7" aliases="none">
+        <maml:name>ForceToken</maml:name>
         <maml:Description>
-          <maml:para>If set to true, we allow verbose output that may include sensitive data * WARNING * If you set this to true, your Slack token will be visible as plain text in verbose output</maml:para>
+          <maml:para>If set to true, an authentication token will be re-generated on every API call.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
         <dev:type>
@@ -8580,7 +8710,19 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="8" aliases="none">
+        <maml:name>ForceVerbose</maml:name>
+        <maml:Description>
+          <maml:para>If set to true, we allow verbose output that may include sensitive data * WARNING * If you set this to true, your Fortify on Demand token will be visible as plain text in verbose output</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="9" aliases="none">
         <maml:name>Path</maml:name>
         <maml:Description>
           <maml:para>If specified, save config file to this file path. Defaults to PS4FOD.xml in the user temp folder on Windows, or .ps4fod in the user's home directory on Linux/macOS.</maml:para>
