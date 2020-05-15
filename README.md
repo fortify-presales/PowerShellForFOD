@@ -8,7 +8,7 @@
 *   [Current API Support](#current-api-support)
 *   [Installation](#installation)
 *   [Configuration](#configuration)
-*   [Usage](#usage)
+*   [Example](#example)
 *   [Logging](#logging)
 *   [Developing and Contributing](#developing-and-contributing)
 *   [Licensing](#licensing)
@@ -84,12 +84,12 @@ Get-FODToken
 You will requested for your login details, in example you would enter your `tenantId\username` and `password`.
 For more information on how to authenticate please refer to [USAGE](USAGE.md).
 
-## Usage
+## Example
 
 Example command:
 
 ```powershell
-$applications = Get-FODApplications -Filters "applicationName:test" -Paging | Out-GridView
+Get-FODApplications -Filters "applicationName:test" -Paging | Out-GridView
 ```
 
 For more example commands, please refer to [USAGE](USAGE.md).
@@ -107,6 +107,6 @@ to see if has already been discussed.
 
 ## Licensing
 
-PowerShellForGitHub is licensed under the [GNU General Public license](LICENSE).
+PowerShellForFOD is licensed under the [GNU General Public license](LICENSE).
 
 
