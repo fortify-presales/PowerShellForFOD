@@ -110,7 +110,7 @@ verbose output in commands and sub-commands.
 ### Adding applications
 
 To create a new application, you need to create a `FODApplicationObject` and `FODAttributeObjects` for any 
-attributes you want to set for the application. Note: some attributes are mandatory and values will need to provided - 
+attributes you want to set for the application. Note: some attributes are mandatory and values will need to be provided - 
 you can check which attributes are mandatory using `Get-FODAttributes -Filter 'isRequired:True'`. 
 
 An example of creating attributes and an application is shown in the following: 
