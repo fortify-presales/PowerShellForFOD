@@ -109,5 +109,7 @@ to see if has already been discussed.
 
 PowerShellForFOD is licensed under the [GNU General Public license](LICENSE).
 
-Please note: this content is provided by for the benefit of Micro Focus customers, support for it is not available via Micro Focus Software Support.
+Please note: this is community content provided by and for the benefit of [Micro Focus](https://www.microfocus.com/) customers, 
+it is not officially endorsed nor supported via [Micro Focus Software Support](https://www.microfocus.com/en-us/support).
+
 
