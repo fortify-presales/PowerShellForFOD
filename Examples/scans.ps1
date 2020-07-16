@@ -1,5 +1,5 @@
 #
-# FOD Release examples
+# FOD Scans, Vulnerabilities and Audit Templates examples
 #
 # - Change "$ownerId" to valid user id (user'Get-FODUsers' to find user id values)
 # - Change "$attributes" to set any "required" values (use 'Get-FODAttributes Get-FODAttributes -Filters "isRequired:True"' to find any required values)
@@ -27,7 +27,7 @@ $attributes = @(
 $appObject = New-FODApplicationObject -Name "apitest1" -Description "its description" `
     -Type "Web_Thick_Client" -BusinessCriticality "Low" `
     -ReleaseName "1.0" -ReleaseDescription "its description" -SDLCStatus "Development" `
-    -OwnerId 9444 -Attributes $attributes
+    -OwnerId $ownerId -Attributes $attributes
 
 # Add the new Application
 Write-Host "Creating new application..."
@@ -41,47 +41,28 @@ $applicationId = $appResponse.applicationId
 Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
 
-#
-# Create a new Release for Application Id $applicationId
-#
-
-# Create the ReleaseObject
-$relObject = New-FODReleaseObject -Name "1.0.1" -Description "its description" -ApplicationId $applicationId `
-    -SDLCStatus 'Development'
-
-# Add the new Release
-Write-Host "Creating new release..."
-$relResponse = Add-FODRelease -Release $relObject
-if ($relResponse) {
-    Write-Host "Created release with id:" $relResponse.releaseId
-}
-$releaseId = $relResponse.releaseId
-
+# Import application audit templates
+Write-Host "Importing Application Audit Template"
+Import-FODApplicationAuditTemplates -ApplicationId $applicationId -FilePath $PSScriptRoot\uploads\sql-injections-aat.json
 Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
 
-# Get the new Release
-Write-Host "Getting release with id: $releaseId"
-Get-FODRelease -Id $releaseId
-
+# Import static scan
+Write-Host "Importing static scan... please wait until complete in FOD portal"
+Import-FODStaticScan -ApplicationName "apitest1" -ReleaseName "1.0" -ScanFile $PSScriptRoot\uploads\WebGoat5.0.fpr
 Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
 
-# Create the update ReleaseObject
-$relUpdateObject = New-FODReleaseObject -Name "1.0.2" -Description "updated description" `
-    -SDLCStatus 'QA' -OwnerId $ownerId
+# Import dynamic scan
+# TBD
 
-# Update the Release
-Write-Host "Updating release with id: $releaseId"
-Update-FODRelease -Id $releaseId -Release $relUpdateObject
-
+# Get Vulnerabilities again (SQL Injections only) - should be none as suppressed via Audit Template
+Write-Host "Retrieving Crtitical SQL Injection Vulnerabilities - there should be none because of filters..."
+Get-FODVulnerabilities -ApplicationName "apitest1" -ReleaseName "1.0" -Filters "SeverityString:Critical+category:SQL Injection" -Paging
 Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
-
-# Delete the Release
-Write-Host "Deleting release with id: $releaseId"
-Remove-FODRelease -Id $releaseId
 
 # Delete the Application
 Write-Host "Deleting application with id: $applicationId"
 Remove-FODApplication -Id $applicationId
+

@@ -4,8 +4,18 @@ function Start-FODStaticScan {
         Starts a static scan in FOD.
     .DESCRIPTION
         Starts a Fortify On Demand static scan by uploading a Zip file with the source code to analyse.
+        The scan options (such as lanaguage/technology etc) should have been set and saved in FOD prior
+        to executing this function.
     .PARAMETER BSIToken
         The Build Server Integration (BSI) token found in Fortify on Demand Portal.
+        Note: The BSI token is being deprecated, please use ReleaseId or ApplicationName and ReleaseName.
+    .PARAMETER ApplicationName
+        The Name of the application to import into.
+    .PARAMETER ReleaseName
+        The Name of the release to import into.
+        Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId
+    .PARAMETER ReleaseId
+        The Id of the release to import into.
     .PARAMETER ZipFile
         The absolute path of the Zip file to upload.
     .PARAMETER IsRemediationScan
@@ -17,6 +27,9 @@ function Start-FODStaticScan {
         Select if an entitlement should be purchased if one is not available.
     .PARAMETER RemediationScanPreference
         The remdiation scan preference type.
+        Valid values are: RemediationScanIfAvailable, RemediationScanOnly, NonRemediationScanOnly
+    .PARAMER InProgressScanPreference
+        The action to perform if a scan is already running.
         Valid values are: DoNotStartScan, CancelInProgressScan
     .PARAMETER Notes
         Any notes to be included with the scan.
@@ -34,6 +47,11 @@ function Start-FODStaticScan {
         Start-FODStaticScan -BSIToken $BsiToken -ZipFile C:\Temp\upload\fod.zip `
             -RemediationScanPreference NonRemediationScanOnly -EntitlementPreference SubscriptionOnly `
             -InProgressScanPreference DoNotStartScan -Notes "some notes"
+    .EXAMPLE
+        # Starts a static scan using the release id 1000 and the Zip file "C:\Temp\upload\fod.zip"
+        Start-FODStaticScan -ReleaseId 1000 -ZipFile C:\Temp\upload\fod.zip `
+            -RemediationScanPreference NonRemediationScanOnly -EntitlementPreference SubscriptionOnly `
+            -InProgressScanPreference DoNotStartScan -Notes "some notes"
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/StaticScans/StaticScansV3_StartScanAdvanced
     .FUNCTIONALITY
@@ -41,8 +59,17 @@ function Start-FODStaticScan {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter()]
         [string]$BSIToken,
+
+        [Parameter()]
+        [string]$ApplicationName,
+
+        [Parameter()]
+        [string]$ReleaseName,
+
+        [Parameter()]
+        [int]$ReleaseId,
 
         [Parameter(Mandatory)]
         [system.io.fileinfo]$ZipFile,
@@ -89,6 +116,33 @@ function Start-FODStaticScan {
     )
     begin
     {
+        # If we don't have a ReleaseId we have to find it using API
+        if (-not $ReleaseId -and -not $BSIToken) {
+            if ($ApplicationName -and $ReleaseName)
+            {
+                # Find all "matching" releases and filter for exact matches
+                Write-Verbose "Retrieving release id for release: $ReleaseName of application: $ApplicationName"
+                foreach ($release in Get-FODReleases -Filters "applicationName:$ApplicationName+releaseName:$ReleaseName") {
+                    if ($release.applicationName -eq $ApplicationName -and $release.releaseName -eq $ReleaseName) {
+                        $ReleaseId = $release.releaseId
+                        break
+                    }
+                }
+                if ($ReleaseId)
+                {
+                    Write-Host "Found release with id: $ReleaseId"
+                }
+                else
+                {
+                    Write-Error "Unable to find release: $ReleaseName of application: $ApplicationName"
+                    throw
+                }
+            } else {
+                Write-Error "Both ApplicationName and ReleaseName are required if not specifying ReleaseId"
+                throw
+            }
+        }
+
         # Get current module version
         $myModuleName = "PowerShellForFOD"
         $myModuleVer = "1.0.0.0" # default
@@ -107,12 +161,16 @@ function Start-FODStaticScan {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        
-        $BSITokenObj = Parse-FODBSIToken $BSIToken
-        $BSITokenObj.scanPreference
-        if ($BSITokenObj -eq $null) {
-            Write-Error "Unable to parse BSI token"
-            throw
+
+        $BSITokenObj = $null
+        if ($BSIToken) {
+            $BSITokenObj = Parse-FODBSIToken $BSIToken
+            if ($BSITokenObj -eq $null)
+            {
+                Write-Error "Unable to parse BSI token"
+                throw
+            }
+            $ReleaseId = $BSITokenObj.releaseId
         }
         Write-Verbose "Start-FODStaticScan Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
 
@@ -141,18 +199,18 @@ function Start-FODStaticScan {
             $RemScanPrefVal = [RemediationScanPreferenceType]::$RemediationScanPreference.value__
         }
         $ScanPrefix = [string]::Format("/api/v3/releases/{0}/static-scans/start-scan-advanced?" +
-            "releaseId={1}&bsiToken={2}&technologyStack={3}&entitlementPreferenceType={4}" +
-            "&purchaseEntitlement={5}&remdiationScanPreferenceType={6}" +
-            "&inProgressScanActionType={7}&scanTool={8}&scanToolVersion={9}&scanMethodType=CICD",
-            $BSITokenObj.releaseId, $BSITokenObj.releaseId, $BSIToken, $BSITokenObj.technologyType,
+            "releaseId={1}&entitlementPreferenceType={2}" +
+            "&purchaseEntitlement={3}&remdiationScanPreferenceType={4}" +
+            "&inProgressScanActionType={5}&scanTool={6}&scanToolVersion={7}&scanMethodType=CICD",
+            $ReleaseId, $ReleaseId,
             [EntitlementPreferenceType]::$EntitlementPreference.value__, $PurchaseEntitlement.IsPresent,
             $RemScanPrefVal, [InProgressScanActionType]::$InProgressScanPreference.value__,
             $myModuleName, $myModuleVer)
+        if (-not [string]::IsNullOrEmpty($BSIToken)) {
+            $ScanPrefix = [string]::Format("{0}&bsiToken={1}", $ScanPrefix, $BSIToken)
+        }
         if (-not [string]::IsNullOrEmpty($Notes)) {
             $ScanPrefix = [string]::Format("{0}&notes={1}", $ScanPrefix, $Notes)
-        }
-        if (-not [string]::IsNullOrEmpty($BSITokenObj.technologyVersion)) {
-            $ScanPrefix = [string]::Format("{0}&languageLevel={1}", $ScanPrefix, $BSITokenObj.technologyVersion)
         }
 
         # Open zip file for reading

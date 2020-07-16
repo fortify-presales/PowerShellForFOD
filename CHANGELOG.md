@@ -8,6 +8,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+## [1.0.0.7] - 2020-07-15
+
+### Added
+
+- Export and Import of Application Audit Templates
+- Get-FODReleaseId - get release id using Application Name and Release Name
+- Scans example script (Examples\scans.ps1)
+
+### Changed
+
+- Start-FODStaticScan - added ReleaseId parameter - note: this is the preferred way of initiating the scan as BSI token is being deprecated.
+- Added parameters for ApplicationName and ReleaseName so scans can be uploaded without finding ReleaseId
+  (Start-FODStaticScan, Import-FODStaticScan, Import-FODDynamicScan, Import-FODDynamicScan, Get-FODVulnerabilities
+- Corrected "LoadedCount" calculation in loops (Get-FODApplications, Get-FODApplicationScans, Get-FODReleaseScans, Get-FODUsers,
+  Get-FODVulnerabilities)
+- Get-FODReleases - corrected documentation
+
 ## [1.0.0.6] - 2020-05-06
 
 ### Added
@@ -91,7 +112,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Initial version with token generation and basic FOS API call infrastructure
+- Initial version with token generation and basic FOD API call infrastructure
 - Query, Add, Update and Delete Releases
 - Query, Add, Update and Delete Users
 - Query Attributes
@@ -112,7 +133,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Initial version with token generation and basic FOS API call infrastructure
+- Initial version with token generation and basic FOD API call infrastructure
 - Query, Add, Update and Delete Applications
 
 ### Changed

@@ -17,6 +17,8 @@ function Get-FODAttributes {
      .EXAMPLE
         # Get any attributes with "test" or "demo" in their attributename
         Get-FODAttributes -Filters "attributeName:test|demo"
+        # Get any required attributes
+        Get-FODAttributes -Filters "isRequired:True"
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Attributes/AttributesV3_GetAttributes
     .FUNCTIONALITY

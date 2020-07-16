@@ -107,9 +107,10 @@ function Send-FODApi {
             Write-Verbose "BodyFile is $BodyFile"
             $Params.Add('Method', $Method)
             $Params.Add('InFile', $BodyFile)
+            $Params.Add('ContentType', $ContentType)
         } else {
             $Params.Add('Method', $Method)
-            $Params.Add('ContentType', 'application/json')
+            $Params.Add('ContentType', $ContentType)
             $Params.add('Body', (ConvertTo-Json $Body))
         }
         if ($Proxy) {

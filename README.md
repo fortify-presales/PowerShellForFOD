@@ -51,7 +51,8 @@ At present, this module can:
  * Query, add and remove user group access to Applications
  * Query Vulnerabilities
  * Import on-premise static scans (from [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast))
- * Import on-premise dynamic scans (from [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast)) 
+ * Import on-premise dynamic scans (from [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast))
+ * Export and Import Application Audit Templates 
 
 Development is ongoing, with the goal to add broad support for the entire API set.
 
@@ -81,7 +82,7 @@ Set-FODConfig -ApiUri https://api.ams.fortify.com -GrantType UsernamePassword -S
 Get-FODToken
 ```
 
-You will requested for your login details, in example you would enter your `tenantId\username` and `password`.
+You will be requested for your login details, in example you would enter your `tenantId\username` and `password`.
 For more information on how to authenticate please refer to [USAGE](USAGE.md).
 
 ## Example

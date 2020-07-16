@@ -114,7 +114,10 @@ function Get-FODUsers {
             Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/users'" #$Params
             $Response = Send-FODApi -Method Get -Operation "/api/v3/users" -Body $Body @Params
             $TotalCount = $Response.totalCount
-            if ($LoadedCount -lt ($TotalCount - $LoadLimit)) {
+            if ($TotalCount -lt $LoadLimit) {
+                $LoadedCount += $TotalCount
+                $HasMore = $false
+            } elseif ($LoadedCount -lt ($TotalCount - $LoadLimit)) {
                 $HasMore = $true
                 $LoadedCount += $LoadLimit
                 $Body.Remove("offset")

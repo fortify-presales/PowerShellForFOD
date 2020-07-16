@@ -14,7 +14,9 @@
     * [Removing User Application Access](#removing-user-application-access)
     * [Adding User Group Application Access](#adding-user-group-application-access)
     * [Retrieving User Group Application Access](#retrieving-user-group-application-access)
-    * [Removing User Group Application Access](#removing-user-group-application-access)    
+    * [Removing User Group Application Access](#removing-user-group-application-access)   
+    * [Exporting Application Audit Templates](#exporting-application-audit-templates) 
+    * [Importing Application Audit Templates](#importing-application-audit-templates) 
 *   [Releases](#releases)
     * [Adding Releases](#adding-releases)
     * [Retrieving Releases](#retrieving-releases)
@@ -113,7 +115,7 @@ To create a new application, you need to create a `FODApplicationObject` and `FO
 attributes you want to set for the application. Note: some attributes are mandatory and values will need to be provided - 
 you can check which attributes are mandatory using `Get-FODAttributes -Filter 'isRequired:True'`. 
 
-An example of creating attributes and an application is shown in the following: 
+An example of creating attributes and a new application is shown in the following: 
 
 ```Powershell
 # Create any AttributeObjects first - some might be mandatory
@@ -237,7 +239,36 @@ To remove a user's access to an application, use the following:
 # Remove the user with id 1000 from application 100
 Remove-FODUserApplicationAccess -UserId 1000 -ApplicationId 100
 ```
-  
+
+### Exporting Application Audit Templates
+
+Application Audit Templates apply filters at a per-application level that either suppress or change
+the severity of issues across all current and future scans. Once you have configured filters for a
+specific application you can export them as a template that could be imported and applied to other
+similar applications.
+
+To export an Application Audit Template, you can use the following:
+ 
+```PowerShell
+# Export the template for application id 1001, saving it in the file 'aat-standard.json'
+Export-FODApplicationAuditTemplates -ApplicationId 1000 -ScanType All -FilePath aat-standard.json
+```
+
+You can export the templates for specific scan types, e.g. Static, Dynamic, Mobile or Open Source
+or more likely 'All' of the templates as in the above example.
+
+### Importing Application Audit Templates
+
+Once you have exported an Application Audit Template, you can import it into another application using
+the following:
+
+```PowerShell
+# Import the template saved in the file 'aat-standard.json' into application if 1001
+Import-FODApplicationAuditTemplates -ApplicationId 1001 -FilePath aat-standard.json
+```
+
+Note that importing a template will override any filters that have already been applied to an application.
+ 
 ----------
 
 ## Releases
@@ -349,7 +380,14 @@ using the `Import-FODStaticScan` as in the following:
 
 ```Powershell
 # Import an FPR scan file into release with id 1000
-Import-FODStaticScan -Release 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+Import-FODStaticScan -ReleaseId 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+```
+
+Rather than referencing the "ReleaseId" you can also refer to the application and release by name as in the following:
+
+```Powershell
+# Import an FPR scan file into release "1.0" of application myapp
+Import-FODStaticScan -ApplicationName "myapp" -ReleaseName "1.0" -ScanFile C:\Temp\scans\scanResults.fpr
 ```
 
 ### Importing Dynamic Scans
@@ -359,15 +397,25 @@ using the `Import-FODDynamicScan` as in the following:
 
 ```Powershell
 # Import an FPR scan file into release with id 1000
-Import-FODDynamicScan -Release 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+Import-FODDynamicScan -ReleaseId 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+```
+
+Rather than referencing the "ReleaseId" you can also refer to the application and release by name as in the following:
+
+```Powershell
+# Import an FPR scan file into release "1.0" of application myapp
+Import-FODDynamicScan -ApplicationName "myapp" -ReleaseName "1.0" -ScanFile C:\Temp\scans\scanResults.fpr
 ```
 
 ### Starting a Static Scan
 
 To start a Fortify on Demand static scan, a *Zip* file with the source and dependencies (as described in the [documentation](https://ams.fortify.com/Docs/en/index.htm) 
-needs to be uploaded and a Build Server Integration (BSI) token needs to be specified. This token is available in the
- `Static Scan Setup` when you select `Start Scan -> Static` from the Fortify on Demand portal and enter 
-the basic details of the scan. When you have both of these you can start a static scan using the following:
+should have been created and a static scan configured. This configuration is carried out using `Static Scan Setup` when you select `Start Scan -> Static` from 
+the Fortify on Demand portal. Once you "Save" this configuration you will see both a "Release ID" and 
+"Build Server Integration (BSI) Token" field - that can be used to start a static scan using the API. 
+Both the "Release Id" and "BSI Token" are supported, but the "Release Id" is the recommended method.
+
+To start a scan using the "Build Server Integration (BSI) Token" use the following:
 
 ```Powershell 
 # Copy the BSI Token from the portal between the quotes
@@ -379,7 +427,19 @@ $response = Start-FODStaticScan -BSIToken $BsiToken -ZipFile C:\Temp\upload\fod.
 Write-Host "Started static scan id: $response.scanId"
 ```
 
-After the zip file has been uploaded the scan will be queued and executed in Fortify on Demand. To find the status of
+To start a scan using the "Release Id" value, use the following:
+
+```Powershell 
+# Copy the ReleaseId from the portal between the quotes
+$ReleaseId = "..."
+# Starts a static scan using the ReleaseId value and the Zip file "C:\Temp\upload\fod.zip"
+$response = Start-FODStaticScan -ReleaseId $ReleaseId -ZipFile C:\Temp\upload\fod.zip `
+    -RemediationScanPreference NonRemediationScanOnly -EntitlementPreference SubscriptionOnly `
+    -InProgressScanPreference DoNotStartScan -Notes "some notes" -Raw
+Write-Host "Started static scan id: $response.scanId"
+```
+
+After the Zip file has been uploaded the scan will be queued and executed in Fortify on Demand. To find the status of
 the scan you can use the `Get-FODScanSummary` function as in the following:
 
 ```Powershell
@@ -387,7 +447,7 @@ the scan you can use the `Get-FODScanSummary` function as in the following:
 Get-FODScanSummary -ScanId $response.scanId | Select-Object -Property analysisStatusType
 ```
 
-The `analysisStatusType` will be the current status visibile in the Fortify on Demand portal, e.g. Queued, In_Progress, 
+The `analysisStatusType` will be the current status visible in the Fortify on Demand portal, e.g. Queued, In_Progress, 
 Completed and so on.
 
 ----------

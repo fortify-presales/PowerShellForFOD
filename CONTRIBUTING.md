@@ -4,4 +4,4 @@
 
 The contribution guide is yet to be written.
 
-For more information and/or questsions please contact the author directly: kevin.lee@microfocus.com
+For more information and/or questions please contact the author directly: kevin.lee@microfocus.com

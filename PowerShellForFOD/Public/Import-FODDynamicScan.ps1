@@ -3,7 +3,12 @@ function Import-FODDynamicScan {
     .SYNOPSIS
         Imports a dynamic scan results file into a FOD Release.
     .DESCRIPTION
-        Imports a Fortify SCA on-premise scan results file into a Fortify on Demand Release.
+        Imports a Fortify SCA on-premise dynamic scan results file into a Fortify on Demand Release.
+    .PARAMETER ApplicationName
+        The Name of the application to import into.
+    .PARAMETER ReleaseName
+        The Name of the release to import into.
+        Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId
     .PARAMETER ReleaseId
         The Id of the release to import into.
     .PARAMETER ScanFile
@@ -18,7 +23,10 @@ function Import-FODDynamicScan {
         Default value is the value set by Set-FODConfig
     .EXAMPLE
         # Import an FPR scan file into release with id 1000
-        Import-FODDynamicScan -Release 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+        Import-FODDynamicScan -ReleaseId 1000 -ScanFile C:\Temp\scans\scanResults.fpr
+    .EXAMPLE
+        # Import an FPR scan file into release 1.0 of application MyApp
+        Import-FODDynamicScan -ApplicationName MyApp -Release 1.0 -ScanFile C:\Temp\scans\scanResults.fpr
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/DynamicScans/DynamicScansV3_PutImportScan
     .FUNCTIONALITY
@@ -26,7 +34,13 @@ function Import-FODDynamicScan {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter()]
+        [string]$ApplicationName,
+
+        [Parameter()]
+        [string]$ReleaseName,
+
+        [Parameter()]
         [int]$ReleaseId,
 
         [Parameter(Mandatory)]
@@ -50,6 +64,15 @@ function Import-FODDynamicScan {
     )
     begin
     {
+        # If we don't have a ReleaseId we have to find it using API
+        if (-not $ReleaseId) {
+            try {
+                $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
+            } catch {
+                Write-Error $_
+                Break
+            }
+        }
         if (-not $ScanFile.Exists) {
             Write-Error "Scan file '$ScanFile' does not exist"
             throw

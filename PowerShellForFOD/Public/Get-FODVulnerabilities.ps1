@@ -4,7 +4,12 @@ function Get-FODVulnerabilities {
         Get information about FOD vulnerabilities.
     .DESCRIPTION
         Get information about FOD vulnerabilities.
-    .PARAMETER ReleaseId    
+    .PARAMETER ApplicationName
+        The Name of the application to import into.
+    .PARAMETER ReleaseName
+        The Name of the release to import into.
+        Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId
+    .PARAMETER ReleaseId
         The Id of the Release to get vulnerabilities for.
     .PARAMETER Filters
         A delimited list of field filters.
@@ -50,7 +55,13 @@ function Get-FODVulnerabilities {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter()]
+        [string]$ApplicationName,
+
+        [Parameter()]
+        [string]$ReleaseName,
+
+        [Parameter()]
         [int]$ReleaseId,
 
         [string]$Filters,
@@ -81,6 +92,15 @@ function Get-FODVulnerabilities {
     )
     begin
     {
+        # If we don't have a ReleaseId we have to find it using API
+        if (-not $ReleaseId) {
+           try {
+               $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
+           } catch {
+               Write-Error $_
+               Break
+           }
+        }
         $Params = @{}
         if ($Proxy) {
             $Params['Proxy'] = $Proxy
@@ -105,7 +125,7 @@ function Get-FODVulnerabilities {
                 $Body.Add("orderByDirection", $OrderByDirection)
             } else {
                 Write-Error "OrderBy can only be ASC or DESC."
-                throw
+                Break
             }
         }
         if ($Fields) {
@@ -131,7 +151,7 @@ function Get-FODVulnerabilities {
         }
         if ($Limit -gt 50) {
             Write-Error "Maximum value for Limit is 50."
-            throw
+            Break
         }
         $RawVulnerabilities = @()
         $HasMore = $false
@@ -145,7 +165,10 @@ function Get-FODVulnerabilities {
             Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/releases/$ReleaseId/vulnerabilities'" #$Params
             $Response = Send-FODApi -Method Get -Operation "/api/v3/releases/$ReleaseId/vulnerabilities" -Body $Body @Params
             $TotalCount = $Response.totalCount
-            if ($LoadedCount -lt ($TotalCount - $LoadLimit)) {
+            if ($TotalCount -lt $LoadLimit) {
+                $LoadedCount += $TotalCount
+                $HasMore = $false
+            } elseif ($LoadedCount -lt ($TotalCount - $LoadLimit)) {
                 $HasMore = $true
                 $LoadedCount += $LoadLimit
                 $Body.Remove("offset")
@@ -155,10 +178,10 @@ function Get-FODVulnerabilities {
             }
             $RawVulnerabilities += $Response.items
         } until (
-        -not $Paging -or
+            -not $Paging -or
                 -not $HasMore
         )
-        Write-Verbose "Loaded $LoadedCount vulnerabilities"
+        Write-Verbose "Loaded $TotalCount vulnerabilities"
     }
     end {
         if ($Raw) {

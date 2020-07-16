@@ -35,7 +35,7 @@ function Get-FODReleases {
         Get-FODReleases -Paging -Filters "releaseName:test|demo"
      .EXAMPLE
         # Get all the releases for a specific application called 'TestApp'
-        Get-FODReleases -Filter "applicatioName:TestApp"
+        Get-FODReleases -Filters "applicatioName:TestApp"
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetReleases
     .FUNCTIONALITY

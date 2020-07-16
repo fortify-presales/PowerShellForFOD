@@ -28,8 +28,6 @@ function Get-FODScanSummary {
         [int]$ScanId,
 
         [switch]$Raw,
-        [switch]$Paging,
-        [int]$Limit = 50,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
