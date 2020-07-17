@@ -130,12 +130,16 @@ function Get-FODToken
     }
     if ($GrantType -eq 'UsernamePassword') {
         $Body.Add('grant_type', 'password')
-        $Body.Add('username', $Credential.UserName)
-        $Body.Add('password',[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Credential.Password)))
+        #$Body.Add('username', $Credential.UserName)
+        #$Body.Add('password',[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Credential.Password)))
+        $Body.Add('username', $Credential.GetNetworkCredential().UserName)
+        $Body.Add('password', $Credential.GetNetworkCredential().Password)
     } elseif ($GrantType -eq 'ClientCredentials') {
         $Body.Add('grant_type', 'client_credentials')
-        $Body.Add('client_id', $Credential.UserName)
-        $Body.Add('client_secret',[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Credential.Password)))
+        #$Body.Add('client_id', $Credential.UserName)
+        #$Body.Add('client_secret',[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Credential.Password)))
+        $Body.Add('client_id', $Credential.GetNetworkCredential().UserName)
+        $Body.Add('client_secret', $Credential.GetNetworkCredential().Password)
     } else {
         # We shouldn't get here...
         Write-Error "Unknown GrantType $GrantType"
