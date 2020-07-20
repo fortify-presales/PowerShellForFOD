@@ -117,8 +117,7 @@ function New-FODApplicationObject
         $AllUserGroups = @()
         $AllAttributes = @()
         if ($HasMicroservices -and -not $MicroServices) {
-            Write-Error "A value for MicroServices is required if HasMicroservices is selected"
-            throw
+            throw "A value for MicroServices is required if HasMicroservices is selected"
         }
         Write-Verbose "New-FODApplicationObject Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }

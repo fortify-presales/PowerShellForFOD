@@ -61,8 +61,7 @@ function Import-FODApplicationAuditTemplates {
             $Params.Add('BodyFile', $FilePath)
             $Params.Add("ContentType", "application/json")
         } else {
-            Write-Error "Cannot read input file: $FilePath"
-            throw
+            throw "Cannot read input file: $FilePath"
         }
         Write-Verbose "Import-FODApplicationAuditTemplates Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }

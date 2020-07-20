@@ -134,12 +134,10 @@ function Start-FODStaticScan {
                 }
                 else
                 {
-                    Write-Error "Unable to find release: $ReleaseName of application: $ApplicationName"
-                    throw
+                    throw "Unable to find release: $ReleaseName of application: $ApplicationName"
                 }
             } else {
-                Write-Error "Both ApplicationName and ReleaseName are required if not specifying ReleaseId"
-                throw
+                throw "Both ApplicationName and ReleaseName are required if not specifying ReleaseId"
             }
         }
 
@@ -150,8 +148,7 @@ function Start-FODStaticScan {
         $myModuleVer = $module.Version
 
         if (-not $ZipFile.Exists) {
-            Write-Error "Zip file '$ZipFile' does not exist"
-            throw
+            throw "Zip file '$ZipFile' does not exist"
         }
         $Params = @{}
         if ($Proxy) {
@@ -165,10 +162,8 @@ function Start-FODStaticScan {
         $BSITokenObj = $null
         if ($BSIToken) {
             $BSITokenObj = Parse-FODBSIToken $BSIToken
-            if ($BSITokenObj -eq $null)
-            {
-                Write-Error "Unable to parse BSI token"
-                throw
+            if ($BSITokenObj -eq $null) {
+                throw "Unable to parse BSI token"
             }
             $ReleaseId = $BSITokenObj.releaseId
         }

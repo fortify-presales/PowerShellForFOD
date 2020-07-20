@@ -83,16 +83,14 @@ function Get-FODApplicationScans {
             if ($OrderByDirection -eq "ASC" -or $OrderByDirection -eq "DESC") {
                 $Body.Add("orderByDirection", $OrderByDirection)
             } else {
-                Write-Error "OrderBy can only be ASC or DESC."
-                throw
+                Write-Error "OrderBy can only be ASC or DESC." -ErrorAction Stop
             }
         }
         if ($Fields) {
             $Body.Add("fields", $Fields)
         }
         if ($Limit -gt 50) {
-            Write-Error "Maximum value for Limit is 50."
-            throw
+            Write-Error "Maximum value for Limit is 50." -ErrorAction Stop
         }
         $RawScans = @()
         $HasMore = $false

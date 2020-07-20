@@ -12,6 +12,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
+## [1.0.0.8] - 2020-07-20
+
+### Added
+
+- Static Scans example script (Examples\start-static-scans.ps1)
+
+### Changed
+
+- Changed storage of authentication details to "GetNetworkCredential" to support PowerShell Core.
+- Made "throw" logic consistent across functions.
+
 ## [1.0.0.7] - 2020-07-15
 
 ### Added

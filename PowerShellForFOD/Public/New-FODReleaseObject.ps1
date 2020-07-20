@@ -66,8 +66,7 @@ function New-FODReleaseObject
     begin
     {
         if ($CopyState -and -not $CopyReleaseId) {
-            Write-Error "A value for CopyReleaseId is required id CopyState is selected"
-            throw
+            throw "A value for CopyReleaseId is required id CopyState is selected"
         }
         Write-Verbose "New-FODReleaseObject Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }

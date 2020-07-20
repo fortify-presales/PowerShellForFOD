@@ -142,8 +142,7 @@ function Get-FODToken
         $Body.Add('client_secret', $Credential.GetNetworkCredential().Password)
     } else {
         # We shouldn't get here...
-        Write-Error "Unknown GrantType $GrantType"
-        throw
+        throw "Unknown GrantType $GrantType"
     }
 
     $Uri = "$ApiUri/oauth/token"

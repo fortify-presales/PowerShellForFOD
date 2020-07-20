@@ -74,8 +74,7 @@ function Import-FODStaticScan {
             }
         }
         if (-not $ScanFile.Exists) {
-            Write-Error "Scan file '$ScanFile' does not exist"
-            throw
+            throw "Scan file '$ScanFile' does not exist"
         }
         $Params = @{}
         if ($Proxy) {
