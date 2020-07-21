@@ -36,6 +36,11 @@ function Parse-FODError
 
             # TODO: other messages by error code
 
+            "2032" = @{
+                Message = "Scan settings not available"
+                RecommendedAction = "Please configure and save scan settings for the FOD portal"
+            }
+
             "1000" = @{
                 Message = "Authorization failure - has authentication token been created?"
                 RecommendedAction = "Please try re-creating a token using Get-FODToken"
