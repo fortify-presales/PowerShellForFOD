@@ -221,7 +221,7 @@ function Start-FODStaticScan {
             } else {
                 Write-Verbose "Sending fragment: $FragmentNumber"
             }
-            Set-Content -Path $TempFile.FullName -Value $readByteArray -Encoding Byte
+            Set-Content -Path $TempFile.FullName -Value $readByteArray -AsByteStream
             $ScanUrl = "$ScanPrefix&fragNo=$FragmentNumber&offset=$Offset"
             Write-Verbose "Send-FODApi -Method Post -Operation $ScanUrl" #$Params
             $Response = Send-FODApi -Method Post -Operation $ScanUrl @Params

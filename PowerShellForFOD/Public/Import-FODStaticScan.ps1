@@ -123,7 +123,7 @@ function Import-FODStaticScan {
             } else {
                 Write-Verbose "Sending fragment: $FragmentNumber"
             }
-            Set-Content -Path $TempFile.FullName -Value $readByteArray -Encoding Byte
+            Set-Content -Path $TempFile.FullName -Value $readByteArray -AsByteStream
             $ImportUrl = "/api/v3/releases/$ReleaseId/static-scans/import-scan?releaseId=$ReleaseId&fragNo=$FragmentNumber&offset=$Offset&fileLength=$FileLength&importScanSessionId=$ImportSessionId"
             Write-Verbose "Send-FODApi -Method Put -Operation $ImportUrl" #$Params
             $Response = Send-FODApi -Method Put -Operation $ImportUrl @Params
