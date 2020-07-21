@@ -92,6 +92,6 @@ end {
     if ($Raw) {
         $ScanSummary
     } else {
-        Write-Host "$ScanStatus scan - scan id: $ScanId"
+        Write-Host "$ScanStatus scan id: $ScanId"
     }
 }
