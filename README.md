@@ -56,7 +56,8 @@ At present, this module can:
 
 Development is ongoing, with the goal to add broad support for the entire API set.
 
-Review example [usage](USAGE.md) to see how the module can be used to accomplish some example tasks.
+Please read [Usage](USAGE.md) to see how the module can be used to accomplish some example tasks.
+There are also a number of more detailed scripted [Examples](examples).
 
 ----------
 
