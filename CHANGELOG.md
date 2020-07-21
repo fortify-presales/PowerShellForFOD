@@ -12,6 +12,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
+## [1.0.0.9] - 2020-07-21
+
+### Added
+
+- None
+
+### Changed
+
+- Fixed Import-StaticScan, Import-DynamicScan and Start-FODStaticScan to work on PowerShell Core
+
 ## [1.0.0.8] - 2020-07-20
 
 ### Added

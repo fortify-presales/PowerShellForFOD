@@ -96,6 +96,12 @@ Get-FODApplications -Filters "applicationName:test" -Paging | Out-GridView
 
 For more example commands, please refer to [USAGE](USAGE.md).
 
+
+## Supported Versions
+
+PowerShellForFOD has been tested on PowerShell 5.x (Windows) and PowerShell Core 7.x (Linux).
+On Windows it should work on any PowerShell version later than 5.x - however if you find any problems
+please raise an [issue](https://github.com/fortify-community-plugins/PowerShellForFOD/issues).
 ----------
 
 ## Developing and Contributing
