@@ -143,9 +143,9 @@ function Start-FODStaticScan {
 
         # Get current module version
         $myModuleName = "PowerShellForFOD"
-        $myModuleVer = "1.0.0.0" # default
         $module = Get-Module -ListAvailable -Name $myModuleName
         $myModuleVer = $module.Version
+        if (-not $myModuleVer) { $myModuleVer = "1.0.0.0" }
 
         if (-not $ZipFile.Exists) {
             throw "Zip file '$ZipFile' does not exist"
