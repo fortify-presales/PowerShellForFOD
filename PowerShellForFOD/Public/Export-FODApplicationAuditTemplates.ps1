@@ -5,7 +5,7 @@ function Export-FODApplicationAuditTemplates {
     .DESCRIPTION
         Exports the audit templates for a given application to a file in JSON format.
         The file can subsequently be imported with Import-FODApplicationAuditTemplates.
-    .PARAMETER ApplicationId
+    .PARAMETER Id
         The id of the Application to retrieve the audit templatea for.
     .PARAMETER ScanType
         The audit templates will be filtered by this type.
@@ -20,7 +20,7 @@ function Export-FODApplicationAuditTemplates {
         Default value is the value set by Set-FODConfig
     .EXAMPLE
         # Export all the audit templates for application with id 1000
-        Export-FODApplicationAuditTemplates -ApplicationId 10000 -ScanType All -FilePath aat-10000.json
+        Export-FODApplicationAuditTemplates -Id 1000 -ScanType All -FilePath aat-10000.json
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetAuditTemplates
     .FUNCTIONALITY
@@ -28,8 +28,8 @@ function Export-FODApplicationAuditTemplates {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [int]$ApplicationId,
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
+        [int]$Id,
 
         [Parameter(Mandatory)]
         [ValidateSet('Static', 'Dynamic', 'Mobile', 'OpenSource', 'All', IgnoreCase = $false)]
@@ -76,8 +76,8 @@ function Export-FODApplicationAuditTemplates {
     process
     {
         if ($ScanType -ne 'All') {
-            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$ApplicationId/audittemplates'" #$Params
-            $AuditTemplateSummary = Send-FODApi -Method Get -Operation "/api/v3/applications/$ApplicationId/audittemplates" @Params
+            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$Id/audittemplates'" #$Params
+            $AuditTemplateSummary = Send-FODApi -Method Get -Operation "/api/v3/applications/$Id/audittemplates" @Params
             $AuditTemplates.Add($AuditTemplateSummary.items)
         } else {
             foreach ($sType in @('Static', 'Dynamic', 'Mobile', 'OpenSource')) {
@@ -86,8 +86,8 @@ function Export-FODApplicationAuditTemplates {
                 }
                 $Params["Body"] = $Body
                 Write-Verbose "Retrieving audit template for scan type: $st"
-                Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$ApplicationId/audittemplates'" #$Params
-                $AuditTemplateSummary = Send-FODApi -Method Get -Operation "/api/v3/applications/$ApplicationId/audittemplates" @Params
+                Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/applications/$Id/audittemplates'" #$Params
+                $AuditTemplateSummary = Send-FODApi -Method Get -Operation "/api/v3/applications/$Id/audittemplates" @Params
                 if ($AuditTemplateSummary.items) {
                     $AuditTemplates.Add($AuditTemplateSummary.items)
                 }

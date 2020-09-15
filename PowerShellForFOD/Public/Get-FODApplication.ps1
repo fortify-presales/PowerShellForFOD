@@ -17,6 +17,9 @@ function Get-FODApplication {
     .EXAMPLE
         # Get the application with id 100
         Get-FODApplication -Id 100
+    .EXAMPLE
+        # Get the application with name "FOD-TEST" using "Get-FODApplicationId" in pipeline
+        Get-FODApplicationId -ApplicationName FOD-TEST | Get-FODApplication
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplication
     .FUNCTIONALITY
@@ -24,7 +27,7 @@ function Get-FODApplication {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$Id,
 
         [switch]$Raw,

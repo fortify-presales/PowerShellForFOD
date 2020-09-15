@@ -37,7 +37,7 @@ function Get-FODReleaseScans {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$ReleaseId,
 
         [string]$OrderBy,
@@ -113,6 +113,7 @@ function Get-FODReleaseScans {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawScans += $Response.items

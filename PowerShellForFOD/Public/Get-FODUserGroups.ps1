@@ -118,6 +118,7 @@ function Get-FODUserGroups {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawUserGroups += $Response.items

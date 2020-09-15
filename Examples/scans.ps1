@@ -1,7 +1,7 @@
 #
 # FOD Scans, Vulnerabilities and Audit Templates examples
 #
-# - Change "$ownerId" to valid user id (user'Get-FODUsers' to find user id values)
+# - Change "$ownerId" to valid user id (or use 'Get-FODUsers' to find user id values)
 # - Change "$attributes" to set any "required" values (use 'Get-FODAttributes Get-FODAttributes -Filters "isRequired:True"' to find any required values)
 
 $ownerId = 9444 # user who will own the application
@@ -43,7 +43,7 @@ Write-Host -NoNewLine 'Press any key to continue...';
 
 # Import application audit templates
 Write-Host "Importing Application Audit Template"
-Import-FODApplicationAuditTemplates -ApplicationId $applicationId -FilePath $PSScriptRoot\uploads\sql-injections-aat.json
+Import-FODApplicationAuditTemplates -Id $applicationId -FilePath $PSScriptRoot\uploads\sql-injections-aat.json
 Write-Host -NoNewLine 'Press any key to continue...';
 [void][System.Console]::ReadKey($FALSE)
 

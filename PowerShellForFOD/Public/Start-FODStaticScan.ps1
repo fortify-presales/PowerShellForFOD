@@ -9,13 +9,13 @@ function Start-FODStaticScan {
     .PARAMETER BSIToken
         The Build Server Integration (BSI) token found in Fortify on Demand Portal.
         Note: The BSI token is being deprecated, please use ReleaseId or ApplicationName and ReleaseName.
+    .PARAMETER ReleaseId
+        The Id of the release to import into.
     .PARAMETER ApplicationName
         The Name of the application to import into.
     .PARAMETER ReleaseName
         The Name of the release to import into.
         Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId
-    .PARAMETER ReleaseId
-        The Id of the release to import into.
     .PARAMETER ZipFile
         The absolute path of the Zip file to upload.
     .PARAMETER IsRemediationScan
@@ -59,17 +59,17 @@ function Start-FODStaticScan {
     #>
     [CmdletBinding()]
     param (
-        [Parameter()]
+        [Parameter(Mandatory=$False)]
         [string]$BSIToken,
 
-        [Parameter()]
+        [Parameter(Mandatory=$False)]
+        [int]$ReleaseId,
+
+        [Parameter(Mandatory=$False)]
         [string]$ApplicationName,
 
-        [Parameter()]
+        [Parameter(Mandatory=$False)]
         [string]$ReleaseName,
-
-        [Parameter()]
-        [int]$ReleaseId,
 
         [Parameter(Mandatory)]
         [system.io.fileinfo]$ZipFile,
@@ -117,27 +117,17 @@ function Start-FODStaticScan {
     begin
     {
         # If we don't have a ReleaseId we have to find it using API
-        if (-not $ReleaseId -and -not $BSIToken) {
-            if ($ApplicationName -and $ReleaseName)
-            {
-                # Find all "matching" releases and filter for exact matches
-                Write-Verbose "Retrieving release id for release: $ReleaseName of application: $ApplicationName"
-                foreach ($release in Get-FODReleases -Filters "applicationName:$ApplicationName+releaseName:$ReleaseName") {
-                    if ($release.applicationName -eq $ApplicationName -and $release.releaseName -eq $ReleaseName) {
-                        $ReleaseId = $release.releaseId
-                        break
-                    }
-                }
-                if ($ReleaseId)
-                {
-                    Write-Host "Found release with id: $ReleaseId"
-                }
-                else
-                {
-                    throw "Unable to find release: $ReleaseName of application: $ApplicationName"
+        if (-not ($PSBoundParameters.ContainsKey('ReleaseId') -or $PSBoundParameters.ContainsKey('BSIToken'))) {
+            if ($PSBoundParameters.ContainsKey('ApplicationName') -and $PSBoundParameters.ContainsKey('ReleaseName')) {
+                try {
+                    $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
+                    Write-Verbose "Found Release Id: $ReleaseId"
+                } catch {
+                    Write-Error $_
+                    Break
                 }
             } else {
-                throw "Both ApplicationName and ReleaseName are required if not specifying ReleaseId"
+                throw "Please supply a parameter for `"BSIToken`", `"ReleaseId`" or both `"ApplicationName`" and `"ReleaseName`""
             }
         }
 
@@ -221,7 +211,12 @@ function Start-FODStaticScan {
             } else {
                 Write-Verbose "Sending fragment: $FragmentNumber"
             }
-            Set-Content -Path $TempFile.FullName -Value $readByteArray -AsByteStream
+            if ($PSVersionTable.PSVersion.Major -lt 6) {
+                Set-Content -Path $TempFile.FullName -Value $readByteArray -Encoding Byte
+            } else
+            {
+                Set-Content -Path $TempFile.FullName -Value $readByteArray -AsByteStream
+            }
             $ScanUrl = "$ScanPrefix&fragNo=$FragmentNumber&offset=$Offset"
             Write-Verbose "Send-FODApi -Method Post -Operation $ScanUrl" #$Params
             $Response = Send-FODApi -Method Post -Operation $ScanUrl @Params

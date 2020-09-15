@@ -5,7 +5,7 @@ function Import-FODApplicationAuditTemplates {
     .DESCRIPTION
         Import the audit templates for a given application from a file in JSON format.
         The input file can be exported previously with Export-FODApplicationAuditTemplates.
-    .PARAMETER ApplicationId
+    .PARAMETER Id
         The id of the Application to import the audit template to.
     .PARAMETER FilePath
         The path of the file containing the audit templates.
@@ -17,7 +17,7 @@ function Import-FODApplicationAuditTemplates {
         Default value is the value set by Set-FODConfig
     .EXAMPLE
         # Import the audit templates for application with id 1000
-        Import-FODApplicationAuditTemplates -ApplicationId 10000 -FilePath aat-10000.json
+        Import-FODApplicationAuditTemplates -Id 10000 -FilePath aat-10000.json
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_PutApplicationAuditTemplates
     .FUNCTIONALITY
@@ -25,8 +25,8 @@ function Import-FODApplicationAuditTemplates {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [int]$ApplicationId,
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
+        [int]$Id,
 
         [Parameter(Mandatory)]
         [ValidateScript( {Test-Path -Path $PSItem -IsValid})]
@@ -67,8 +67,8 @@ function Import-FODApplicationAuditTemplates {
     }
     process
     {
-        Write-Verbose "Send-FODApi: -Method Put -Operation '/api/v3/applications/$ApplicationId/audittemplates'" #$Params
-        $RawResponse = Send-FODApi -Method Put -Operation "/api/v3/applications/$ApplicationId/audittemplates" @Params
+        Write-Verbose "Send-FODApi: -Method Put -Operation '/api/v3/applications/$Id/audittemplates'" #$Params
+        $RawResponse = Send-FODApi -Method Put -Operation "/api/v3/applications/$Id/audittemplates" @Params
     }
     end {
         if ($Raw) {

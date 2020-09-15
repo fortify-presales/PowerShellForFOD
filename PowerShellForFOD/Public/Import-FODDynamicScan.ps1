@@ -4,13 +4,13 @@ function Import-FODDynamicScan {
         Imports a dynamic scan results file into a FOD Release.
     .DESCRIPTION
         Imports a Fortify SCA on-premise dynamic scan results file into a Fortify on Demand Release.
+    .PARAMETER ReleaseId
+        The Id of the release to import into.
     .PARAMETER ApplicationName
         The Name of the application to import into.
     .PARAMETER ReleaseName
         The Name of the release to import into.
         Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId
-    .PARAMETER ReleaseId
-        The Id of the release to import into.
     .PARAMETER ScanFile
         The absolute path of the scan file to import.
     .PARAMETER Raw
@@ -34,14 +34,14 @@ function Import-FODDynamicScan {
     #>
     [CmdletBinding()]
     param (
-        [Parameter()]
+        [Parameter(Mandatory=$False)]
+        [int]$ReleaseId,
+
+        [Parameter(Mandatory=$False)]
         [string]$ApplicationName,
 
-        [Parameter()]
+        [Parameter(Mandatory=$False)]
         [string]$ReleaseName,
-
-        [Parameter()]
-        [int]$ReleaseId,
 
         [Parameter(Mandatory)]
         [system.io.fileinfo]$ScanFile,
@@ -64,13 +64,19 @@ function Import-FODDynamicScan {
     )
     begin
     {
-        # If we don't have a ReleaseId we have to find it using API
-        if (-not $ReleaseId) {
-            try {
-                $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
-            } catch {
-                Write-Error $_
-                Break
+        # If we don't have a ReleaseId parameter we have to find it using API
+        if (-not $PSBoundParameters.ContainsKey('ReleaseId'))
+        {
+            if ($PSBoundParameters.ContainsKey('ApplicationName') -and $PSBoundParameters.ContainsKey('ReleaseName')) {
+                try {
+                    $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
+                    Write-Verbose "Found Release Id: $ReleaseId"
+                } catch {
+                    Write-Error $_
+                    Break
+                }
+            } else {
+                throw "Please supply a parameter for `"ReleaseId`" or both `"ApplicationName`" and `"ReleaseName`""
             }
         }
         if (-not $ScanFile.Exists) {
@@ -123,7 +129,11 @@ function Import-FODDynamicScan {
             } else {
                 Write-Verbose "Sending fragment: $FragmentNumber"
             }
-            Set-Content -Path $TempFile.FullName -Value $readByteArray -AsByteStream
+            if ($PSVersionTable.PSVersion.Major -lt 6) {
+                Set-Content -Path $TempFile.FullName -Value $readByteArray -Encoding Byte
+            } else {
+                Set-Content -Path $TempFile.FullName -Value $readByteArray -AsByteStream
+            }
             $ImportUrl = "/api/v3/releases/$ReleaseId/dynamic-scans/import-scan?releaseId=$ReleaseId&fragNo=$FragmentNumber&offset=$Offset&fileLength=$FileLength&importScanSessionId=$ImportSessionId"
             Write-Verbose "Send-FODApi -Method Put -Operation $ImportUrl" #$Params
             $Response = Send-FODApi -Method Put -Operation $ImportUrl @Params

@@ -30,6 +30,9 @@ function Get-FODApplicationScans {
     .EXAMPLE
         # Get all of the scans for application id 100 through Paging
         Get-FODApplicationScans -ApplicationId 100 -Paging
+    .EXAMPLE
+        # Get all of the scan for application "FOD-TEST" using Get-FODApplicationId in pipeline
+        Get-FODApplicationId -ApplicationName "FOD-TEST" | Get-FODApplicationScans -Paging
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetScansByApplicationId
     .FUNCTIONALITY
@@ -37,7 +40,7 @@ function Get-FODApplicationScans {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(ValueFromPipeline=$True, Mandatory=$True)]
         [int]$ApplicationId,
 
         [string]$OrderBy,
@@ -113,6 +116,7 @@ function Get-FODApplicationScans {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawScans += $Response.items

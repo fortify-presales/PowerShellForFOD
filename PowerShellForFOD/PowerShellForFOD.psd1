@@ -12,7 +12,7 @@
 RootModule = 'PowerShellForFOD.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.0.9'
+ModuleVersion = '1.1.0.9'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -71,11 +71,11 @@ PowerShellVersion = '5.1'
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @('Add-FODApplication', 'Add-FODRelease', 'Add-FODUser', 
                'Add-FODUserApplicationAccess', 'Add-FODUserGroupApplicationAccess', 
-               'Export-FODApplicationAuditTemplates', 'Get-FODApplication', 
+               'Export-FODApplicationAuditTemplates', 'Get-FODApplication', 'Get-FODApplicationId',
                'Get-FODApplications', 'Get-FODApplicationScans', 'Get-FODAttributes', 
                'Get-FODConfig', 'Get-FODRelease', 'Get-FODReleaseId', 
                'Get-FODReleases', 'Get-FODReleaseScan', 'Get-FODReleaseScans', 
-               'Get-FODScans', 'Get-FODScanSummary', 'Get-FODToken', 'Get-FODUser', 
+               'Get-FODScans', 'Get-FODScanSummary', 'Get-FODToken', 'Get-FODUser', 'Get-FODUserId',
                'Get-FODUserApplicationAccess', 'Get-FODUserGroupApplicationAccess', 
                'Get-FODUserGroups', 'Get-FODUsers', 'Get-FODVulnerabilities', 
                'Import-FODApplicationAuditTemplates', 'Import-FODDynamicScan', 

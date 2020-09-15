@@ -4,13 +4,32 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project roughly adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
 ### Added
 
 ### Changed
+
+## [1.1.0.10] - 2020-09-15
+
+### Added
+
+- Added Get-FODApplicationId, Get-FODReleaseId, Get-FODUserId helpers.
+- Added PowerShell pipeline support to Export-FODApplicationAuditTemplate, Get-FODApplication,
+Get-FODApplicationScans, Get-FODRelease, Get-FODReleaseScanId, Get-FODReleaseScans,
+Get-FODScanSummary, Get-FODUsers, Get-FODApplicationAccess, Get-FODUserGroupApplicationAccess,
+Get-FODVulnerabilties, Import-FODApplicationAuditTemplates, Import-FODDynamicScan,
+Import-FODStaticScan, Remove-FODApplication, Remove-FODRelease, Remove-FODUser,
+Start-FODStaticScan, Update-FODApplication, Update-FODRelease, UpdateFODUser
+- PowerShell Core, PowerShell 5.x, PowerShell 6+ support
+
+### Changed
+
+- Fixed Get-FODToken not working for UsernamePassword Grant Type.
+- Fixed Import-FODDynamicScan, Import-FODStaticScan, Start-FODStaticScan to work on PowerShell 5.x
+- Updated Usage documentation
 
 ## [1.0.0.9] - 2020-07-21
 

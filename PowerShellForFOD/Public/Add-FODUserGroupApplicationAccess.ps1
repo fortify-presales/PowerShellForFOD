@@ -6,7 +6,7 @@ function Add-FODUserGroupApplicationAccess {
         Adds/Grants user group access for one or more applications.
     .PARAMETER UserGroupId
         The id of the user group to give access to.
-    .PARAMTER ApplicationId
+    .PARAMETER ApplicationId
         The id of the application to give the user access to.
     .PARAMETER Raw
         Print Raw output - do not convert into UserObject.

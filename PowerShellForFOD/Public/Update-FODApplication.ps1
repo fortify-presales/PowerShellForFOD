@@ -32,7 +32,7 @@ function Update-FODApplication {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$Id,
 
         [PSTypeName('PS4FOD.ApplicationObject')]

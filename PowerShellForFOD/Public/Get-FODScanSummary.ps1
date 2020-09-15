@@ -4,7 +4,7 @@ function Get-FODScanSummary {
         Gets the scans summary for a specific scan from FOD.
     .DESCRIPTION
         Gets the scans summary for a specific scan from FOD.
-    .PARAMETER ScanId
+    .PARAMETER Id
         The scan id.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
@@ -16,7 +16,7 @@ function Get-FODScanSummary {
         Default value is the value set by Set-FODConfig
     .EXAMPLE
         # Get the scan summary for scan with id 1000
-        Get-ScanSummary -ScanId 1000
+        Get-ScanSummary -Id 1000
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Scans/ScansV3_GetScanSummary
     .FUNCTIONALITY
@@ -24,8 +24,8 @@ function Get-FODScanSummary {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [int]$ScanId,
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
+        [int]$Id,
 
         [switch]$Raw,
 
@@ -58,8 +58,8 @@ function Get-FODScanSummary {
     }
     process
     {
-        Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/scans/$ScanId/summary'" #$Params
-        $RawScanSummary = Send-FODApi -Method Get -Operation "/api/v3/scans/$ScanId/summary" @Params
+        Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/scans/$Id/summary'" #$Params
+        $RawScanSummary = Send-FODApi -Method Get -Operation "/api/v3/scans/$Id/summary" @Params
 }
     end {
         if ($Raw) {

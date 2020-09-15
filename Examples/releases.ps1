@@ -1,7 +1,7 @@
 #
 # FOD Release examples
 #
-# - Change "$ownerId" to valid user id (user'Get-FODUsers' to find user id values)
+# - Change "$ownerId" to valid user id (or use 'Get-FODUsers' to find user id values)
 # - Change "$attributes" to set any "required" values (use 'Get-FODAttributes Get-FODAttributes -Filters "isRequired:True"' to find any required values)
 
 $ownerId = 9444 # user who will own the application

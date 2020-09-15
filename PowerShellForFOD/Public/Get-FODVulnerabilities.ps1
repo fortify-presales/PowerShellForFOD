@@ -4,13 +4,13 @@ function Get-FODVulnerabilities {
         Get information about FOD vulnerabilities.
     .DESCRIPTION
         Get information about FOD vulnerabilities.
+    .PARAMETER ReleaseId
+        The Id of the Release to get vulnerabilities for.
     .PARAMETER ApplicationName
         The Name of the application to import into.
     .PARAMETER ReleaseName
         The Name of the release to import into.
         Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId
-    .PARAMETER ReleaseId
-        The Id of the Release to get vulnerabilities for.
     .PARAMETER Filters
         A delimited list of field filters.
     .PARAMETER OrderBy
@@ -45,7 +45,10 @@ function Get-FODVulnerabilities {
     .EXAMPLE
         # Get all of the vulnerabilities for release id 1000 through Paging
         Get-FODVulnerabilities -Release Id 1000 -Paging
-     .EXAMPLE
+    .EXAMPLE
+        # Get all of the vulnerabilities for release "1.0" of application "FOD-Test"
+        Get-FODVulnerabilities -ApplicationName "FOD-Test" -ReleaseName "1.0" -Paging
+    .EXAMPLE
         # Get all vulnerabilities with "critical" or "high" severity for release id 1000
         Get-FODVulnerabilities -Release Id 1000 -Paging -Filters "severityString:Critical|High"
     .LINK
@@ -55,14 +58,14 @@ function Get-FODVulnerabilities {
     #>
     [CmdletBinding()]
     param (
-        [Parameter()]
+        [Parameter(Mandatory=$False)]
+        [int]$ReleaseId,
+
+        [Parameter(Mandatory=$False)]
         [string]$ApplicationName,
 
-        [Parameter()]
+        [Parameter(Mandatory=$False)]
         [string]$ReleaseName,
-
-        [Parameter()]
-        [int]$ReleaseId,
 
         [string]$Filters,
         [string]$OrderBy,
@@ -92,14 +95,20 @@ function Get-FODVulnerabilities {
     )
     begin
     {
-        # If we don't have a ReleaseId we have to find it using API
-        if (-not $ReleaseId) {
-           try {
-               $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
-           } catch {
-               Write-Error $_
-               Break
-           }
+        # If we don't have a ReleaseId parameter we have to find it using API
+        if (-not $PSBoundParameters.ContainsKey('ReleaseId'))
+        {
+            if ($PSBoundParameters.ContainsKey('ApplicationName') -and $PSBoundParameters.ContainsKey('ReleaseName')) {
+                try {
+                    $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
+                    Write-Verbose "Found Release Id: $ReleaseId"
+                } catch {
+                    Write-Error $_
+                    Break
+                }
+            } else {
+                throw "Please supply a parameter for `"ReleaseId`" or both `"ApplicationName`" and `"ReleaseName`""
+            }
         }
         $Params = @{}
         if ($Proxy) {
@@ -174,6 +183,7 @@ function Get-FODVulnerabilities {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawVulnerabilities += $Response.items

@@ -132,7 +132,7 @@ function Get-FODToken
         $Body.Add('grant_type', 'password')
         #$Body.Add('username', $Credential.UserName)
         #$Body.Add('password',[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($Credential.Password)))
-        $Body.Add('username', $Credential.GetNetworkCredential().UserName)
+        $Body.Add('username', ($Credential.GetNetworkCredential().Domain + "\" + $Credential.GetNetworkCredential().UserName))
         $Body.Add('password', $Credential.GetNetworkCredential().Password)
     } elseif ($GrantType -eq 'ClientCredentials') {
         $Body.Add('grant_type', 'client_credentials')

@@ -17,6 +17,9 @@ function Get-FODRelease {
     .EXAMPLE
         # Get the release with id 100
         Get-FODRelease -Id 100
+    .EXAMPLE
+        # Get the release with name "1.0" in application "FOD-TEST" using "Get-FODReleaseId" in pipeline
+        Get-FODReleaseId -ApplicationName IWA -ReleaseName master | Get-FODRelease
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetRelease
     .FUNCTIONALITY
@@ -24,7 +27,7 @@ function Get-FODRelease {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$Id,
 
         [switch]$Raw,

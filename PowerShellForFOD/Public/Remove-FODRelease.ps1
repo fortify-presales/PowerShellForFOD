@@ -24,7 +24,7 @@ function Remove-FODRelease {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$Id,
 
         [switch]$Raw,

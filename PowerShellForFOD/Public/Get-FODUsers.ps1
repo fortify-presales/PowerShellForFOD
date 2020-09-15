@@ -121,6 +121,7 @@ function Get-FODUsers {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawUsers += $Response.items

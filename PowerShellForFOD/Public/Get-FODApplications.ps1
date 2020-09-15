@@ -117,6 +117,7 @@ function Get-FODApplications {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawApplications += $Response.items

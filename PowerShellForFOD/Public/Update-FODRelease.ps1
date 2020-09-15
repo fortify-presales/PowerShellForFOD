@@ -32,7 +32,7 @@ function Update-FODRelease {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$Id,
 
         [PSTypeName('PS4FOD.ReleaseObject')]

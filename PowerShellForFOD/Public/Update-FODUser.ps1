@@ -36,7 +36,7 @@ function Update-FODUser {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$Id,
 
         [PSTypeName('PS4FOD.UserObject')]

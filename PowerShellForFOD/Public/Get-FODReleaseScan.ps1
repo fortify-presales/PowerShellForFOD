@@ -26,10 +26,10 @@ function Get-FODReleaseScan {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$ReleaseId,
 
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True)]
         [int]$ScanId,
 
         [switch]$Raw,

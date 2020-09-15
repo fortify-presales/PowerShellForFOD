@@ -1,11 +1,11 @@
-function Get-FODUserApplicationAccess {
+function Get-FODUserId {
     <#
     .SYNOPSIS
-        Get information about the application access of an FOD user.
+        Gets the id for a specific user.
     .DESCRIPTION
-        Get information about the application access of an FOD user.
-    .PARAMETER UserId
-        The id of the user.
+        Gets the internal id for a specific user using the user name provided.
+    .PARAMETER UserName
+        The user name of the user.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -15,16 +15,15 @@ function Get-FODUserApplicationAccess {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-
-    .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/UserApplicationAccesss/UserApplicationAccesssV3_GetUserApplicationAccess
-    .FUNCTIONALITY
+        # Get the user id for user name "testuser1"
+        Get-FODUserId -UserName "testuser1"
+     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
-        [int]$UserId,
+        [Parameter(Mandatory)]
+        [string]$UserName,
 
         [switch]$Raw,
 
@@ -52,19 +51,33 @@ function Get-FODUserApplicationAccess {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Get-FODUserGroupApplicationAccess Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $RawUserApplicationAccess = $null
+        Write-Verbose "Get-FODUserId Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $User = @{}
     }
     process
     {
-            Write-Verbose "Send-FODApi -Method Get -Operation '/api/v3/user-application-access/$UserId'" #$Params
-            $RawUserApplicationAccess = Send-FODApi -Method Get -Operation "/api/v3/user-application-access/$UserId" @Params
+        # Find all "matching" users and filter for exact matches
+        Write-Verbose "Retrieving all users with username:$UserName"
+        foreach ($u in Get-FODUsers -Filters "username:$UserName") {
+            if ($u.username -eq $UserName) {
+                $User = $u
+                break
+            }
+        }
+        if ($User.Count -ne 0)
+        {
+            Write-Verbose "Found user: $UserName"
+        }
+        else
+        {
+            throw "Unable to find user: $UserName"
+        }
     }
     end {
         if ($Raw) {
-            $RawUserApplicationAccess
+            $User
         } else {
-            Parse-FODUserApplicationAccess -InputObject $RawUserApplicationAccess.items
+            $User.userId
         }
     }
 }

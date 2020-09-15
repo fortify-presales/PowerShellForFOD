@@ -24,7 +24,7 @@ function Get-FODUserGroupApplicationAccess {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [int]$UserGroupId,
 
         [switch]$Raw,

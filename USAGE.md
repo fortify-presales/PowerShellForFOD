@@ -150,6 +150,14 @@ To get (retrieve) an individual application, use the following:
 Get-FODApplication -Id $applicationId
 ```
 
+You can also get (retrieve) the id of an application using `FOD-GetApplicationId` and use it in a pipeline as in the
+following:
+
+```Powershell
+# Get the application with name "test"
+Get-FODApplicationId -ApplicationName "test" | Get-FODApplication
+```
+
 To get (retrieve) one or more applications, use the following:
 
 ```Powershell
@@ -250,8 +258,8 @@ similar applications.
 To export an Application Audit Template, you can use the following:
  
 ```PowerShell
-# Export the template for application id 1001, saving it in the file 'aat-standard.json'
-Export-FODApplicationAuditTemplates -ApplicationId 1000 -ScanType All -FilePath aat-standard.json
+# Export the template for application id 1000, saving it in the file 'aat-standard.json'
+Export-FODApplicationAuditTemplates -Id 1000 -ScanType All -FilePath aat-standard.json
 ```
 
 You can export the templates for specific scan types, e.g. Static, Dynamic, Mobile or Open Source
@@ -263,8 +271,8 @@ Once you have exported an Application Audit Template, you can import it into ano
 the following:
 
 ```PowerShell
-# Import the template saved in the file 'aat-standard.json' into application if 1001
-Import-FODApplicationAuditTemplates -ApplicationId 1001 -FilePath aat-standard.json
+# Import the template saved in the file 'aat-standard.json' into application if 1000
+Import-FODApplicationAuditTemplates -Id 1000 -FilePath aat-standard.json
 ```
 
 Note that importing a template will override any filters that have already been applied to an application.
@@ -297,6 +305,14 @@ To get (retrieve) an individual release, use the following:
 ```Powershell
 # Get the new Release created above
 Get-FODRelease -Id $releaseId
+```
+
+You can also get (retrieve) the id of a release using `FOD-GetReleaseId` and use it in a pipeline as in the
+following:
+
+```Powershell
+# Get the release "1.0" of application with name "test"
+Get-FODReleaseId -ApplicationName "test" -ReleaseName "1.0" | Get-FODRelease
 ```
 
 To get (retrieve) one or more releases, use the following:
@@ -463,6 +479,13 @@ You can retrieve vulnerabilities for a specific release using the following:
 Get-FODVulnerabilities -Release Id 1000 -Paging
 ```
 
+Rather than referencing the "ReleaseId" you can also refer to the application and release by name as in the following:
+
+```Powershell
+# Get all of the vulnerabilities for release "1.0" of application "myapp"
+Get-FODVulnerabilities -ApplicationName "myapp" -ReleaseName "1.0" -Paging
+```
+
 You can also use "filters" to retrieve different severities, categories and types of vulnerabilities, for example:
 
 ```Powershell
@@ -501,6 +524,13 @@ To get (retrieve) an individual user, use the following:
 ```Powershell
 # Get the new user created above
 Get-FODUser -Id $userId
+```
+You can also get (retrieve) the id of a user using `FOD-GetUserId` and use it in a pipeline as in the
+following:
+
+```Powershell
+# Get the user "testuser1" 
+Get-FODUserId -UserName "testuser1" | Get-FODUser
 ```
 
 To get (retrieve) one or more users, use the following:

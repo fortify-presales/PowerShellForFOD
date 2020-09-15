@@ -3,9 +3,11 @@ function Get-FODReleaseId {
     .SYNOPSIS
         Gets the id for a specific release.
     .DESCRIPTION
-        Gets the id for a specific release using the Application name and Release name provided.
-    .PARAMETER Id
-        The id of the release.
+        Gets the internal id for a specific release using the Application name and Release name provided.
+    .PARAMETER ApplicationName
+        The name of the application.
+    .PARAMETER ReleaseName
+        The name of the release.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -17,9 +19,7 @@ function Get-FODReleaseId {
     .EXAMPLE
         # Get the release id for Application name "test", Release name "1.0"
         Get-FODReleaseId -ApplicationName "test" -ReleaseName "1.0"
-    .LINK
-        https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetRelease
-    .FUNCTIONALITY
+     .FUNCTIONALITY
         Fortify on Demand
     #>
     [CmdletBinding()]
@@ -57,6 +57,7 @@ function Get-FODReleaseId {
             $VerbosePreference = "Continue"
         }
         Write-Verbose "Get-FODReleaseId Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $Release = @{}
     }
     process
     {
@@ -64,15 +65,15 @@ function Get-FODReleaseId {
         {
             # Find all "matching" releases and filter for exact matches
             Write-Verbose "Retrieving release id for release: $ReleaseName of application: $ApplicationName"
-            foreach ($release in Get-FODReleases -Filters "applicationName:$ApplicationName+releaseName:$ReleaseName") {
-                if ($release.applicationName -eq $ApplicationName -and $release.releaseName -eq $ReleaseName) {
-                    $ReleaseId = $release.releaseId
+            foreach ($rel in Get-FODReleases -Filters "applicationName:$ApplicationName+releaseName:$ReleaseName") {
+                if ($rel.applicationName -eq $ApplicationName -and $rel.releaseName -eq $ReleaseName) {
+                    $Release = $rel
                     break
                 }
             }
-            if ($ReleaseId)
+            if ($Release.Count -ne 0)
             {
-                Write-Verbose "Found release id: $ReleaseId"
+                Write-Verbose "Found release: $Release"
             }
             else
             {
@@ -83,6 +84,10 @@ function Get-FODReleaseId {
         }
     }
     end {
-        $ReleaseId
+        if ($Raw) {
+            $Release
+        } else {
+            $Release.releaseId
+        }
     }
 }

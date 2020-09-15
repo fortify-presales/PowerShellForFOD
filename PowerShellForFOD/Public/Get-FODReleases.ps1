@@ -117,6 +117,7 @@ function Get-FODReleases {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawReleases += $Response.items

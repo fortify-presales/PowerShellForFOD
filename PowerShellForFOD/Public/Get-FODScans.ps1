@@ -132,6 +132,7 @@ function Get-FODScans {
                 $Body.Remove("offset")
                 $Body.Add("offset", $LoadedCount)
             } else {
+                $LoadedCount += $TotalCount
                 $HasMore = $false
             }
             $RawScans += $Response.items
