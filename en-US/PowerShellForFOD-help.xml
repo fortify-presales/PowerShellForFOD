@@ -543,19 +543,19 @@
       <command:verb>Add</command:verb>
       <command:noun>FODUserApplicationAccess</command:noun>
       <maml:description>
-        <maml:para>{{ Fill in the Synopsis }}</maml:para>
+        <maml:para>Adds/Grants user access for a given application.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>{{ Fill in the Description }}</maml:para>
+      <maml:para>Adds/Grants user access for one or more applications.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Add-FODUserApplicationAccess</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
           <maml:name>UserId</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill UserId Description }}</maml:para>
+            <maml:para>The id of the user to give access to.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
@@ -564,10 +564,10 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
           <maml:name>ApplicationId</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill ApplicationId Description }}</maml:para>
+            <maml:para>The id of the application to give the user access to.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
@@ -576,19 +576,19 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
           <maml:name>Token</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill Token Description }}</maml:para>
+            <maml:para>FOD authentication token to use. If empty, the value from PS4FOD will be used.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
           <maml:name>Uri</maml:name>
           <maml:Description>
             <maml:para>{{ Fill Uri Description }}</maml:para>
@@ -598,49 +598,61 @@
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
           <maml:name>Proxy</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill Proxy Description }}</maml:para>
+            <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>ForceVerbose</maml:name>
-          <maml:Description>
-            <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
-          </maml:Description>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>False</dev:defaultValue>
+          <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Raw</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill Raw Description }}</maml:para>
+            <maml:para>Print Raw output - do not convert into UserObject. Default is false.</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ForceVerbose</maml:name>
+          <maml:Description>
+            <maml:para>Force verbose output. Default value is the value set by Set-FODConfig</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>UserId</maml:name>
+        <maml:Description>
+          <maml:para>The id of the user to give access to.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>ApplicationId</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill ApplicationId Description }}</maml:para>
+          <maml:para>The id of the application to give the user access to.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
         <dev:type>
@@ -650,33 +662,9 @@
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-        <maml:name>ForceVerbose</maml:name>
-        <maml:Description>
-          <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
-        </maml:Description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>False</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
-        <maml:name>Proxy</maml:name>
-        <maml:Description>
-          <maml:para>{{ Fill Proxy Description }}</maml:para>
-        </maml:Description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Raw</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill Raw Description }}</maml:para>
+          <maml:para>Print Raw output - do not convert into UserObject. Default is false.</maml:para>
         </maml:Description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -685,19 +673,19 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
         <maml:name>Token</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill Token Description }}</maml:para>
+          <maml:para>FOD authentication token to use. If empty, the value from PS4FOD will be used.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
         <maml:name>Uri</maml:name>
         <maml:Description>
           <maml:para>{{ Fill Uri Description }}</maml:para>
@@ -707,41 +695,35 @@
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
-        <maml:name>UserId</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+        <maml:name>Proxy</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill UserId Description }}</maml:para>
+          <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
         </maml:Description>
-        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
-          <maml:name>Object</maml:name>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ForceVerbose</maml:name>
+        <maml:Description>
+          <maml:para>Force verbose output. Default value is the value set by Set-FODConfig</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
       </command:parameter>
     </command:parameters>
-    <command:inputTypes>
-      <command:inputType>
-        <dev:type>
-          <maml:name>None</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:inputType>
-    </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:returnValue>
-    </command:returnValues>
+    <command:inputTypes />
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -749,10 +731,10 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
-        <dev:code>PS C:\&gt; {{ Add example code here }}</dev:code>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <dev:code># Give the user with id 1000 access to application with id 100</dev:code>
         <dev:remarks>
-          <maml:para>{{ Add example description here }}</maml:para>
+          <maml:para>Add-FODUserApplicationAccess -UserId 1000 -ApplicationId 100</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -764,19 +746,19 @@
       <command:verb>Add</command:verb>
       <command:noun>FODUserGroupApplicationAccess</command:noun>
       <maml:description>
-        <maml:para>{{ Fill in the Synopsis }}</maml:para>
+        <maml:para>Adds/Grants user group access for a given application.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>{{ Fill in the Description }}</maml:para>
+      <maml:para>Adds/Grants user group access for one or more applications.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Add-FODUserGroupApplicationAccess</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
           <maml:name>UserGroupId</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill UserGroupId Description }}</maml:para>
+            <maml:para>The id of the user group to give access to.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
@@ -785,10 +767,10 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
           <maml:name>ApplicationId</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill ApplicationId Description }}</maml:para>
+            <maml:para>The id of the application to give the user access to.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
           <dev:type>
@@ -797,19 +779,19 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
           <maml:name>Token</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill Token Description }}</maml:para>
+            <maml:para>FOD authentication token to use. If empty, the value from PS4FOD will be used.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
           <maml:name>Uri</maml:name>
           <maml:Description>
             <maml:para>{{ Fill Uri Description }}</maml:para>
@@ -819,49 +801,61 @@
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
           <maml:name>Proxy</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill Proxy Description }}</maml:para>
+            <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>ForceVerbose</maml:name>
-          <maml:Description>
-            <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
-          </maml:Description>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>False</dev:defaultValue>
+          <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Raw</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill Raw Description }}</maml:para>
+            <maml:para>Print Raw output - do not convert into UserObject. Default is false.</maml:para>
           </maml:Description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ForceVerbose</maml:name>
+          <maml:Description>
+            <maml:para>Force verbose output. Default value is the value set by Set-FODConfig</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>UserGroupId</maml:name>
+        <maml:Description>
+          <maml:para>The id of the user group to give access to.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <dev:type>
+          <maml:name>Object</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>ApplicationId</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill ApplicationId Description }}</maml:para>
+          <maml:para>The id of the application to give the user access to.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
         <dev:type>
@@ -871,33 +865,9 @@
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-        <maml:name>ForceVerbose</maml:name>
-        <maml:Description>
-          <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
-        </maml:Description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>False</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
-        <maml:name>Proxy</maml:name>
-        <maml:Description>
-          <maml:para>{{ Fill Proxy Description }}</maml:para>
-        </maml:Description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-        <dev:type>
-          <maml:name>String</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Raw</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill Raw Description }}</maml:para>
+          <maml:para>Print Raw output - do not convert into UserObject. Default is false.</maml:para>
         </maml:Description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -906,19 +876,19 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
         <maml:name>Token</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill Token Description }}</maml:para>
+          <maml:para>FOD authentication token to use. If empty, the value from PS4FOD will be used.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
         <maml:name>Uri</maml:name>
         <maml:Description>
           <maml:para>{{ Fill Uri Description }}</maml:para>
@@ -928,41 +898,35 @@
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
-        <maml:name>UserGroupId</maml:name>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="5" aliases="none">
+        <maml:name>Proxy</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill UserGroupId Description }}</maml:para>
+          <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
         </maml:Description>
-        <command:parameterValue required="true" variableLength="false">Object</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
-          <maml:name>Object</maml:name>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>None</dev:defaultValue>
+        <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ForceVerbose</maml:name>
+        <maml:Description>
+          <maml:para>Force verbose output. Default value is the value set by Set-FODConfig</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
       </command:parameter>
     </command:parameters>
-    <command:inputTypes>
-      <command:inputType>
-        <dev:type>
-          <maml:name>None</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:inputType>
-    </command:inputTypes>
-    <command:returnValues>
-      <command:returnValue>
-        <dev:type>
-          <maml:name>System.Object</maml:name>
-        </dev:type>
-        <maml:description>
-          <maml:para></maml:para>
-        </maml:description>
-      </command:returnValue>
-    </command:returnValues>
+    <command:inputTypes />
+    <command:returnValues />
     <maml:alertSet>
       <maml:alert>
         <maml:para></maml:para>
@@ -970,10 +934,10 @@
     </maml:alertSet>
     <command:examples>
       <command:example>
-        <maml:title>-------------------------- Example 1 --------------------------</maml:title>
-        <dev:code>PS C:\&gt; {{ Add example code here }}</dev:code>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <dev:code># Give the user group with id 1000 access to application with id 100</dev:code>
         <dev:remarks>
-          <maml:para>{{ Add example description here }}</maml:para>
+          <maml:para>Add-FODUserGroupApplicationAccess -UserGroupId 1000 -ApplicationId 100</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -994,8 +958,8 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Export-FODApplicationAuditTemplates</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>ApplicationId</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
+          <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the Application to retrieve the audit templatea for.</maml:para>
           </maml:Description>
@@ -1080,8 +1044,8 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-        <maml:name>ApplicationId</maml:name>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
+        <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the Application to retrieve the audit templatea for.</maml:para>
         </maml:Description>
@@ -1177,7 +1141,7 @@
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
         <dev:code># Export all the audit templates for application with id 1000</dev:code>
         <dev:remarks>
-          <maml:para>Export-FODApplicationAuditTemplates -ApplicationId 10000 -ScanType All -FilePath aat-10000.json</maml:para>
+          <maml:para>Export-FODApplicationAuditTemplates -Id 1000 -ScanType All -FilePath aat-10000.json</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -1203,7 +1167,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODApplication</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the application.</maml:para>
@@ -1276,7 +1240,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the application.</maml:para>
@@ -1364,10 +1328,201 @@
           <maml:para>Get-FODApplication -Id 100</maml:para>
         </dev:remarks>
       </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <dev:code># Get the application with name "FOD-TEST" using "Get-FODApplicationId" in pipeline</dev:code>
+        <dev:remarks>
+          <maml:para>Get-FODApplicationId -ApplicationName FOD-TEST | Get-FODApplication</maml:para>
+        </dev:remarks>
+      </command:example>
     </command:examples>
     <command:relatedLinks>
       <maml:navigationLink>
         <maml:linkText>https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplication</maml:linkText>
+        <maml:uri>https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplication</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-FODApplicationId</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>FODApplicationId</command:noun>
+      <maml:description>
+        <maml:para>Gets the id for a FOD applications.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Get the internal id for a specific FOD application.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-FODApplicationId</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>ApplicationName</maml:name>
+          <maml:Description>
+            <maml:para>The application name.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Token</maml:name>
+          <maml:Description>
+            <maml:para>FOD token to use. If empty, the value from PS4FOD will be used.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+          <maml:name>ApiUri</maml:name>
+          <maml:Description>
+            <maml:para>{{ Fill ApiUri Description }}</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+          <maml:name>Proxy</maml:name>
+          <maml:Description>
+            <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Raw</maml:name>
+          <maml:Description>
+            <maml:para>If specified, provide raw output and do not parse any responses.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ForceVerbose</maml:name>
+          <maml:Description>
+            <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>ApplicationName</maml:name>
+        <maml:Description>
+          <maml:para>The application name.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Raw</maml:name>
+        <maml:Description>
+          <maml:para>If specified, provide raw output and do not parse any responses.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <maml:name>Token</maml:name>
+        <maml:Description>
+          <maml:para>FOD token to use. If empty, the value from PS4FOD will be used.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+        <maml:name>ApiUri</maml:name>
+        <maml:Description>
+          <maml:para>{{ Fill ApiUri Description }}</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+        <maml:name>Proxy</maml:name>
+        <maml:Description>
+          <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ForceVerbose</maml:name>
+        <maml:Description>
+          <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <dev:code># Get the id for the Application called "FOD-Test"</dev:code>
+        <dev:remarks>
+          <maml:para>Get-FODApplicationId -ApplicationName "FOD-Test"</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
         <maml:uri>https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplication</maml:uri>
       </maml:navigationLink>
     </command:relatedLinks>
@@ -1697,7 +1852,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODApplicationScans</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>ApplicationId</maml:name>
           <maml:Description>
             <maml:para>The application id.</maml:para>
@@ -1829,7 +1984,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>ApplicationId</maml:name>
         <maml:Description>
           <maml:para>The application id.</maml:para>
@@ -1975,6 +2130,13 @@
         <dev:code># Get all of the scans for application id 100 through Paging</dev:code>
         <dev:remarks>
           <maml:para>Get-FODApplicationScans -ApplicationId 100 -Paging</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <dev:code># Get all of the scan for application "FOD-TEST" using Get-FODApplicationId in pipeline</dev:code>
+        <dev:remarks>
+          <maml:para>Get-FODApplicationId -ApplicationName "FOD-TEST" | Get-FODApplicationScans -Paging</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -2274,7 +2436,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODRelease</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the release.</maml:para>
@@ -2347,7 +2509,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the release.</maml:para>
@@ -2435,6 +2597,13 @@
           <maml:para>Get-FODRelease -Id 100</maml:para>
         </dev:remarks>
       </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <dev:code># Get the release with name "1.0" in application "FOD-TEST" using "Get-FODReleaseId" in pipeline</dev:code>
+        <dev:remarks>
+          <maml:para>Get-FODReleaseId -ApplicationName IWA -ReleaseName master | Get-FODRelease</maml:para>
+        </dev:remarks>
+      </command:example>
     </command:examples>
     <command:relatedLinks>
       <maml:navigationLink>
@@ -2453,7 +2622,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Gets the id for a specific release using the Application name and Release name provided.</maml:para>
+      <maml:para>Gets the internal id for a specific release using the Application name and Release name provided.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -2461,7 +2630,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
           <maml:name>ApplicationName</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill ApplicationName Description }}</maml:para>
+            <maml:para>The name of the application.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -2473,7 +2642,7 @@
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
           <maml:name>ReleaseName</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill ReleaseName Description }}</maml:para>
+            <maml:para>The name of the release.</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -2546,7 +2715,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
         <maml:name>ApplicationName</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill ApplicationName Description }}</maml:para>
+          <maml:para>The name of the application.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -2558,7 +2727,7 @@
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>ReleaseName</maml:name>
         <maml:Description>
-          <maml:para>{{ Fill ReleaseName Description }}</maml:para>
+          <maml:para>The name of the release.</maml:para>
         </maml:Description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -2646,7 +2815,7 @@
     </command:examples>
     <command:relatedLinks>
       <maml:navigationLink>
-        <maml:linkText>https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetRelease</maml:linkText>
+        <maml:linkText>Online Version:</maml:linkText>
         <maml:uri>https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetRelease</maml:uri>
       </maml:navigationLink>
     </command:relatedLinks>
@@ -2983,7 +3152,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODReleaseScan</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>ReleaseId</maml:name>
           <maml:Description>
             <maml:para>The release id.</maml:para>
@@ -3068,7 +3237,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>ReleaseId</maml:name>
         <maml:Description>
           <maml:para>The release id.</maml:para>
@@ -3191,7 +3360,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODReleaseScans</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>ReleaseId</maml:name>
           <maml:Description>
             <maml:para>The release id.</maml:para>
@@ -3323,7 +3492,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>ReleaseId</maml:name>
         <maml:Description>
           <maml:para>The release id.</maml:para>
@@ -3869,8 +4038,8 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODScanSummary</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>ScanId</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
+          <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The scan id.</maml:para>
           </maml:Description>
@@ -3942,8 +4111,8 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-        <maml:name>ScanId</maml:name>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
+        <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The scan id.</maml:para>
         </maml:Description>
@@ -4027,7 +4196,7 @@
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
         <dev:code># Get the scan summary for scan with id 1000</dev:code>
         <dev:remarks>
-          <maml:para>Get-ScanSummary -ScanId 1000</maml:para>
+          <maml:para>Get-ScanSummary -Id 1000</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -4293,7 +4462,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODUser</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the user.</maml:para>
@@ -4366,7 +4535,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the user.</maml:para>
@@ -4477,7 +4646,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODUserApplicationAccess</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>UserId</maml:name>
           <maml:Description>
             <maml:para>The id of the user.</maml:para>
@@ -4550,7 +4719,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>UserId</maml:name>
         <maml:Description>
           <maml:para>The id of the user.</maml:para>
@@ -4661,7 +4830,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Get-FODUserGroupApplicationAccess</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>UserGroupId</maml:name>
           <maml:Description>
             <maml:para>The id of the user group.</maml:para>
@@ -4734,7 +4903,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>UserGroupId</maml:name>
         <maml:Description>
           <maml:para>The id of the user group.</maml:para>
@@ -5149,6 +5318,190 @@
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
+      <command:name>Get-FODUserId</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>FODUserId</command:noun>
+      <maml:description>
+        <maml:para>Gets the id for a specific user.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Gets the internal id for a specific user using the user name provided.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-FODUserId</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>UserName</maml:name>
+          <maml:Description>
+            <maml:para>The user name of the user.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Token</maml:name>
+          <maml:Description>
+            <maml:para>FOD token to use. If empty, the value from PS4FOD will be used.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+          <maml:name>ApiUri</maml:name>
+          <maml:Description>
+            <maml:para>{{ Fill ApiUri Description }}</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+          <maml:name>Proxy</maml:name>
+          <maml:Description>
+            <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Raw</maml:name>
+          <maml:Description>
+            <maml:para>If specified, provide raw output and do not parse any responses.</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ForceVerbose</maml:name>
+          <maml:Description>
+            <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
+          </maml:Description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>UserName</maml:name>
+        <maml:Description>
+          <maml:para>The user name of the user.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Raw</maml:name>
+        <maml:Description>
+          <maml:para>If specified, provide raw output and do not parse any responses.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <maml:name>Token</maml:name>
+        <maml:Description>
+          <maml:para>FOD token to use. If empty, the value from PS4FOD will be used.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.Token</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+        <maml:name>ApiUri</maml:name>
+        <maml:Description>
+          <maml:para>{{ Fill ApiUri Description }}</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.ApiUri</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
+        <maml:name>Proxy</maml:name>
+        <maml:Description>
+          <maml:para>Proxy server to use. Default value is the value set by Set-FODConfig</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ForceVerbose</maml:name>
+        <maml:Description>
+          <maml:para>{{ Fill ForceVerbose Description }}</maml:para>
+        </maml:Description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$Script:PS4FOD.ForceVerbose</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <dev:code># Get the user id for user name "testuser1"</dev:code>
+        <dev:remarks>
+          <maml:para>Get-FODUserId -UserName "testuser1"</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://api.ams.fortify.com/swagger/ui/index#!/UserGroups/UserGroupsV3_GetUserGroups</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
       <command:name>Get-FODUsers</command:name>
       <command:verb>Get</command:verb>
       <command:noun>FODUsers</command:noun>
@@ -5480,16 +5833,16 @@
       <command:syntaxItem>
         <maml:name>Get-FODVulnerabilities</maml:name>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>ApplicationName</maml:name>
+          <maml:name>ReleaseId</maml:name>
           <maml:Description>
-            <maml:para>The Name of the application to import into.</maml:para>
+            <maml:para>The Id of the Release to get vulnerabilities for.</maml:para>
           </maml:Description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>None</dev:defaultValue>
+          <dev:defaultValue>0</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="10" aliases="none">
           <maml:name>Token</maml:name>
@@ -5528,6 +5881,18 @@
           <dev:defaultValue>$Script:PS4FOD.Proxy</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>ApplicationName</maml:name>
+          <maml:Description>
+            <maml:para>The Name of the application to import into.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
           <maml:name>ReleaseName</maml:name>
           <maml:Description>
             <maml:para>The Name of the release to import into. Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId</maml:para>
@@ -5538,18 +5903,6 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-          <maml:name>ReleaseId</maml:name>
-          <maml:Description>
-            <maml:para>The Id of the Release to get vulnerabilities for.</maml:para>
-          </maml:Description>
-          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
           <maml:name>Filters</maml:name>
@@ -5693,6 +6046,18 @@
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>ReleaseId</maml:name>
+        <maml:Description>
+          <maml:para>The Id of the Release to get vulnerabilities for.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>0</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>ApplicationName</maml:name>
         <maml:Description>
           <maml:para>The Name of the application to import into.</maml:para>
@@ -5704,7 +6069,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
         <maml:name>ReleaseName</maml:name>
         <maml:Description>
           <maml:para>The Name of the release to import into. Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId</maml:para>
@@ -5715,18 +6080,6 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-        <maml:name>ReleaseId</maml:name>
-        <maml:Description>
-          <maml:para>The Id of the Release to get vulnerabilities for.</maml:para>
-        </maml:Description>
-        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>0</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
         <maml:name>Filters</maml:name>
@@ -5926,6 +6279,13 @@
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <dev:code># Get all of the vulnerabilities for release "1.0" of application "FOD-Test"</dev:code>
+        <dev:remarks>
+          <maml:para>Get-FODVulnerabilities -ApplicationName "FOD-Test" -ReleaseName "1.0" -Paging</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 3 --------------------------</maml:title>
         <dev:code># Get all vulnerabilities with "critical" or "high" severity for release id 1000</dev:code>
         <dev:remarks>
           <maml:para>Get-FODVulnerabilities -Release Id 1000 -Paging -Filters "severityString:Critical|High"</maml:para>
@@ -5954,8 +6314,8 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Import-FODApplicationAuditTemplates</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>ApplicationId</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
+          <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the Application to import the audit template to.</maml:para>
           </maml:Description>
@@ -6028,8 +6388,8 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-        <maml:name>ApplicationId</maml:name>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
+        <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the Application to import the audit template to.</maml:para>
         </maml:Description>
@@ -6113,7 +6473,7 @@
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
         <dev:code># Import the audit templates for application with id 1000</dev:code>
         <dev:remarks>
-          <maml:para>Import-FODApplicationAuditTemplates -ApplicationId 10000 -FilePath aat-10000.json</maml:para>
+          <maml:para>Import-FODApplicationAuditTemplates -Id 10000 -FilePath aat-10000.json</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -6140,6 +6500,18 @@
       <command:syntaxItem>
         <maml:name>Import-FODDynamicScan</maml:name>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>ReleaseId</maml:name>
+          <maml:Description>
+            <maml:para>The Id of the release to import into.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
           <maml:name>ApplicationName</maml:name>
           <maml:Description>
             <maml:para>The Name of the application to import into.</maml:para>
@@ -6151,7 +6523,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
           <maml:name>ReleaseName</maml:name>
           <maml:Description>
             <maml:para>The Name of the release to import into. Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId</maml:para>
@@ -6162,18 +6534,6 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-          <maml:name>ReleaseId</maml:name>
-          <maml:Description>
-            <maml:para>The Id of the release to import into.</maml:para>
-          </maml:Description>
-          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
         </command:parameter>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
           <maml:name>ScanFile</maml:name>
@@ -6249,6 +6609,18 @@
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>ReleaseId</maml:name>
+        <maml:Description>
+          <maml:para>The Id of the release to import into.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>0</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>ApplicationName</maml:name>
         <maml:Description>
           <maml:para>The Name of the application to import into.</maml:para>
@@ -6260,7 +6632,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
         <maml:name>ReleaseName</maml:name>
         <maml:Description>
           <maml:para>The Name of the release to import into. Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId</maml:para>
@@ -6271,18 +6643,6 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-        <maml:name>ReleaseId</maml:name>
-        <maml:Description>
-          <maml:para>The Id of the release to import into.</maml:para>
-        </maml:Description>
-        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>0</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
         <maml:name>ScanFile</maml:name>
@@ -6403,6 +6763,18 @@
       <command:syntaxItem>
         <maml:name>Import-FODStaticScan</maml:name>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>ReleaseId</maml:name>
+          <maml:Description>
+            <maml:para>The Id of the release to import into.</maml:para>
+          </maml:Description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
           <maml:name>ApplicationName</maml:name>
           <maml:Description>
             <maml:para>The Name of the application to import into.</maml:para>
@@ -6414,7 +6786,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
           <maml:name>ReleaseName</maml:name>
           <maml:Description>
             <maml:para>The Name of the release to import into. Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId</maml:para>
@@ -6425,18 +6797,6 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-          <maml:name>ReleaseId</maml:name>
-          <maml:Description>
-            <maml:para>The Id of the release to import into.</maml:para>
-          </maml:Description>
-          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
-          <dev:type>
-            <maml:name>Int32</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
         </command:parameter>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
           <maml:name>ScanFile</maml:name>
@@ -6512,6 +6872,18 @@
     </command:syntax>
     <command:parameters>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>ReleaseId</maml:name>
+        <maml:Description>
+          <maml:para>The Id of the release to import into.</maml:para>
+        </maml:Description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>0</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>ApplicationName</maml:name>
         <maml:Description>
           <maml:para>The Name of the application to import into.</maml:para>
@@ -6523,7 +6895,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
         <maml:name>ReleaseName</maml:name>
         <maml:Description>
           <maml:para>The Name of the release to import into. Note: Both ApplicationName and ReleaseName are required if not specifying ReleaseId</maml:para>
@@ -6534,18 +6906,6 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-        <maml:name>ReleaseId</maml:name>
-        <maml:Description>
-          <maml:para>The Id of the release to import into.</maml:para>
-        </maml:Description>
-        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
-        <dev:type>
-          <maml:name>Int32</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>0</dev:defaultValue>
       </command:parameter>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="4" aliases="none">
         <maml:name>ScanFile</maml:name>
@@ -7955,7 +8315,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Remove-FODApplication</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the application.</maml:para>
@@ -8028,7 +8388,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the application.</maml:para>
@@ -8139,7 +8499,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Remove-FODRelease</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the release.</maml:para>
@@ -8212,7 +8572,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the release.</maml:para>
@@ -8323,7 +8683,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Remove-FODUser</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the user.</maml:para>
@@ -8396,7 +8756,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="1" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the user.</maml:para>
@@ -9499,13 +9859,13 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>ApplicationName</maml:name>
+          <maml:name>ReleaseId</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill ApplicationName Description }}</maml:para>
+            <maml:para>{{ Fill ReleaseId Description }}</maml:para>
           </maml:Description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>Int32</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -9535,9 +9895,9 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
-          <maml:name>ReleaseName</maml:name>
+          <maml:name>ApplicationName</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill ReleaseName Description }}</maml:para>
+            <maml:para>{{ Fill ApplicationName Description }}</maml:para>
           </maml:Description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -9547,13 +9907,13 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
-          <maml:name>ReleaseId</maml:name>
+          <maml:name>ReleaseName</maml:name>
           <maml:Description>
-            <maml:para>{{ Fill ReleaseId Description }}</maml:para>
+            <maml:para>{{ Fill ReleaseName Description }}</maml:para>
           </maml:Description>
-          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>Int32</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
@@ -9704,7 +10064,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>ApplicationName</maml:name>
         <maml:Description>
           <maml:para>{{ Fill ApplicationName Description }}</maml:para>
@@ -9824,7 +10184,7 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
         <maml:name>ReleaseId</maml:name>
         <maml:Description>
           <maml:para>{{ Fill ReleaseId Description }}</maml:para>
@@ -9836,7 +10196,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
         <maml:name>ReleaseName</maml:name>
         <maml:Description>
           <maml:para>{{ Fill ReleaseName Description }}</maml:para>
@@ -9941,7 +10301,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Update-FODApplication</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the application.</maml:para>
@@ -10026,7 +10386,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the application.</maml:para>
@@ -10149,7 +10509,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Update-FODRelease</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the release.</maml:para>
@@ -10234,7 +10594,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the release.</maml:para>
@@ -10357,7 +10717,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Update-FODUser</maml:name>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
           <maml:name>Id</maml:name>
           <maml:Description>
             <maml:para>The id of the user.</maml:para>
@@ -10442,7 +10802,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="True (ByValue)" position="named" aliases="none">
         <maml:name>Id</maml:name>
         <maml:Description>
           <maml:para>The id of the user.</maml:para>
