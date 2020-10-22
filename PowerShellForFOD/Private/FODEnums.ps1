@@ -18,3 +18,9 @@ Enum InProgressScanActionType {
     DoNotStartScan = 0
     CancelScanInProgress = 1
 }
+Enum DynamicScanAssessmentType {
+    DynamicWebsite = 119
+    DynamicPlusWebsite = 120
+    DynamicWebServices = 125
+    DynamicPlusWebServices = 126
+}

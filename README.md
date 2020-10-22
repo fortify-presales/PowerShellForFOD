@@ -1,6 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/egkljq9ok9xhvnhh?svg=true)](https://ci.appveyor.com/project/akevinlee/powershellforfod)
 
-# Power Shell For Fortify On Demand (FOD) Module
+# Power Shell for Fortify On Demand (FOD) Module
 
 #### Table of Contents
 

@@ -73,7 +73,7 @@ FunctionsToExport = @('Add-FODApplication', 'Add-FODRelease', 'Add-FODUser',
                'Add-FODUserApplicationAccess', 'Add-FODUserGroupApplicationAccess', 
                'Export-FODApplicationAuditTemplates', 'Get-FODApplication', 
                'Get-FODApplicationId', 'Get-FODApplications', 
-               'Get-FODApplicationScans', 'Get-FODAttributes', 'Get-FODConfig', 
+               'Get-FODApplicationScans', 'Get-FODAttributes', 'Get-FODConfig', 'Get-FODDynamicScanSetup',
                'Get-FODRelease', 'Get-FODReleaseId', 'Get-FODReleases', 
                'Get-FODReleaseScan', 'Get-FODReleaseScans', 'Get-FODScans', 
                'Get-FODScanSummary', 'Get-FODToken', 'Get-FODUser', 
@@ -87,8 +87,8 @@ FunctionsToExport = @('Add-FODApplication', 'Add-FODRelease', 'Add-FODUser',
                'Remove-FODApplication', 'Remove-FODRelease', 'Remove-FODUser', 
                'Remove-FODUserApplicationAccess', 
                'Remove-FODUserGroupApplicationAccess', 'Send-FODApi', 
-               'Set-FODConfig', 'Start-FODStaticScan', 'Update-FODApplication', 
-               'Update-FODRelease', 'Update-FODUser')
+               'Set-FODConfig', 'Start-FODStaticScan', 'Start-FODDynamicScan', 'Update-FODDynamicScanSetup',
+               'Update-FODApplication','Update-FODRelease', 'Update-FODUser')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

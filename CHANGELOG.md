@@ -1,4 +1,4 @@
-# Power Shell For Fortify On Demand (FOD) Module
+# Power Shell for Fortify On Demand (FOD) Module
 
 ## Change Log
 
@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Added
+
+- Added Get-FODDynamicScanSetup, Updated-FODDynamicScanSetup, Start-FODDynamicScan
 
 ### Changed
 
