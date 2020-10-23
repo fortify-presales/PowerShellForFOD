@@ -1,4 +1,4 @@
-# Power Shell For Fortify On Demand (FOD) Module
+# Power Shell for Fortify On Demand (FOD) Module
 
 ## Contributing
 

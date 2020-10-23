@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Added Get-FODDynamicScanSetup, Updated-FODDynamicScanSetup, Start-FODDynamicScan
+- Added Get-FODDynamicScanSetup, Update-FODDynamicScanSetup, Start-FODDynamicScan for startic dynamic scans
 
 ### Changed
 

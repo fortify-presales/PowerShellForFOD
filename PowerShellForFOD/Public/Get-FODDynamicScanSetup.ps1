@@ -8,6 +8,8 @@ function Get-FODDynamicScanSetup {
         The Id of the release.
     .PARAMETER OutFile
         If specified, write the setup (as JSON) to the file specified.
+    .PARAMETER Raw
+        If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
         FOD token to use.
         If empty, the value from PS4FOD will be used.
@@ -29,6 +31,8 @@ function Get-FODDynamicScanSetup {
 
         [Parameter()]
         [String]$OutFile,
+
+        [switch]$Raw,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -55,18 +59,20 @@ function Get-FODDynamicScanSetup {
             $VerbosePreference = "Continue"
         }
         Write-Verbose "Get-FODDynamicScanStatus Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
-        $DynamicScanSetup = $null
+        $RawDynamicScanSetup = $null
     }
     process
     {
             Write-Verbose "Send-FODApi -Method Get -Operation 'GET /api/v3/releases/$ReleaseId/dynamic-scans/scan-setup'" #$Params
-            $DynamicScanSetup = Send-FODApi -Method Get -Operation "/api/v3/releases/$ReleaseId/dynamic-scans/scan-setup" @Params
+            $RawDynamicScanSetup = Send-FODApi -Method Get -Operation "/api/v3/releases/$ReleaseId/dynamic-scans/scan-setup" @Params
     }
     end {
-        if ($OutFile) {
-            Set-Content -Path $OutFile -Value ($DynamicScanSetup | ConvertTo-Json)
+        if ($Raw) {
+            $RawDynamicScanSetup
+        } elseif ($OutFile) {
+            Set-Content -Path $OutFile -Value ($RawDynamicScanSetup | ConvertTo-Json)
         } else {
-            $DynamicScanSetup | ConvertTo-Json
+            Parse-FODDynamicScanSetup -InputObject $RawDynamicScanSetup
         }
     }
 }

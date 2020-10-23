@@ -28,6 +28,7 @@
     * [Importing Static Scans](#importing-static-scans)
     * [Importing Dynamic Scans](#importing-dynamic-scans)    
     * [Starting a Static Scan](#starting-a-static-scan)
+    * [Starting a Dynamic Scan](#starting-a-dynamic-scan)
 *   [Vulnerabilities](#vulnerabilities)
     * [Retrieving Vulnerabilities](#retrieving-vulnerabilities)    
 *   [Users](#users)
@@ -465,6 +466,41 @@ Get-FODScanSummary -ScanId $response.scanId | Select-Object -Property analysisSt
 
 The `analysisStatusType` will be the current status visible in the Fortify on Demand portal, e.g. Queued, In_Progress, 
 Completed and so on.
+
+### Starting a Dynamic Scan
+
+To start a Fortify on Demand dynamic scan you need to first configure the details of the scan to be carried out using
+the portal. Once you have "saved" the scan configuration in the portal you can check it be retrieved using the following
+command:
+
+```Powershell
+Get-FODDynamicScanSetup -ReleaseId $ReleaseId
+```
+
+where `$ReleaseId` is the unique id for the releases in Fortify on Demand. You can also retrieve this id using `GetReleaseId`.
+
+To start a scan using the "Release Id" value, use the following:
+
+```Powershell 
+# Copy the ReleaseId from the portal between the quotes
+$ReleaseId = "..."
+# Starts a static scan using the ReleaseId value and the Zip file "C:\Temp\upload\fod.zip"
+$response = Start-FODDynamicScan --EntitlementPreference SingleScan
+Write-Host "Started static scan id: $response.scanId"
+```
+
+To find the status of the scan you can use the `Get-FODScanSummary` function as in the following:
+
+```Powershell
+# Get the summary of the scan from the $response object created in the previous step
+Get-FODScanSummary -ScanId $response.scanId | Select-Object -Property analysisStatusType
+```
+
+The `analysisStatusType` will be the current status visible in the Fortify on Demand portal, e.g. Queued, In_Progress, 
+Completed and so on.
+
+The `Start-FODDynamicScan` function will automatically find an appropriate "entitlement", if not entitlements are
+available you can optionally purchase a new entitlement using the `-PurchaseEntitlement` option.
 
 ----------
 

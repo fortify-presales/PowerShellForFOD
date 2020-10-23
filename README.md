@@ -50,6 +50,7 @@ At present, this module can:
  * Query, add and remove user access to Applications
  * Query, add and remove user group access to Applications
  * Query Vulnerabilities
+ * Start Static and Dynamic scans
  * Import on-premise static scans (from [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast))
  * Import on-premise dynamic scans (from [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast))
  * Export and Import Application Audit Templates 
