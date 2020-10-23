@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
+- Updated Start-FODStaticScan to allow queueing - added "Queue" option for "inProgressScanActionType"
+
 ## [1.1.0.10] - 2020-09-15
 
 ### Added

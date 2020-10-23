@@ -91,7 +91,7 @@ function Start-FODStaticScan {
 
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [ValidateSet('DoNotStartScan', 'CancelInProgressScan', IgnoreCase = $false)]
+        [ValidateSet('DoNotStartScan', 'CancelInProgressScan', 'Queue', IgnoreCase = $false)]
         $InProgressScanPreference,
 
         [Parameter()]
