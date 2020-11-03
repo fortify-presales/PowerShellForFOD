@@ -195,7 +195,7 @@ function Start-FODDynamicScan {
             If ($ScanId) {
                 Write-Host "Started dynamic scan with scan id: $ScanId"
             } else {
-                Write-Error "Error startin scan, could not extract scan id!"
+                Write-Error "Error starting scan, could not extract scan id!"
             }
         }
     }

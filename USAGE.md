@@ -426,11 +426,12 @@ Import-FODDynamicScan -ApplicationName "myapp" -ReleaseName "1.0" -ScanFile C:\T
 
 ### Starting a Static Scan
 
-To start a Fortify on Demand static scan, a *Zip* file with the source and dependencies (as described in the [documentation](https://ams.fortify.com/Docs/en/index.htm) 
-should have been created and a static scan configured. This configuration is carried out using `Static Scan Setup` when you select `Start Scan -> Static` from 
+To start a Fortify on Demand static scan, a *Zip* file with the source and dependencies (as described in the
+[documentation](https://ams.fortify.com/Docs/en/index.htm) should have been created and a static scan configured. 
+This configuration is carried out using `Static Scan Setup` when you select `Start Scan -> Static` from 
 the Fortify on Demand portal. Once you "Save" this configuration you will see both a "Release ID" and 
-"Build Server Integration (BSI) Token" field - that can be used to start a static scan using the API. 
-Both the "Release Id" and "BSI Token" are supported, but the "Release Id" is the recommended method.
+"Build Server Integration (BSI) Token" field. Either of these can be used to start a static scan using the API,  
+however the BSI Token mechanism is being deprecated in 2020 and so using the "Release Id" is the recommended method.
 
 To start a scan using the "Build Server Integration (BSI) Token" use the following:
 
@@ -440,7 +441,7 @@ $BsiToken = "..."
 # Starts a static scan using the BSI Token $BsiToken and the Zip file "C:\Temp\upload\fod.zip"
 $response = Start-FODStaticScan -BSIToken $BsiToken -ZipFile C:\Temp\upload\fod.zip `
     -RemediationScanPreference NonRemediationScanOnly -EntitlementPreference SubscriptionOnly `
-    -InProgressScanPreference DoNotStartScan -Notes "some notes" -Raw
+    -InProgressScanPreference Queue -Notes "some notes" -Raw
 Write-Host "Started static scan id: $response.scanId"
 ```
 
@@ -452,7 +453,7 @@ $ReleaseId = "..."
 # Starts a static scan using the ReleaseId value and the Zip file "C:\Temp\upload\fod.zip"
 $response = Start-FODStaticScan -ReleaseId $ReleaseId -ZipFile C:\Temp\upload\fod.zip `
     -RemediationScanPreference NonRemediationScanOnly -EntitlementPreference SubscriptionOnly `
-    -InProgressScanPreference DoNotStartScan -Notes "some notes" -Raw
+    -InProgressScanPreference Queue -Notes "some notes" -Raw
 Write-Host "Started static scan id: $response.scanId"
 ```
 
@@ -470,23 +471,23 @@ Completed and so on.
 ### Starting a Dynamic Scan
 
 To start a Fortify on Demand dynamic scan you need to first configure the details of the scan to be carried out using
-the portal. Once you have "saved" the scan configuration in the portal you can check it be retrieved using the following
+the portal. Once you have "saved" the scan configuration in the portal you can check it can be retrieved using the following
 command:
 
 ```Powershell
 Get-FODDynamicScanSetup -ReleaseId $ReleaseId
 ```
 
-where `$ReleaseId` is the unique id for the releases in Fortify on Demand. You can also retrieve this id using `GetReleaseId`.
+where `$ReleaseId` is the unique id for the releases in Fortify on Demand (You can also retrieve this id using `GetReleaseId`).
 
-To start a scan using the "Release Id" value, use the following:
+To start a dynamic scan using the "Release Id" value, use the following:
 
 ```Powershell 
 # Copy the ReleaseId from the portal between the quotes
 $ReleaseId = "..."
-# Starts a static scan using the ReleaseId value and the Zip file "C:\Temp\upload\fod.zip"
-$response = Start-FODDynamicScan --EntitlementPreference SingleScan
-Write-Host "Started static scan id: $response.scanId"
+# Starts a previously configured dynamic scan
+$response = Start-FODDynamicScan -ReleaseId $ReleaseId -EntitlementPreference SingleScan
+Write-Host "Started dynamic scan id: $response.scanId"
 ```
 
 To find the status of the scan you can use the `Get-FODScanSummary` function as in the following:
@@ -499,7 +500,7 @@ Get-FODScanSummary -ScanId $response.scanId | Select-Object -Property analysisSt
 The `analysisStatusType` will be the current status visible in the Fortify on Demand portal, e.g. Queued, In_Progress, 
 Completed and so on.
 
-The `Start-FODDynamicScan` function will automatically find an appropriate "entitlement", if not entitlements are
+The `Start-FODDynamicScan` function will automatically find an appropriate "entitlement", if no entitlements are
 available you can optionally purchase a new entitlement using the `-PurchaseEntitlement` option.
 
 ----------

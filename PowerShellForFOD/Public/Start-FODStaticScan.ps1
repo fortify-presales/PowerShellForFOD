@@ -239,7 +239,11 @@ function Start-FODStaticScan {
             $Response
         } else {
             $ScanId = $Response.scanId
-            Write-Host "Started scan with scan id: $ScanId"
+            If ($ScanId) {
+                Write-Host "Started static scan with scan id: $ScanId"
+            } else {
+                Write-Error "Error starting scan, could not extract scan id!"
+            }
         }
     }
 }

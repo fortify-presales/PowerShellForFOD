@@ -17,6 +17,7 @@ Enum EntitlementFrequencyType {
 Enum InProgressScanActionType {
     DoNotStartScan = 0
     CancelScanInProgress = 1
+    Queue = 2
 }
 Enum DynamicScanAssessmentType {
     DynamicWebsite = 119

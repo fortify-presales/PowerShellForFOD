@@ -10,11 +10,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Added Get-FODDynamicScanSetup, Update-FODDynamicScanSetup, Start-FODDynamicScan for startic dynamic scans
+-
 
 ### Changed
 
-- Updated Start-FODStaticScan to allow queueing - added "Queue" option for "inProgressScanActionType"
+-
+
+## [1.1.0.11] - 2020-11-03
+
+## [Unreleased]
+
+### Added
+
+- Added Get-FODDynamicScanSetup, Update-FODDynamicScanSetup, Start-FODDynamicScan for setting up and starting dynamic scans
+
+### Changed
+
+- Updated Start-FODStaticScan to allow queueing by adding "Queue" option for "inProgressScanActionType"
 
 ## [1.1.0.10] - 2020-09-15
 
