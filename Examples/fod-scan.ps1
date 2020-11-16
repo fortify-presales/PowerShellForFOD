@@ -49,14 +49,13 @@ begin {
 process {
 
     # Configure API
-    Write-Verbose "Configuring FOD API ..."
+    Write-Host "Configuring FOD API ..."
     $PWord = ConvertTo-SecureString -String $FODApiPassword -AsPlainText -Force
     $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $FODApiUsername, $PWord
     Set-FODConfig -ApiUri $FODApiUri -GrantType $FODApiGrantType -Scope $FODApiScope
     Get-FODToken -Credential $Credential
 
-    try
-    {
+    try {
         $ReleaseId = Get-FODReleaseId -ApplicationName $ApplicationName -ReleaseName $ReleaseName
         if ($ReleaseId) {
             Write-Host "Found release id: '$ReleaseId' in application '$ApplicationName'"

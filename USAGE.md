@@ -31,6 +31,8 @@
     * [Starting a Dynamic Scan](#starting-a-dynamic-scan)
 *   [Vulnerabilities](#vulnerabilities)
     * [Retrieving Vulnerabilities](#retrieving-vulnerabilities)    
+*   [Open Source Components](#open-source-components)
+    * [Retrieving Open Source Components](#retrieving-open-source-components)       
 *   [Users](#users)
     * [Adding Users](#adding-users)
     * [Retrieving Users](#retrieving-users)
@@ -529,6 +531,22 @@ You can also use "filters" to retrieve different severities, categories and type
 # Get all vulnerabilities with "critical" or "high" severity for release id 1000
 Get-FODVulnerabilities -Release Id 1000 -Paging -Filters "severityString:Critical|High"
 ```
+
+----------
+
+## Open Source Components
+
+### Retrieving Open Source Components
+
+You can retrieve all of the open source components found using Sonatype or BlackDuck using the following:
+
+```Powershell
+# Get all the open source components through Paging found using Sonatype
+Get-FODOpenSourceComponents -Paging -OpenSourceScanType Sonatype
+```
+
+Depending on the data in your tenant, this call might take some time. An example of how to filter the output based
+on application, licenses or component is included in the example script [open-source-components.ps1](Examples\open-source-components.ps1).
 
 ----------
 

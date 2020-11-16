@@ -53,7 +53,8 @@ At present, this module can:
  * Start Static and Dynamic scans
  * Import on-premise static scans (from [Fortify SCA](https://www.microfocus.com/en-us/products/static-code-analysis-sast))
  * Import on-premise dynamic scans (from [Fortify WebInspect](https://www.microfocus.com/en-us/products/webinspect-dynamic-analysis-dast))
- * Export and Import Application Audit Templates 
+ * Export and Import Application Audit Templates
+ * Query Open Source Components 
 
 Development is ongoing, with the goal to add broad support for the entire API set.
 
