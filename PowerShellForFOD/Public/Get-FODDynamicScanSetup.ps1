@@ -58,7 +58,7 @@ function Get-FODDynamicScanSetup {
             $Params.Add('ForceVerbose', $True)
             $VerbosePreference = "Continue"
         }
-        Write-Verbose "Get-FODDynamicScanStatus Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        Write-Verbose "Get-FODDynamicScanSetup Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
         $RawDynamicScanSetup = $null
     }
     process

@@ -1,4 +1,10 @@
 # An example dashboard using PowerShellForFOD and Universal Dashboard (https://universaldashboard.io/)
+
+# Install-Module Universal -Scope CurrentUser -AllowClobber
+# Install-PSUServer -LatestVersion
+# Install-PSUServer -Path (Join-Path $Env:AppData "PSU") -AddToPath
+# (C:\Users\YOUR_USERNAME\AppData\Roaming\PSU)
+# Start-PSUServer -Port 8080
 #
 # To start dashboard run this script from PowerShell console:
 #       ./dashboard.ps1

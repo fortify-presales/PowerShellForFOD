@@ -22,6 +22,13 @@
     * [Retrieving Releases](#retrieving-releases)
     * [Updating Releases](#updating-releases)
     * [Deleting Releases](#deleting-releases)
+*   [Microservices](#microservices)
+    * [Creating Applications with Microservices](#creating-applications-with-microservices)
+    * [Retrieving Microservics](#retrieving-microservices)
+    * [Creating new Releases for Microservice](#creating-new-releases-for-microservices)
+    * [Adding new Microservice](#adding-new-microservices)
+    * [Updating Microservices](#updating-microservices)
+    * [Removing Microservices](#removing-microservices)
 *   [Scans](#scans)
     * [Retrieving Scans](#retrieving-scans)
     * [Retrieving Scan Summary](#retrieving-scan-summary)
@@ -347,6 +354,83 @@ To delete (remove) a release, use the following:
 
 ```Powershell
 Remove-FODRelease -Id $releaseId
+```
+
+----------
+
+## Microservices
+
+### Creating Applications with Microservices
+
+You can create Applications that consist of Microservices by using `New-FODMicroserviceObject` and additional
+parameters to `New-FODApplicationObject` as in the following:
+
+```Powershell
+$microservices = @(
+    New-FODMicroserviceObject -Name "Microservice 1"
+    New-FODMicroserviceObject -Name "Microservice 2"
+)
+
+$appObject = New-FODApplicationObject -Name "Microservice App" -Description "its description" `
+    -Type "Web_Thick_Client" -BusinessCriticality "Low" -HasMicroservices $True `
+    -ReleaseName "1.0" -ReleaseDescription "its description" -SDLCStatus "Development" `
+    -MicroServices $microservices -ReleaseMicroserviceName "Microservice 1" `
+    -OwnerId $ownerId -Attributes $attributes
+
+$appResponse = Add-FODApplication -Application $appObject
+$appId = $appResponse.applicationId
+```
+
+### Retrieving microservices
+
+You can retrieve the details of Microservices (including their ids) by using `Get-FODMicroservices`
+as in the following:
+
+```Powershell
+$msObject = Get-FODMicroservices -ApplicationId $applicationId | Where-Object {$_.name -eq 'Microservice 2'}
+$msId = $msObject.id
+```
+
+### Creating new Releases for Microservices
+
+The `Add-FODApplication` operation above will only create a release for the specific Microservice that is specified.
+To create releases for additional Microservices you can use the following:
+
+```Powershell
+# Retrieve the details of the Microservice we wish to create a release for
+$msObject = Get-FODMicroservices -ApplicationId $applicationId | Where-Object {$_.name -eq 'Microservice 2'}
+
+# Create the ReleaseObject for the release to add to microservice
+$relObject = New-FODReleaseObject -Name "1.0" -Description "its description" -ApplicationId $applicationId `
+    -SDLCStatus 'Development' -Microservice $msObject
+$relResponse = Add-FODRelease -Release $relObject
+
+```
+### Adding new Microservices
+
+You can create a new Microservice in an application using the following:
+
+```Powershell
+$msResponse = Add-FODMicroservice -ApplicationId $applicationId -Name "Microservice 3"
+```
+
+Please note there is a limit on the number of Microservices which can be added to an Application.
+Please check the product documentation for details of the current limit.
+
+### Updating Microservices
+
+You can update the name of an existing Microservice using the following:
+
+```Powershell
+Update-FODMicroservice -ApplicationId $applicationId -Id $msResponse.id -Name "Microservice 3 Updated"
+```
+
+### Removing Microservices
+
+You can remove a Microservice from an Application using the following:
+
+```Powershell
+Remove-FODMicroservice -ApplicationId $applicationId -Id $msResponse.id
 ```
 
 ----------

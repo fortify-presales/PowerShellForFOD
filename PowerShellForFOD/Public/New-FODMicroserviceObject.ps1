@@ -25,7 +25,8 @@ function New-FODMicroServiceObject
     param
     (
         [int]$Id,
-        [string]$Name
+        [string]$Name,
+        [int]$ReleaseId
     )
     begin
     {
@@ -41,8 +42,9 @@ function New-FODMicroServiceObject
 
         switch ($psboundparameters.keys)
         {
-            'id'     { $body.id = $Id }
-            'name'   { $body.name = $name }
+            'id'        { $body.id = $Id }
+            'name'      { $body.name = $Name }
+            'releaseId' { $body.releaseid = $ReleaseId}
         }
 
         Add-ObjectDetail -InputObject $body -TypeName PS4FOD.MicroserviceObject

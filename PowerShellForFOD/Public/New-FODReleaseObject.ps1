@@ -58,10 +58,9 @@ function New-FODReleaseObject
 
         [int]$OwnerId,
 
-        [Parameter(Mandatory = $false,
-                ValueFromPipeline = $true)]
-        [PSTypeName('PS4FOD.MicroServiceObject')]
+        [Parameter(ParameterSetName = 'FODMicroServiceObject', ValueFromPipeline = $True)]
         $MicroService
+
     )
     begin
     {
@@ -91,7 +90,7 @@ function New-FODReleaseObject
             'copyReleaseId'         { $body.copyStateReleaseId = $CopyReleaseId }
             'sdlcStatus'            { $body.sdlcStatusType = $SDLCStatus }
             'microservice'          { $body.microserviceId = $MicroService.Id }
-            'ownerId'                   { $body.ownerId = $OwnerId }
+            'ownerId'               { $body.ownerId = $OwnerId }
         }
 
         Add-ObjectDetail -InputObject $body -TypeName PS4FOD.ReleaseObject

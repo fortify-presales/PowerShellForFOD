@@ -44,7 +44,7 @@ At present, this module can:
  * Execute a generic FOD API REST command with authentication and rate limiting support
  * Query, add, update and remove Users
  * Query, add, update and remove Applications
- * Query, add, update and remove Users
+ * Query, add, update and remove Releases
  * Query Attributes
  * Query Application, Release and individual Scans
  * Query, add and remove user access to Applications

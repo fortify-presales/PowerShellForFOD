@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
+### Changed
+
+## [1.1.0.12] - 2021-02-04
+
+### Added
+
+- Microservice support for adding/updating/removing microservices from applications and releases
 - Added Get-FODOpenSourceComponents to retrieve all open source components from FOD.
 - Added Examples\os-components.ps1 as an example to retrieve and filter open source components.
 - Added Get-FODTenantHeatMaps to retrieve heat map of releases

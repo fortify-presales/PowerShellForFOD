@@ -36,7 +36,7 @@ function New-FODApplicationObject
     .PARAMETER HasMicroservices
         Whether the application contains Microservices.
         Default is false.
-    .PARAMETER MicroServices
+    .PARAMETER Microservices
         Collection of PS4FOD.MicroserviceObject's containing the release names of all
         Microservices associated to the application.
         Optional.
@@ -92,7 +92,7 @@ function New-FODApplicationObject
                 ValueFromPipeline = $true)]
         [PSTypeName('PS4FOD.MicroserviceObject')]
         [System.Collections.Hashtable[]]
-        $MicroServices,
+        $Microservices,
 
         [string]$ReleaseMicroserviceName,
 
@@ -116,15 +116,18 @@ function New-FODApplicationObject
         $AllMicroservices = @()
         $AllUserGroups = @()
         $AllAttributes = @()
-        if ($HasMicroservices -and -not $MicroServices) {
-            throw "A value for MicroServices is required if HasMicroservices is selected"
+        if ($HasMicroservices -and -not $Microservices) {
+            throw "A value for Microservices is required if HasMicroservices is selected"
+        }
+        if ($HasMicroservices -and -not $ReleaseMicroserviceName) {
+            throw "A value for ReleaseMicroserviceName is required if HasMicroservices is selected"
         }
         Write-Verbose "New-FODApplicationObject Bound Parameters:  $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
     }
     process
     {
-        foreach ($MicroService in $Microservices) {
-            $AllMicroservices += $MicroService
+        foreach ($Microservice in $Microservices) {
+            $AllMicroservices += $Microservice.name
         }
         foreach ($UserGroup in $UserGroups) {
             $AllUserGroups += $UserGroup
@@ -153,7 +156,7 @@ function New-FODApplicationObject
                     $body.hasMicroservices = $false
                 }
             }
-            'microservices'             { $body.microservices = @($AllMicroServices) }
+            'Microservices'             { $body.Microservices = @($AllMicroservices) }
             'releaseMicroserviceName'   { $body.releaseMicroserviceName = $releaseMicroserviceName }
 
             'releaseName'               { $body.releaseName = $ReleaseName }
