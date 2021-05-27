@@ -26,6 +26,8 @@ function Set-FODConfig
         Proxy to use with Invoke-RESTMethod.
     .PARAMETER ForceToken
         If set to true, an authentication token will be re-generated on every API call.
+    .PARAMETER RenewToken
+        If set to true, an authentication token will be re-generated if the existing token has expired.
     .PARAMETER ForceVerbose
         If set to true, we allow verbose output that may include sensitive data
         *** WARNING ***
@@ -43,6 +45,9 @@ function Set-FODConfig
     param(
         [Parameter()]
         [string]$Token,
+
+        [Parameter()]
+        [int]$Expiry,
 
         [Parameter()]
         [string]$ApiUri,
@@ -69,6 +74,9 @@ function Set-FODConfig
         [bool]$ForceToken,
 
         [Parameter()]
+        [bool]$RenewToken,
+
+        [Parameter()]
         [bool]$ForceVerbose,
 
         [Parameter()]
@@ -82,8 +90,10 @@ function Set-FODConfig
         'Scope'        { $Script:PS4FOD.Scope = $Scope }
         'Credential'   { $Script:PS4FOD.Credential = $Credential }
         'Token'        { $Script:PS4FOD.Token = $Token }
+        'Expiry'       { $Script:PS4FOD.Expiry = $Expiry }
         'Proxy'        { $Script:PS4FOD.Proxy = $Proxy }
         'ForceToken'   { $Script:PS4FOD.ForceToken = $ForceToken }
+        'RenewToken'   { $Script:PS4FOD.RenewToken = $RenewToken }
         'ForceVerbose' { $Script:PS4FOD.ForceVerbose = $ForceVerbose }
     }
 
@@ -100,12 +110,14 @@ function Set-FODConfig
     # Write the global variable and the xml
     $Script:PS4FOD |
         Select-Object -Property Proxy,
-        @{ l = 'ApiUri'; e = { Encrypt $_.ApiUri } },
-        @{ l = 'GrantType'; e = { $_.GrantType } },
-        @{ l = 'Scope'; e = { $_.Scope } },
-        @{ l = 'Credential'; e = { $_.Credential } },
-        @{ l = 'Token'; e = { Encrypt $_.Token } },
+        @{l='ApiUri';e={Encrypt $_.ApiUri}},
+        @{l='GrantType';e={$_.GrantType}},
+        @{l='Scope';e={$_.Scope}},
+        @{l='Credential';e={$_.Credential}},
+        @{l='Token';e={Encrypt $_.Token}},
+        @{l='Expiry';e={$_.Expiry}},
         ForceToken,
+        RenewToken,
         ForceVerbose |
         Export-Clixml -Path $Path -force
 

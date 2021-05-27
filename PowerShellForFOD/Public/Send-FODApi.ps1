@@ -27,8 +27,12 @@ function Send-FODApi {
     .PARAMETER Proxy
         Proxy server to use.
         If empty, the value from PS4FOD will be used.
-    .PARAMETER NewToken
-        Create a new token using stored credentials.
+    .PARAMETER ForceToken
+        If set to true, an authentication token will be re-generated on every API call.
+        If empty, the value from PS4FOD will be used.
+    .PARAMETER RenewToken
+        If set to true, an authentication token will be re-generated if the existing token has expired.
+        If empty, the value from PS4FOD will be used.
     .PARAMETER ForceVerbose
         If specified, don't explicitly remove verbose output from Invoke-RestMethod
         *** WARNING ***
@@ -86,6 +90,8 @@ function Send-FODApi {
         [ValidateNotNullOrEmpty()]
         [string]$Proxy = $Script:PS4FOD.Proxy,
 
+        [switch]$RenewToken = $Script:PS4FOD.RenewToken,
+
         [switch]$ForceToken = $Script:PS4FOD.ForceToken,
 
         [switch]$ForceVerbose = $Script:PS4FOD.ForceVerbose
@@ -120,8 +126,17 @@ function Send-FODApi {
             $Params.Add('Verbose', $True)
             $VerbosePreference = "Continue"
         }
-        if ($ForceToken) {
-            Write-Verbose "Re-creating authentication token"
+        if ($RenewToken -and $Script:PS4FOD.Expiry -and $Script:PS4FOD.Credential) {
+            Write-Verbose "Checking existing authentication token expiry"
+            $now = [Math]::Floor([decimal](Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
+            if ($now -ge $Script:PS4FOD.Expiry) {
+                Write-Verbose "Existing authentication token has expired, renewing it"
+                Get-FODToken
+                $Token = $Script:PS4FOD.Token
+            }
+        }
+        if ($ForceToken -and $Script:PS4FOD.Credential) {
+            Write-Verbose "Forcing re-creation of authentication token"
             Get-FODToken
             $Token = $Script:PS4FOD.Token
         }

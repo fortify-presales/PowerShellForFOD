@@ -42,6 +42,7 @@ Function Get-FODConfig {
             }
         }
         Write-Verbose "Retrieving FOD Configuration from $Path"
+
         Import-Clixml -Path $Path |
                 Select-Object -Property Proxy,
                 @{l='ApiUri';e={Decrypt $_.ApiUri}},
@@ -49,7 +50,9 @@ Function Get-FODConfig {
                 @{l='Scope';e={$_.Scope}},
                 @{l='Credential';e={$_.Credential}},
                 @{l='Token';e={Decrypt $_.Token}},
+                @{l='Expiry';e={$_.Expiry}},
                 ForceToken,
+                RenewToken,
                 ForceVerbose
     }
 

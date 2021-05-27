@@ -164,10 +164,13 @@ function Get-FODToken
         $Response | Parse-FODError
     } elseif ($Response) {
         $Token = $Response.access_token
+
+        $now = [Math]::Floor([decimal](Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
+        $Expiry = $now + $Response.expires_in;
         if ($Print) {
             Write-Host $Token
         }
-        Set-FODConfig -ApiUri $ApiUri -GrantType $GrantType -Scope $Scope -Token $Token
+        Set-FODConfig -ApiUri $ApiUri -GrantType $GrantType -Scope $Scope -Token $Token -Expiry $Expiry
     }
     else {
         Write-Verbose "Something went wrong.  `$Response is `$null"

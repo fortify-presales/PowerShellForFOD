@@ -6,11 +6,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project roughly adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.1.0.13] - 2021-05-27
 
 ### Added
 
+- Added TestFODApplication and TestFODRelease to check for the existence of a named application and/or release.
+- Added ability to automatically renew FOD token if it has expired.
+- Added a "Since" option to Get-FODApplications, Get-FODReleases, Get-FODScans to retrieve new or changed data since a specific time.
+
 ### Changed
+
+- Updated USAGE and README for new options. 
 
 ## [1.1.0.12] - 2021-02-04
 

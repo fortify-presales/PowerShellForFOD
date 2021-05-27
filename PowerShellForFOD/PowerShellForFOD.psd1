@@ -91,7 +91,8 @@ FunctionsToExport = @('Add-FODApplication', 'Add-FODMicroservice', 'Add-FODRelea
                'Remove-FODRelease', 'Remove-FODUser', 
                'Remove-FODUserApplicationAccess', 
                'Remove-FODUserGroupApplicationAccess', 'Send-FODApi', 
-               'Set-FODConfig', 'Start-FODDynamicScan', 'Start-FODStaticScan', 
+               'Set-FODConfig', 'Start-FODDynamicScan', 'Start-FODStaticScan',
+               'Test-FODApplication', 'Test-FODRelease',
                'Update-FODApplication', 'Update-FODDynamicScanSetup', 
                'Update-FODMicroservice', 'Update-FODRelease', 'Update-FODUser')
 

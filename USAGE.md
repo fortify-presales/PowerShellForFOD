@@ -109,11 +109,13 @@ There following configuration settings are available/visible:
 - `Scope` - The API scope of access
 - `Credential` - A PowerShell Credential object
 - `Token` - An authentication token retrieved using `Get-FODToken`
+- `RenewToken` - Renew the authentication token automatically if it has expired  
 - `ForceToken` - Force the authentication token to be re-generated on every API call
 - `ForceVerbose` - Force Verbose output for all commands and subcommands 
 
 Each of these options can be set via `Set-FODConfig`, for example `Set-FODConfig -ForceVerbose` to force
-verbose output in commands and sub-commands.
+verbose output in commands and sub-commands. Please note that for `RenewToken` and `ForceToken` the FOD
+API credentials need to be stored using the `Credential` setting.
 
 ----------
 
@@ -173,6 +175,13 @@ To get (retrieve) one or more applications, use the following:
 ```Powershell
 # Get any applications with "test" or "demo" in their name
 Get-FODApplications -Paging -Filters "applicationName:test|demo"
+```
+
+To get (retrieve) one or more applications added or modified in the last 7 days, use the following:
+
+```PowerShell
+# Get any applications added or modified in the last 7 days
+Get-FODApplications -Since (Get-Date).AddDays(-7)
 ```
 
 ### Updating applications
@@ -332,6 +341,13 @@ To get (retrieve) one or more releases, use the following:
 Get-FODReleases -Paging -Filters 'sdlcStatusType:Production+isPassed:False'
 ```
 
+To get (retrieve) one or more releases added or modified in the last 7 days, use the following:
+
+```PowerShell
+# Get any releases added or modified in the last 7 days
+Get-FODReleases -Since (Get-Date).AddDays(-7)
+```
+
 ### Updating releases
 
 To update an existing release, you will first need to create an `FODReleaseObject` with any updated values. An example
@@ -465,6 +481,13 @@ To retrieve a specific scan for a release you can use:
 ```Powershell
 # Get the scans with id 1234 for release id 1000 through Paging
 Get-FODReleaseScan -ReleaseId 1000 -ScanId 1234
+```
+
+To get (retrieve) scans that were started in the last 2 hours, use the following:
+
+```PowerShell
+# Get any scans run in the last 2 days
+Get-FODScans -Since (Get-Date).AddHours(-2)
 ```
 
 ### Retrieving Scan Summary

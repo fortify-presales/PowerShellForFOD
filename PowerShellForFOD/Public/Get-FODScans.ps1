@@ -25,6 +25,8 @@ function Get-FODScans {
         Limit the number of scans returned to this number.
         Maximum value is 50.
         Default is 50.
+    .PARAMETER Since
+        Limit the results to the specified modified on or after date.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -53,6 +55,7 @@ function Get-FODScans {
         [switch]$Raw,
         [switch]$Paging,
         [int]$Limit = 50,
+        [DateTime]$Since,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -110,6 +113,10 @@ function Get-FODScans {
         }
         if ($Limit -gt 50) {
             Write-Error "Maximum value for Limit is 50." -ErrorAction Stop
+        }
+        if ($Since) {
+            $DateTimeString = Get-Date -Date $Since -Format "o"
+            $Body.Add("modifiedStartDate", $DateTimeString)
         }
         $RawScans = @()
         $HasMore = $false

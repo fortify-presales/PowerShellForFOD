@@ -19,6 +19,8 @@ function Get-FODApplications {
         Limit the number of applications returned to this number.
         Maximum value is 50.
         Default is 50.
+    .PARAMETER Since
+        Limit the results to the specified modified on or after date.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -33,6 +35,9 @@ function Get-FODApplications {
      .EXAMPLE
         # Get any applications with "test" or "demo" in their name
         Get-FODApplications -Paging -Filters "applicationName:test|demo"
+     .EXAMPLE
+        # Get applications created or modified in the last 7 days
+        Get-FODApplications -Since (Get-Date).AddDays(-7)
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Applications/ApplicationsV3_GetApplications
     .FUNCTIONALITY
@@ -47,6 +52,7 @@ function Get-FODApplications {
         [switch]$Raw,
         [switch]$Paging,
         [int]$Limit = 50,
+        [DateTime]$Since,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -95,6 +101,10 @@ function Get-FODApplications {
         }
         if ($Limit -gt 50) {
             Write-Error "Maximum value for Limit is 50." -ErrorAction Stop
+        }
+        if ($Since) {
+            $DateTimeString = Get-Date -Date $Since -Format "o"
+            $Body.Add("modifiedStartDate", $DateTimeString)
         }
         $RawApplications = @()
         $HasMore = $false

@@ -30,8 +30,10 @@ if(-not (Test-Path -Path $script:_PS4FODXmlpath -ErrorAction SilentlyContinue))
             Scope = $null
             Credential = $null
             Token = $null
+            Expiry = $null
             Proxy = $null
             ForceToken = $False
+            RenewToken = $False
             ForceVerbose = $False
         } | Export-Clixml -Path $($script:_PS4FODXmlpath) -Force -ErrorAction Stop
     }

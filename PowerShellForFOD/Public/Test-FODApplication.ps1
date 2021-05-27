@@ -1,9 +1,10 @@
-function Get-FODApplicationId {
+function Test-FODApplication {
     <#
     .SYNOPSIS
-        Gets the id for a FOD applications.
+        Checks if an FOD application exists.
     .DESCRIPTION
-        Get the internal id for a specific FOD application.
+        Checks if the specified FOD application name already exists in FOD.
+        Returns $True if the application exists else $False.
     .PARAMETER ApplicationName
         The name of the application.
     .PARAMETER Raw
@@ -15,13 +16,14 @@ function Get-FODApplicationId {
         Proxy server to use.
         Default value is the value set by Set-FODConfig
     .EXAMPLE
-        # Get the id for the Application called "FOD-Test"
-        Get-FODApplicationId -ApplicationName "FOD-Test"
+        # Test if the Application with name "test" exists
+        Test-FODApplication -ApplicationName test
     .FUNCTIONALITY
         Fortify on Demand
     #>
+    [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$True, ValueFromPipeline=$True)]
         [string]$ApplicationName,
 
         [switch]$Raw,
@@ -42,22 +44,29 @@ function Get-FODApplicationId {
     )
     begin
     {
-        $Application = @()
+        $Params = @{}
+        if ($Proxy) {
+            $Params['Proxy'] = $Proxy
+        }
+        if ($ForceVerbose) {
+            $Params.Add('ForceVerbose', $True)
+            $VerbosePreference = "Continue"
+        }
+        Write-Verbose "Test-FODApplication Bound Parameters: $( $PSBoundParameters | Remove-SensitiveData | Out-String )"
+        $Exists = $False
     }
     process
     {
         try {
-            $Application = Get-FODApplications -Filters "applicationName:$ApplicationName" | Where-Object { $_.applicationName -eq $ApplicationName }
+            $Response = Get-FODApplicationId -ApplicationName $ApplicationName @Params
+            if ($Response -gt 0) {
+                $Exists = $True
+            }
         } catch {
-            Write-Error $_
-            Break
+            $Exists = $False
         }
     }
     end {
-        if ($Raw) {
-            $Application
-        } else {
-            $Application | Select-Object -ExpandProperty applicationId
-        }
+        return $Exists
     }
 }

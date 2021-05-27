@@ -19,6 +19,8 @@ function Get-FODReleases {
         Limit the number of releases returned to this number.
         Maximum value is 50.
         Default is 50.
+    .PARAMETER Since
+        Limit the results to the specified modified on or after date.
     .PARAMETER Raw
         If specified, provide raw output and do not parse any responses.
     .PARAMETER Token
@@ -36,6 +38,9 @@ function Get-FODReleases {
      .EXAMPLE
         # Get all the releases for a specific application called 'TestApp'
         Get-FODReleases -Filters "applicatioName:TestApp"
+     .EXAMPLE
+        # Get applications releases created or modified in the last 7 days
+        Get-FODReleases -Since (Get-Date).AddDays(-7)
     .LINK
         https://api.ams.fortify.com/swagger/ui/index#!/Releases/ReleasesV3_GetReleases
     .FUNCTIONALITY
@@ -50,6 +55,7 @@ function Get-FODReleases {
         [switch]$Raw,
         [switch]$Paging,
         [int]$Limit = 50,
+        [DateTime]$Since,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -98,6 +104,10 @@ function Get-FODReleases {
         }
         if ($Limit -gt 50) {
             Write-Error "Maximum value for Limit is 50." -ErrorAction Stop
+        }
+        if ($Since) {
+            $DateTimeString = Get-Date -Date $Since -Format "o"
+            $Body.Add("modifiedStartDate", $DateTimeString)
         }
         $RawReleases = @()
         $HasMore = $false

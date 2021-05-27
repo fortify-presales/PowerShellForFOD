@@ -42,6 +42,7 @@ function Get-FODTenantHeatMaps {
     #>
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('Production', 'QA', 'Development', 'Retired')]
         [string]$SdlcStatus,
