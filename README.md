@@ -1,5 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/egkljq9ok9xhvnhh?svg=true)](https://ci.appveyor.com/project/akevinlee/powershellforfod)
 
+***Please note: this project is no longer maintained - it is recommended to use the [Fortify fcli](https://github.com/fortify/fcli) tool instead***
+
 # Power Shell for Fortify On Demand (FOD) Module
 
 #### Table of Contents
